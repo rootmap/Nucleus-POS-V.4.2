@@ -1,0 +1,37 @@
+@import "variables";
+
+.icon-hmat .path1 {
+  &:before {
+    content: $icon-hmat-path1;  
+    color: rgb(115, 115, 115);
+  }
+}
+.icon-hmat .path2 {
+  &:before {
+    content: $icon-hmat-path2;  
+    margin-left: -1em;  
+    color: rgb(247, 247, 247);
+  }
+}
+.icon-hmat .path3 {
+  &:before {
+    content: $icon-hmat-path3;  
+    margin-left: -1em;  
+    color: rgb(132, 132, 132);
+  }
+}
+.icon-hmat .path4 {
+  &:before {
+    content: $icon-hmat-path4;  
+    margin-left: -1em;  
+    color: rgb(124, 124, 124);
+  }
+}
+.icon-hmat .path5 {
+  &:before {
+    content: $icon-hmat-path5;  
+    margin-left: -1em;  
+    color: rgb(172, 172, 172);
+  }
+}
+
