@@ -49,52 +49,5 @@
     </button>
 </div>
 
-<!-- <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 button button6"  @if($userguideInit==1) data-step="17" data-intro="When you click change sales view button then redirect to add product for sale page." @endif>
-    <button id="changeSalesView" type="button" class="btn btn-green btn-responsive btn1 spfontcartfotter" style="font-size: 15px !important; font-weight: 600;">     
-        <i class="icon-stack3"></i> Change Sales View
-    </button>
-</div>
-
-<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 button button6"  @if($userguideInit==1) data-step="18" data-intro="In this button you can start / turn off your counter display." @endif>
-    <button  type="button" class="btn btn-green btn-darken-2 btn-responsive btn1 spfontcartfotter" style="font-size: 14px !important; font-weight: 600;"> <i class="icon-air-play"></i>  
-        @if(isset($CounterDisplay))
-            @if($CounterDisplay==1)   
-                <span>Turn-off Your Counter Display</span>
-            @else
-                <span>Start Your Counter Display</span>
-            @endif
-        @else
-            <span>Start Your Counter Display</span>
-        @endif
-    </button>
-</div> -->
-
-<!-- <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 button button6"  @if($userguideInit==1) data-step="20" data-intro="When you click sales return then popup new window." @endif>
-    <button type="button" class="btn btn-green btn-darken-1 btn-responsive btn1 spfontcartfotter"  data-toggle="modal" data-target="#salesReturn" style="font-size: 15px !important; font-weight: 600;">     
-        <i class="icon-document"></i> Sales Return
-    </button>
-</div> -->
-
-<!-- <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 button button6"  @if($userguideInit==1) data-step="21" data-intro="When you click create warranty then it will go to warranty page." @endif>
-    <button type="button" class="btn btn-green btn-darken-3 warranty btn-responsive btn1 spfontcartfotter" style="font-size: 15px !important; font-weight: 600;">     
-        <i class="icon-ribbon-b"></i> Create Warranty
-    </button>
-</div>
-
-<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 button button6"  @if($userguideInit==1) data-step="19" data-intro="When you click add partial payment then popup new window." @endif>
-    <button type="button" class="btn btn-green btn-darken-4 btn-responsive btn1 addPartialPayment spfontcartfotter" style="font-size: 15px !important; font-weight: 600;">     
-        <i class="icon-money"></i> Add Partial Payment
-    </button>
-</div>
-
-
-
-<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 button button6" @if($userguideInit==1) data-step="22" data-intro="When you click create buyback then it will go to buyback page." @endif>
-    <button type="button" class="btn btn-green buybackpull btn-darken-2 btn-responsive btn1 spfontcartfotter"  style="font-size: 15px !important; font-weight: 600;">     
-        <i class="icon-random"></i> Create Buyback
-    </button>
-</div>
- -->
-
 
 
