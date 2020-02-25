@@ -28,6 +28,16 @@
 		}
 	</style>
 	@endif
+
+	@if(isset($switchery))
+	<link rel="stylesheet" type="text/css" href=".{{url('theme/app-assets/vendors/css/forms/icheck/icheck.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{url('theme/app-assets/vendors/css/forms/icheck/custom.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{url('theme/app-assets/vendors/css/forms/toggle/bootstrap-switch.min.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{url('theme/app-assets/vendors/css/forms/toggle/switchery.min.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{url('theme/app-assets/vendors/css/forms/spinner/jquery.bootstrap-touchspin.css')}}">
+    <style>.custom-file-control:lang(en)::after { content: 'Choose Image file...'; }</style>
+	@endif
+
 	@if(isset($selectTwo))
     	<link rel="stylesheet" type="text/css" href="{{url('theme/app-assets/vendors/css/forms/selects/select2.min.css')}}">
     @endif
@@ -53,6 +63,22 @@
 			$("#slip").modal('show');
 		}
 	</script>
+	@endif
+
+	@if(isset($switchery))
+	<script src="{{url('theme/app-assets/vendors/js/forms/icheck/icheck.min.js')}}" type="text/javascript"></script>
+    <script src="{{url('theme/app-assets/vendors/js/forms/toggle/bootstrap-checkbox.min.js')}}" type="text/javascript"></script>
+    <script src="{{url('theme/app-assets/vendors/js/forms/toggle/bootstrap-switch.min.js')}}" type="text/javascript"></script>
+	<script src="{{url('theme/app-assets/vendors/js/forms/toggle/switchery.min.js')}}" type="text/javascript"></script>
+
+	<script src="{{url('theme/app-assets/js/scripts/forms/checkbox-radio.min.js')}}" type="text/javascript"></script>
+    <script src="{{url('theme/app-assets/js/scripts/forms/switch.min.js')}}" type="text/javascript"></script>
+    <script src="{{url('theme/app-assets/js/scripts/forms/input-groups.min.js')}}" type="text/javascript"></script>
+    
+	@endif
+
+	@if(isset($addproduct))
+	<script src="{{url('js/product.js')}}" type="text/javascript"></script>
 	@endif
 
 	@if(isset($buyback_customer))

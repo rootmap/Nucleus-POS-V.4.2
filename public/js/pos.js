@@ -6,6 +6,7 @@ function loadingOrProcessing(sms)
         strHtml+='<div class="alert alert-icon-right alert-green alert-dismissible fade in mb-2" role="alert">';
         strHtml+='      <i class="icon-spinner10 spinner"></i> '+sms;
         strHtml+='</div>';
+        strHtml+='<script>setTimeout(function(){ $(".alert-dismissible").hide(); }, 4000);</script>';
 
         return strHtml;
 
@@ -20,6 +21,7 @@ function warningMessage(sms)
         strHtml+='</button>';
         strHtml+=sms;
         strHtml+='</div>';
+        strHtml+='<script>setTimeout(function(){ $(".alert-dismissible").hide(); }, 4000);</script>';
         return strHtml;
 }
 
@@ -32,69 +34,236 @@ function successMessage(sms)
         strHtml+='</button>';
         strHtml+=sms;
         strHtml+='</div>';
+        strHtml+='<script>setTimeout(function(){ $(".alert-dismissible").hide(); }, 4000);</script>';
         return strHtml;
 }
 
-function paginationPerfect()
+$('.dropableCartZone').droppable( {
+        drop: handleDropEvent
+} ); 
+
+
+$('select[name=customer_id]').parent('div').children('span:eq(1)').children('span').children('span').attr('style','border-radius:0px !important;');
+
+function handleDropEvent( event, ui ) {
+    $("#cartMessageProShow").html(loadingOrProcessing("Processing, Please Wait....!!!!"));
+    var item_id=ui.draggable.attr("id");
+    //console.log('ItemID=',item_id);
+
+    var data_pro_id=$("#"+item_id).attr("data-pro-id");
+    var data_pro_name=$("#"+item_id).attr("data-pro-name");
+    var data_pro_name=data_pro_name.replace(/'/g, "");;
+    var data_pro_price=$("#"+item_id).attr("data-pro-price");
+    //console.log('string in JS = ',exTasl);
+    add_pos_cart(data_pro_id,data_pro_price,data_pro_name);
+    //add_pos_cart
+    //$("#"+item_id).trigger( "click" )
+    //alert(ui.draggable.attr("id"));
+   // Here I want the id of the dropped object
+}
+
+function loadCustomerList()
+{
+    var ff="<option ";
+    var fff="<option ";
+        ff+=selectedDefCusPOSSCRvFour; 
+        fff+=selectedDefCusPOSSCRvFour; 
+
+    ff+=" value=''>SELECT CUSTOMER</option>";
+    fff+=" value=''>SELECT CUSTOMER</option>";
+    ff+='<option value="0">CREATE NEW CUSTOMER</option>';
+    var defCusID=defCusIDCusPOSSCRvFour;
+
+    $.each(cusObjData,function(index,row){
+        //console.log(row);  
+
+        if(defCusID==row.id)
+        {
+            ff+="<option selected='selected' value='"+row.id+"'>"+row.name+"</option>";
+            fff+="<option selected='selected' value='"+row.id+"'>"+row.name+"</option>";
+        }
+        else
+        {
+            ff+="<option value='"+row.id+"'>"+row.name+"</option>";
+            fff+="<option value='"+row.id+"'>"+row.name+"</option>";
+        }
+
+        
+    });
+
+    $("select[name=customer_id]").html(ff);
+    $("select[name=sales_return_customer_id]").html(fff);
+    $("select[name=buyback_customer_id]").html(fff);
+    //$("select[name=partialpay_customer_id]").html(fff);
+
+    $("select[name=sales_return_customer_id]").select2({
+         dropdownParent: $("#salesReturn")
+    });
+    
+    $("select[name=sales_return_sales_invoice_id]").select2({
+         dropdownParent: $("#salesReturn")
+    });
+
+
+    ff="";
+    fff="";
+}
+
+function liveRowCartEdit(rowID)
+{
+    var rowData=$("#"+rowID).children("td:eq(1)").html();
+    if($("#"+rowID).children("td:eq(1)").children("input").val())
     {
-        $(".pagination").addClass("pagination-round");
-        $.each($(".pagination").find("li"),function(index,row){
-            $(row).addClass("page-item");
-            $(row).children("a").addClass("page-link");
-            //$(row).children("a").addClass("page-link");
-            if($(row).attr("class")=="active page-item")
+
+        //console.log(rowData);
+    }
+    else
+    {
+        var rowDataPrice=$("#"+rowID).children("td:eq(2)").find("span").html();
+        var inputDataQuantity='<input type="text" style="width:50px;" value="'+rowData+'" onkeyup="updateLiveCartQuantity('+rowID+')"  onchange="updateLiveCartQuantity('+rowID+')" />';
+        var inputDataPrice='<input type="text"  style="width:50px;"  value="'+rowDataPrice+'" onkeyup="updateLiveCartQuantity('+rowID+')"  onchange="updateLiveCartQuantity('+rowID+')" />';
+        $("#"+rowID).children("td:eq(1)").html(inputDataQuantity);
+        $("#"+rowID).children("td:eq(2)").find("span").html(inputDataPrice);
+        $("#"+rowID).children("td:eq(4)").children("a:eq(0)").show();
+    }
+    
+}
+
+function alignProductLine()
+{
+    $.each($(".add-pos-cart"),function(index,row){
+        var charStr=$.trim($(row).html()).length;
+        if(charStr<=15)
+        {
+            $(row).addClass('one-make-full');
+        }
+    });
+}
+
+function storecloseLTTheme(name,price)
+{
+    var conPrice=parseFloat(price).toFixed(2);
+    var data='<tr><td align="left">'+name+' Collected (+) :  </td><td align="left">$'+conPrice+'</td></tr>';
+    return data;
+}
+
+function paginationPerfect()
+{
+    $(".pagination").addClass("pagination-round");
+    $.each($(".pagination").find("li"),function(index,row){
+        $(row).addClass("page-item");
+        $(row).children("a").addClass("page-link");
+        //$(row).children("a").addClass("page-link");
+        if($(row).attr("class")=="active page-item")
+        {
+            var getPageNumber=$.trim($(row).children("span").html());
+            $(row).html('<a href="javascript:void(0);" class="page-link">'+getPageNumber+'</a>');
+        }
+
+        /*if($(row).attr("class")=="disabled page-item")
+        {
+            $(row).html('<a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">Next »</span><span class="sr-only">Next</span></a>');
+        }*/
+
+
+
+        if($.trim($(row).children("span").html()).length>0)
+        {
+            if($.trim($(row).children("span").html())=="«")
             {
                 var getPageNumber=$.trim($(row).children("span").html());
-                $(row).html('<a href="javascript:void(0);" class="page-link">'+getPageNumber+'</a>');
-            }
-
-            /*if($(row).attr("class")=="disabled page-item")
-            {
-                $(row).html('<a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">Next »</span><span class="sr-only">Next</span></a>');
-            }*/
-
-
-
-            if($.trim($(row).children("span").html()).length>0)
-            {
-                if($.trim($(row).children("span").html())=="«")
-                {
-                    var getPageNumber=$.trim($(row).children("span").html());
-                        //console.log(getPageNumber);
-                        $(row).html('<a class="page-link" href="#" aria-label="Prev"><span aria-hidden="true">« Prev</span><span class="sr-only">Prev</span></a>');
-                    }
-                    
-                    if($.trim($(row).children("span").html())=="»")
-                    {
-                        var getPageNumber=$.trim($(row).children("span").html());
-                        //console.log(getPageNumber);
-                        $(row).html('<a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">Next »</span><span class="sr-only">Next</span></a>');
-                    }
-                    
-                }
-
-                if($.trim($(row).children("a").html()).length>0)
-                {
-                    if($.trim($(row).children("a").html())=="«")
-                    {
-                        var getPageNumber=$.trim($(row).children("a").append(" Prev"));
-                        console.log(getPageNumber);
-                        //$(row).html('<a class="page-link" href="#" aria-label="Prev"><span aria-hidden="true">« Prev</span><span class="sr-only">Prev</span></a>');
-                    }
-                    
-                    if($.trim($(row).children("a").html())=="»")
-                    {
-                        var getPageNumber=$.trim($(row).children("a").html("Next »"));
-                        console.log(getPageNumber);
-                        //$(row).html('<a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">Next »</span><span class="sr-only">Next</span></a>');
-                    }
-                    
+                    //console.log(getPageNumber);
+                    $(row).html('<a class="page-link" href="#" aria-label="Prev"><span aria-hidden="true">« Prev</span><span class="sr-only">Prev</span></a>');
                 }
                 
+                if($.trim($(row).children("span").html())=="»")
+                {
+                    var getPageNumber=$.trim($(row).children("span").html());
+                    //console.log(getPageNumber);
+                    $(row).html('<a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">Next »</span><span class="sr-only">Next</span></a>');
+                }
+                
+            }
+
+            if($.trim($(row).children("a").html()).length>0)
+            {
+                if($.trim($(row).children("a").html())=="«")
+                {
+                    var getPageNumber=$.trim($(row).children("a").append(" Prev"));
+                    console.log(getPageNumber);
+                    //$(row).html('<a class="page-link" href="#" aria-label="Prev"><span aria-hidden="true">« Prev</span><span class="sr-only">Prev</span></a>');
+                }
+                
+                if($.trim($(row).children("a").html())=="»")
+                {
+                    var getPageNumber=$.trim($(row).children("a").html("Next »"));
+                    console.log(getPageNumber);
+                    //$(row).html('<a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">Next »</span><span class="sr-only">Next</span></a>');
+                }
+                
+            }
+            
 
 
-            });
-    }
+        });
+}
+
+function loadCloseDrawer()
+{
+    $("#closeStoreMsg").html("");
+    $("#close-drawer").modal('show');
+    //------------------------Ajax Customer Start-------------------------//
+     var AddHowMowKhaoUrl=transactionStoreAddHowMowKhaoUrlCartPOSvfour;
+     $.ajax({
+        'async': false,
+        'type': "POST",
+        'global': false,
+        'dataType': 'json',
+        'url': AddHowMowKhaoUrl,
+        'data': {'_token':csrftLarVe},
+        'success': function (data) {
+            //console.log(data);
+            var salesTotal=parseFloat(data.salesTotal).toFixed(2);
+            var totalTax=parseFloat(data.totalTax).toFixed(2);
+            var opening_amount=parseFloat(data.opening_amount).toFixed(2);
+            var totalPayout=parseFloat(data.totalPayout).toFixed(2);
+            var totalbuyback=parseFloat(data.buyback).toFixed(2);
+
+            var currectStoreTotal=(salesTotal-0)+(opening_amount-0)+(totalPayout-0)-totalbuyback;
+
+                currectStoreTotal=parseFloat(currectStoreTotal).toFixed(2);
+
+            $("#storeCloseDate").html(data.opening_time);
+            $("#storeCloseTotalCollection").html(salesTotal);
+            $("#storeCloseOpeningAmount").html(opening_amount);
+            $("#storeCloseTaxAmount").html(totalTax);
+            $("#totalPayout").html(totalPayout);
+            $("#buybackStoreClosingAmount").html(totalbuyback);
+
+            //storeCloseTableTenderList
+            var salesDataTendr=data.totalSalesTender;
+            var salesDataTendrLength=salesDataTendr.length;
+            if(salesDataTendrLength>0)
+            {
+                var htmlSalesString='';
+                $("#storeCloseTableTenderList").html(htmlSalesString);
+                $.each(salesDataTendr,function(key,row){
+                    //console.log(row);
+                    htmlSalesString+=storecloseLTTheme(row.tender_name,row.tender_total);
+                });
+                $("#storeCloseTableTenderList").html(htmlSalesString);
+            }
+
+            $("#currectStoreTotal").html(currectStoreTotal);
+
+            $("#openStoreMsg").html("");
+        }
+    });
+    //------------------------Ajax Customer End---------------------------//
+}
+
+
+
 
 function checkerCounterST()
 {
@@ -336,15 +505,32 @@ function genarateSalesTotalCart()
         $("#posCartSummary tr:eq(4)").find("td:eq(2)").children("span").html(paid);
         $("#posCartSummary tr:eq(5)").find("td:eq(2)").children("span").html(newdues);
 
-        $("#cartTotalAmount").html(newdues);
+        if(parseFloat(paid)>0){ $("#posCartSummary tr:eq(4)").show(); }
+        else{ $("#posCartSummary tr:eq(4)").hide(); }
+
+        if(parseFloat(newTotalTax)>0){ $("#posCartSummary tr:eq(1)").show(); }
+        else{ $("#posCartSummary tr:eq(1)").hide(); }
+
+        if(parseFloat(newDiscount)>0){ $("#posCartSummary tr:eq(2)").show(); }
+        else{ $("#posCartSummary tr:eq(2)").hide(); }
+
+        $("#cartTotalAmount").html(newPriceTotal);
 
         $("input[name=amount_to_pay]").val(newdues);
         console.log($("input[name=amount_to_pay]").val());
         $("#prmDue").html(newdues);
         $("#totalCartDueToPay").html(newdues);
+
+        $(".posQL").show();
+
+        $(".emptCRTMSG").show();
     }
     else
     {
+        $("#posCartSummary tr:eq(1)").hide();
+        $("#posCartSummary tr:eq(2)").hide();
+        $("#posCartSummary tr:eq(4)").hide();
+
         $("#posCartSummary tr:eq(0)").find("td:eq(2)").children("span").html("0.00");
         $("#posCartSummary tr:eq(1)").find("td:eq(2)").children("span").html("0.00");
         $("#posCartSummary tr:eq(2)").find("td:eq(2)").children("span").html("0.00");
@@ -357,6 +543,12 @@ function genarateSalesTotalCart()
         $("input[name=amount_to_pay]").val("0.00");
         $("#prmDue").html("0.00");
         $("#totalCartDueToPay").html("0.00");
+
+        $(".posQL").hide();
+
+
+        $("#dataCart").html('<tr class="emptCRTMSG"><td colspan="5"><h3 style="height: 50px; text-align: center; line-height: 50px;">No Item on Cart</h3></td></tr>');
+        $(".emptCRTMSG").show();
     }
 
 
@@ -435,7 +627,7 @@ function delposSinleRow(ID)
             'data': {'_token':csrftLarVe},
             'success': function (data) {
                 //tmp = data;
-                console.log("Delete Processing : "+data);
+                $("#cartMessageProShow").html(successMessage("Item is deleted successfully.")); 
             }
         });
         //------------------------Ajax POS End---------------------------//
@@ -502,6 +694,7 @@ function loadCatProduct(cid)
 
 function add_pos_cart(ProductID,ProductPrice,ProductName,repairJson=null,dataType=null)
 {
+        $(".emptCRTMSG").remove();
         $("#cartMessageProShow").html(loadingOrProcessing("Processing, Please Wait....!!!!"));
         var ProductID=parseInt(ProductID);
         if(ProductID<1)
@@ -509,6 +702,8 @@ function add_pos_cart(ProductID,ProductPrice,ProductName,repairJson=null,dataTyp
             $("#cartMessageProShow").html(warningMessage("Invalid Product, Please Try Again.")); 
             return false;
         }
+
+        var rowTypeforMin=$("#dataCart tr[id="+ProductID+"]").children('td:eq(1)').children('div').children('span:eq(0)').children('i').attr('class');
 
         var taxRate=taxRatePOSCartInit;
 
@@ -523,30 +718,75 @@ function add_pos_cart(ProductID,ProductPrice,ProductName,repairJson=null,dataTyp
                      $("#cartMessageProShow").html(warningMessage("Failed, Product in edit mode.")); 
                      return false;
                 }
-                ProductPrice=parseFloat($("#dataCart tr[id="+ProductID+"]").find("td:eq(2)").children("span").html()).toFixed(2);
                 
-                var ExQuantity=$("#dataCart tr[id="+ProductID+"]").find("td:eq(1)").html();
+                var ProductPrice=parseFloat($("#dataCart tr[id="+ProductID+"]").find("td:eq(2)").children("span").html()).toFixed(2);
+                
+                var ExQuantity=$("#dataCart tr[id="+ProductID+"]").find("td:eq(1)").children('div').children('input').val();
+
+                console.log('WOrking' ,ExQuantity);
+
+                if(ExQuantity==1)
+                {
+                    console.log('WOrking did' ,ExQuantity);
+                    $("#dataCart tr[id="+ProductID+"]").children('td:eq(1)').children('div').children('span:eq(0)').children('i').attr('class','icon-minus');
+                }
+
                 var NewQuantity=(ExQuantity-0)+(1-0);
                 var NewPrice=(ProductPrice*NewQuantity).toFixed(2);
                 var taxAmount=parseFloat((NewPrice*taxRate)/100).toFixed(2);
-                $("#dataCart tr[id="+ProductID+"]").find("td:eq(1)").html(NewQuantity);
-                $("#dataCart tr[id="+ProductID+"]").find("td:eq(3)").children("span").html(NewPrice);
+                $("#dataCart tr[id="+ProductID+"]").find("td:eq(1)").children('div').children('input').val(NewQuantity);
+                $("#dataCart tr[id="+ProductID+"]").find("td:eq(3)").children("span").html(parseFloat(NewPrice).toFixed(2));
                 $("#dataCart tr[id="+ProductID+"]").find("td:eq(2)").attr("data-tax",taxAmount);
 
 
             }
             else
             {
+
+
+
+                var quantityPlaceFUnc="javascript:add_pos_cart("+ProductID+","+ProductPrice+",'"+ProductName+"');";
+                var quantityPlace="";
+                    quantityPlace+='<div class="input-group" style="border-spacing: 0px !important;">';
+                    quantityPlace+='  <span class="input-group-addon dedmoreqTv4Ex">';
+                    quantityPlace+='     <i class="icon-remove"></i>';
+                    quantityPlace+='  </span>';
+                    quantityPlace+='  <input style="text-align: center;" type="text" class="form-control directquantitypos" value="1">';
+                    quantityPlace+='  <span onlclick="'+quantityPlaceFUnc+'" class="input-group-addon addmoreqTv4">';
+                    quantityPlace+='     <i class="icon-plus addmoreqTv4Ex"></i>';
+                    quantityPlace+='  </span>';
+                    quantityPlace+='</div>';
+
                 var taxAmount=parseFloat(((ProductPrice*1)*taxRate)/100).toFixed(2);
-                var strHTML='<tr id="'+ProductID+'"><td>'+ProductName+'</td><td  ondblclick="liveRowCartEdit('+ProductID+')">1</td><td  ondblclick="liveRowCartEdit('+ProductID+')" data-tax="'+taxAmount+'"  data-price="'+ProductPrice+'">$<span>'+ProductPrice+'</span></td><td ondblclick="liveRowCartEdit('+ProductID+')">$<span>'+ProductPrice+'</span></td><td style="width: 81px;"><a  href="javascript:editRowLive('+ProductID+');"  title="Edit" class="btn btn-sm btn-outline-green hiddenLiveSave" style="margin-right:2px;  display: none;"><i class="icon-pencil22"></i></a><a href="javascript:delposSinleRow('+ProductID+');" title="Delete" class="btn btn-sm btn-outline-danger"><i class="icon-cross"></i></a></td></tr>';
+                var strHTML='<tr id="'+ProductID+'"><td style="line-height: 35px;">'+ProductName+'</td>';
+                    strHTML+='<td >'+quantityPlace+'</td>';
+                    strHTML+='<td  class="priceEdit"  style="line-height: 35px;" data-tax="'+taxAmount+'"  data-price="'+ProductPrice+'">$<span>'+ProductPrice+'</span></td>';
+                    strHTML+='<td  class="priceEdit"  style="line-height: 35px;">$<span>'+parseFloat(ProductPrice).toFixed(2)+'</span></td>';
+                    strHTML+='</tr>';
 
                 $("#dataCart").append(strHTML);
             }
         }
         else
         {
+            var quantityPlaceFUnc="javascript:add_pos_cart("+ProductID+","+ProductPrice+",'"+ProductName+"');";
+            var quantityPlace='';
+                quantityPlace+='<div class="input-group" style="border-spacing: 0px !important;">';
+                quantityPlace+='  <span class="input-group-addon dedmoreqTv4Ex">';
+                quantityPlace+='     <i class="icon-remove"></i>';
+                quantityPlace+='  </span>';
+                quantityPlace+='  <input style="text-align: center; " type="text" class="form-control directquantitypos" value="1">';
+                quantityPlace+='  <span onlclick="'+quantityPlaceFUnc+'"  class="input-group-addon addmoreqTv4">';
+                quantityPlace+='     <i class="icon-plus addmoreqTv4Ex"></i>';
+                quantityPlace+='  </span>';
+                quantityPlace+='</div>';
+
             var taxAmount=parseFloat(((ProductPrice*1)*taxRate)/100).toFixed(2);
-            var strHTML='<tr id="'+ProductID+'"><td>'+ProductName+'</td><td ondblclick="liveRowCartEdit('+ProductID+')">1</td><td  ondblclick="liveRowCartEdit('+ProductID+')" data-tax="'+taxAmount+'"  data-price="'+ProductPrice+'">$<span>'+ProductPrice+'</span></td><td ondblclick="liveRowCartEdit('+ProductID+')">$<span>'+ProductPrice+'</span></td><td style="width: 81px;"><a  href="javascript:editRowLive('+ProductID+');" title="Edit" class="btn btn-sm btn-outline-green hiddenLiveSave" style="margin-right:2px;  display: none;"><i class="icon-pencil22"></i></a><a href="javascript:delposSinleRow('+ProductID+');" title="Delete" class="btn btn-sm btn-outline-danger"><i class="icon-cross"></i></a></td></tr>';
+            var strHTML='<tr id="'+ProductID+'"><td style="line-height: 35px;">'+ProductName+'</td>';
+                strHTML+='<td style="line-height: 35px;">'+quantityPlace+'</td>';
+                strHTML+='<td  class="priceEdit"  style="line-height: 35px;" data-tax="'+taxAmount+'"  data-price="'+ProductPrice+'">$<span>'+ProductPrice+'</span></td>';
+                strHTML+='<td  class="priceEdit"  style="line-height: 35px;">$<span>'+parseFloat(ProductPrice).toFixed(2)+'</span></td>';
+                strHTML+='</tr>';
 
             $("#dataCart").append(strHTML);
         }
@@ -590,7 +830,384 @@ function add_pos_cart(ProductID,ProductPrice,ProductName,repairJson=null,dataTyp
 
 }
 
+function add_pos_quantity_cart(ProductID,ProductPrice,quantity)
+{
+        $(".emptCRTMSG").remove();
+        $("#cartMessageProShow").html(loadingOrProcessing("Processing, Please Wait....!!!!"));
+        var ProductID=parseInt(ProductID);
+        if(ProductID<1)
+        {
+            $("#cartMessageProShow").html(warningMessage("Invalid Product, Please Try Again.")); 
+            return false;
+        }
+
+        var taxRate=taxRatePOSCartInit;
+
+        if($("#dataCart tr").length > 0)
+        {
+
+            if($("#dataCart tr[id="+ProductID+"]").length)
+            {
+
+                if($("#dataCart tr[id="+ProductID+"]").find("td:eq(2)").children("span").children("input").length)
+                {
+                     $("#cartMessageProShow").html(warningMessage("Failed, Product in edit mode.")); 
+                     return false;
+                }
+                
+                var ProductPrice=parseFloat($("#dataCart tr[id="+ProductID+"]").find("td:eq(2)").children("span").html()).toFixed(2);
+
+                if(quantity==1)
+                {
+                    $("#dataCart tr[id="+ProductID+"]").children('td:eq(1)').children('div').children('span:eq(0)').html('<i class="icon-remove"></i>');
+                }
+                else
+                {
+                    $("#dataCart tr[id="+ProductID+"]").children('td:eq(1)').children('div').children('span:eq(0)').html('<i class="icon-minus"></i>');
+                }
+                
+                //var ExQuantity=$("#dataCart tr[id="+ProductID+"]").find("td:eq(1)").children('div').children('input').val();
+                var NewQuantity=quantity;
+                var NewPrice=(ProductPrice*NewQuantity).toFixed(2);
+                var taxAmount=parseFloat((NewPrice*taxRate)/100).toFixed(2);
+                $("#dataCart tr[id="+ProductID+"]").find("td:eq(1)").children('div').children('input').val(NewQuantity);
+                $("#dataCart tr[id="+ProductID+"]").find("td:eq(3)").children("span").html(parseFloat(NewPrice).toFixed(2));
+                $("#dataCart tr[id="+ProductID+"]").find("td:eq(2)").attr("data-tax",taxAmount);
+
+
+            }
+        }
+        
+        genarateSalesTotalCart();
+        $("#cartMessageProShow").html(loadingOrProcessing("Updating cart, Please Wait...!!!!")); 
+        
+            //------------------------Ajax POS Start-------------------------//
+        var AddPOSUrl=editRowLiveAddPOSUrl+"/"+ProductID+"/"+quantity+"/"+ProductPrice;
+        $.ajax({
+            'async': false,
+            'type': "POST",
+            'global': false,
+            'dataType': 'json',
+            'url': AddPOSUrl,
+            'data': {'_token':csrftLarVe},
+            'success': function (data) {
+                console.log("Live Edit Processing : "+data);
+                $("#cartMessageProShow").html(successMessage("Cart is updated successfully")); 
+            }
+        });
+        //------------------------Ajax POS End---------------------------//
+
+}
+
+var typingTimer;                //timer identifier
+var doneTypingInterval = 1000;  //time in ms, 5 second for example
+
 $(document).ready(function(){
+
+        $('body').on('click', '.dedmoreqTv4Ex', function() {
+            var product_ex=$('.directquantitypos').val();
+
+            if(product_ex==1)
+            {
+                $("#cartMessageProShow").html(loadingOrProcessing("Processing, Please Wait....!!!!"));
+                var product_id=$(this).parent().parent().parent().attr('id');
+                delposSinleRow(product_id);
+                return false;
+            }
+            else if(product_ex==2)
+            {
+                $("#cartMessageProShow").html(loadingOrProcessing("Processing, Please Wait....!!!!"));
+                $(this).parent().children('span:eq(0)').html('<i class="icon-remove"></i>');
+            }
+
+            var product_quantity=product_ex-1;
+            $('.directquantitypos').val(product_quantity);
+
+            $("#cartMessageProShow").html(loadingOrProcessing("Processing, Please Wait....!!!!"));
+            var product_id=$(this).parent().parent().parent().attr('id');
+            var product_name=$(this).parent().parent().parent().children('td:eq(0)').html();
+            var product_price=$(this).parent().parent().parent().children('td:eq(2)').attr('data-price');
+            
+
+            clearTimeout(typingTimer);
+            if ($('.directquantitypos').val) {
+                typingTimer = setTimeout(function(){
+                    
+                    console.log(product_id);
+                    console.log(product_quantity);
+                    console.log(product_name);
+                    console.log(product_price);
+
+                    add_pos_quantity_cart(product_id,product_price,product_quantity);
+
+                }, doneTypingInterval);
+            }
+
+            
+        });
+
+        $('body').on('click', '.addmoreqTv4', function() {
+            var product_ex=$('.directquantitypos').val();
+            if(product_ex==1)
+            {
+                $("#cartMessageProShow").html(loadingOrProcessing("Processing, Please Wait....!!!!"));
+                $(this).parent().children('span:eq(0)').html('<i class="icon-minus"></i>');
+            }
+
+
+            var product_quantity=(product_ex-0)+(1-0);
+            $('.directquantitypos').val(product_quantity);
+
+            $("#cartMessageProShow").html(loadingOrProcessing("Processing, Please Wait....!!!!"));
+            var product_id=$(this).parent().parent().parent().attr('id');
+            var product_name=$(this).parent().parent().parent().children('td:eq(0)').html();
+            var product_price=$(this).parent().parent().parent().children('td:eq(2)').attr('data-price');
+            
+
+            clearTimeout(typingTimer);
+            if ($('.directquantitypos').val) {
+                typingTimer = setTimeout(function(){
+                    
+                    console.log(product_id);
+                    console.log(product_quantity);
+                    console.log(product_name);
+                    console.log(product_price);
+
+                    add_pos_quantity_cart(product_id,product_price,product_quantity);
+
+                }, doneTypingInterval);
+            }
+
+            
+        });
+
+        $('body').on('keyup', '.directquantitypos', function() {
+            $("#cartMessageProShow").html(loadingOrProcessing("Processing, Please Wait....!!!!"));
+            var product_id=$(this).parent().parent().parent().attr('id');
+            var product_name=$(this).parent().parent().parent().children('td:eq(0)').html();
+            var product_price=$(this).parent().parent().parent().children('td:eq(2)').attr('data-price');
+            var product_quantity=$(this).val();
+
+            clearTimeout(typingTimer);
+            if ($(this).val) {
+                typingTimer = setTimeout(function(){
+                    
+                    console.log(product_id);
+                    console.log(product_quantity);
+                    console.log(product_name);
+                    console.log(product_price);
+
+                    add_pos_quantity_cart(product_id,product_price,product_quantity);
+
+                }, doneTypingInterval);
+            }
+
+            
+
+        });
+
+        $('body').on('dblclick', '.priceEdit', function() {
+            var product_id=$(this).parent().attr('id');
+            var product_name=$(this).parent().children('td:eq(0)').html();
+            var product_price=$(this).parent().children('td:eq(2)').attr('data-price');
+            var product_quantity=$(this).parent().children('td:eq(1)').children('div').children('input').val();
+
+            $('#loginApprovalForManagerAndAdmin').modal('show');
+
+            $("#ma_product_id").val(product_id);
+
+            console.log('Product ID=',product_id);
+            console.log('product_name=',product_name);
+            console.log('product_price=',product_price);
+            console.log('product_quantity=',product_quantity);
+            console.log('dblclick working');
+        });      
+
+    
+  
+
+        $('body').on('click', '.verify_ma', function() {
+            var ma_email_address=$('input[name=ma_email_address]').val();
+            var ma_password=$('input[name=ma_password]').val();
+
+            
+            
+            $('.verify_ma').html('<i class="icon-spinner12 spinner"></i> Verify Credentials');
+
+            if(ma_email_address.length==0)
+            {
+                $('.verify_ma').html('<i class="icon-check2"></i> Verify Credentials');
+                $(".ma_verify_msg").html(warningMessage("Enter email address."));
+                return false;
+            }            
+
+            if(ma_password.length==0)
+            {
+                $('.verify_ma').html('<i class="icon-check2"></i> Verify Credentials');
+                $(".ma_verify_msg").html(warningMessage("Enter password."));
+                return false;
+            }
+
+            console.log('ma_email_address ID=',ma_email_address);
+            console.log('ma_password=',ma_password);
+
+            $(this).html('<i class="icon-spinner12 spinner"></i> Verify Credentials');
+
+            $(".ma_verify_msg").html(loadingOrProcessing("Verifying login info, Please wait...")); 
+        
+            //------------------------Ajax POS Start-------------------------//
+            $.ajax({
+                'async': false,
+                'type': "POST",
+                'global': false,
+                'dataType': 'json',
+                'url': verifyManagerLogin,
+                'data': {'email':ma_email_address,'password':ma_password,'remember':1,'_token':csrftLarVe},
+                'success': function (data) {
+                    $('.verify_ma').html('<i class="icon-check2"></i> Verify Credentials');
+                    if(data.auth==true)
+                    {
+                        var product_id=$("#ma_product_id").val();
+                        $("#map_product_id").val(product_id);
+
+                        var product_name=$("#dataCart tr[id="+product_id+"]").find("td:eq(0)").html();
+                        var product_price=$("#dataCart tr[id="+product_id+"]").find("td:eq(2)").attr('data-price');
+                        var product_quantity=$("#dataCart tr[id="+product_id+"]").find("td:eq(1)").children('div').children('input').val();
+                         //
+
+                         $("#map_product").val(product_name);
+                         $("#map_price").val(product_price);
+                         $("#map_quantity").val(product_quantity);
+
+                        $('input[name=ma_email_address]').val("");
+                        $('input[name=ma_password]').val("");
+                        $("#loginApprovalForManagerAndAdmin").modal('hide');
+                        $('#ma_product_edit').modal('show');
+                        $(".ma_verify_msg").html(successMessage("Verification done, Loading edit window."));
+                    }
+                    else
+                    {
+                        $(".ma_verify_msg").html(warningMessage("Wrong credential, Verification Failed."));
+                    }
+                    console.log("Info : "+data);
+                     
+                }
+            });
+            //------------------------Ajax POS End---------------------------//
+
+        });
+
+        $('body').on('click', '.verify_map', function() {
+
+            $('.verify_map').html('<i class="icon-spinner12 spinner"></i> Updating, Please wait..');
+
+            $(".map_verify_msg").html(loadingOrProcessing("Updating cart info, Please wait...")); 
+
+            var product_id=$("#map_product_id").val();
+            var product_name=$("#map_product").val();
+            var map_price=$("#map_price").val();
+            var map_quantity=$("#map_quantity").val();
+
+            if(map_price.length==0)
+            {
+                $('.verify_map').html('<i class="icon-check2"></i> Update');
+                $(".map_verify_msg").html(warningMessage("Enter Price."));
+                return false;
+            }    
+
+            if(map_quantity.length==0)
+            {
+                $('.verify_map').html('<i class="icon-check2"></i> Update');
+                $(".map_verify_msg").html(warningMessage("Enter Quantity."));
+                return false;
+            }       
+
+            $('.verify_map').html('<i class="icon-spinner12 spinner"></i> Updating, Please wait..');
+
+            $(".map_verify_msg").html(loadingOrProcessing("Updating cart info, Please wait...")); 
+
+            var ProductID=parseInt(product_id);
+            if(ProductID<1)
+            {
+                $("#cartMessageProShow").html(warningMessage("Invalid Product, Please Try Again.")); 
+                return false;
+            }
+
+            var taxRate=taxRatePOSCartInit;
+
+            if($("#dataCart tr").length > 0)
+            {
+
+                if($("#dataCart tr[id="+ProductID+"]").length)
+                {
+
+                    if($("#dataCart tr[id="+ProductID+"]").find("td:eq(2)").children("span").children("input").length)
+                    {
+                         $("#cartMessageProShow").html(warningMessage("Failed, Product in edit mode.")); 
+                         return false;
+                    }
+                    
+                    var ProductPrice=parseFloat(map_price).toFixed(2);
+
+                    if(map_quantity==1)
+                    {
+                        $("#dataCart tr[id="+ProductID+"]").children('td:eq(1)').children('div').children('span:eq(0)').html('<i class="icon-remove"></i>');
+                    }
+                    else
+                    {
+                        $("#dataCart tr[id="+ProductID+"]").children('td:eq(1)').children('div').children('span:eq(0)').html('<i class="icon-minus"></i>');
+                    }
+                    
+                    //var ExQuantity=$("#dataCart tr[id="+ProductID+"]").find("td:eq(1)").children('div').children('input').val();
+                    var NewQuantity=map_quantity;
+                    var NewPrice=(ProductPrice*NewQuantity).toFixed(2);
+                    var taxAmount=parseFloat((NewPrice*taxRate)/100).toFixed(2);
+                    $("#dataCart tr[id="+ProductID+"]").find("td:eq(1)").children('div').children('input').val(NewQuantity);
+                    $("#dataCart tr[id="+ProductID+"]").find("td:eq(2)").children("span").html(parseFloat(ProductPrice).toFixed(2));
+                    $("#dataCart tr[id="+ProductID+"]").find("td:eq(3)").children("span").html(parseFloat(NewPrice).toFixed(2));
+                    $("#dataCart tr[id="+ProductID+"]").find("td:eq(2)").attr("data-tax",taxAmount);
+
+
+                }
+            }
+            
+            genarateSalesTotalCart();
+
+            var AddPOSUrl=editRowLiveAddPOSUrl+"/"+product_id+"/"+map_quantity+"/"+map_price;
+            $.ajax({
+                'async': false,
+                'type': "POST",
+                'global': false,
+                'dataType': 'json',
+                'url': AddPOSUrl,
+                'data': {'_token':csrftLarVe},
+                'success': function (data) {
+                    $('.verify_map').html('<i class="icon-check2"></i> Update');
+                    $('#ma_product_edit').modal('hide');
+                    $("#cartMessageProShow").html(successMessage("Cart is updated successfully")); 
+                }
+            });
+               
+
+        });    
+
+        /*$('.addmoreqTv4Ex').click(function(){
+
+            var product_id=$(this).parent().parent().parent().parent().attr('id');
+            var product_name=$(this).parent().parent().parent().parent().children('td:eq(0)').html();
+            var product_price=$(this).parent().parent().parent().parent().children('td:eq(2)').attr('data-price');
+
+            add_pos_cart(product_id,product_price,product_name);
+        });*/
+
+        /*$('.addmoreqTv4').click(function(){
+
+            var product_id=$(this).parent().parent().parent().attr('id');
+            var product_name=$(this).parent().parent().parent().children('td:eq(0)').html();
+            var product_price=$(this).parent().parent().parent().children('td:eq(2)').attr('data-price');
+
+            add_pos_cart(product_id,product_price,product_name);
+        });*/
 
         $("#card-number-prototype").keyup(function(){
             console.log($(this).val());

@@ -77,9 +77,11 @@ Route::group(['middleware' => 'auth'], function () {
 
 	//======================= Paypal Start =======================//
 
-Route::get('/paypal/account/setting', 'InvoiceController@paypalAccountSettings');
-Route::post('/paypal/account/setting', 'InvoiceController@paypalAccountSaveSettings');
-Route::post('/paypal/account/update/setting', 'InvoiceController@paypalAccountSaveSettings');
+	Route::post('/product/settings', 'ProductSettingsController@store');
+	Route::post('/ma/verify', 'InvoiceController@verifyMALogin');
+	Route::get('/paypal/account/setting', 'InvoiceController@paypalAccountSettings');
+	Route::post('/paypal/account/setting', 'InvoiceController@paypalAccountSaveSettings');
+	Route::post('/paypal/account/update/setting', 'InvoiceController@paypalAccountSaveSettings');
 
 //====================== Paypal End ===========================//
 	Route::post('/chat/message/send', 'ChatController@store');

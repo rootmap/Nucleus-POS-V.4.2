@@ -12,14 +12,14 @@
 </style>
 
 
-<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 button button6 checkDrawer" @if($userguideInit==1) data-step="13" data-intro="When you click Make Payment button then popup new payment screen to pay via customer credit card/other card or paypal or cash." @endif>
+<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 button posQL button6 checkDrawer" @if($userguideInit==1) data-step="13" data-intro="When you click Make Payment button then popup new payment screen to pay via customer credit card/other card or paypal or cash." @endif>
     
     <button id="btn-payment-modal_init" data-toggle="modal" data-target="#payModal"  type="button" class="btn btn-green btn-darken-2 btn-responsive btn1  spfontcartfotter" style="font-size: 15px !important; font-weight: 600;">     
        <i class="icon-cash"></i> Make Payment
     </button>
 </div>
 
-<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 button button1 btn-group checkDrawer" @if($userguideInit==1) data-step="15" data-intro="After paid payment then click print invoice button and you print this invoice." @endif>
+<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 button posQL button1 btn-group checkDrawer" @if($userguideInit==1) data-step="15" data-intro="After paid payment then click print invoice button and you print this invoice." @endif>
     <button  type="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-green btn-darken-3 btn-responsive btn1  dropdown-toggle spfontcartfotter" style="font-size: 15px !important; font-weight: 600;"><i class="icon-printer4"></i> Print Invoice &nbsp;</button>      
         <div class="dropdown-menu">
             <a class="dropdown-item printncompleteSale" data-id="pos" href="javascript:void(0);"><i class="icon-printer4"></i> Default Print</a>
@@ -31,7 +31,7 @@
 
 </div>   
 
-<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 button button6 checkDrawer"  @if($userguideInit==1) data-step="14" data-intro="After paid payment then click complete sale button and create a new invoice." @endif>
+<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 button posQL button6 checkDrawer"  @if($userguideInit==1) data-step="14" data-intro="After paid payment then click complete sale button and create a new invoice." @endif>
     <button id="completesale" type="button" class="btn btn-block btn1 btn-green btn-darken-4 btn-responsive btn1 spfontcartfotter" style="font-size: 15px !important; font-weight: 600;">     
        <i class="icon-circle-check"></i>  Complete Sale
     </button>

@@ -6,6 +6,7 @@ use App\Product;
 use App\RetailPosSummary;
 use App\RetailPosSummaryDateWise;
 use App\ProductStockin;
+use App\ProductSettings;
 use App\TicketProblem;
 use Illuminate\Http\Request;
 use Excel;
@@ -24,9 +25,21 @@ class ProductController extends Controller
     public function index()
     {
         $existing_cat=Category::where('store_id',$this->sdc->storeID())->get();
-        $tab=Product::where('store_id',$this->sdc->storeID())->where('general_sale',0)->orderBy('id','DESC')
-                     ->take(100)->get();
-        return view('apps.pages.product.product',['dataTable'=>$tab,'existing_cat'=>$existing_cat]);
+        //$tab=Product::where('store_id',$this->sdc->storeID())->where('general_sale',0)->orderBy('id','DESC')
+                     //->take(100)->get();
+        //return view('apps.pages.product.product',['dataTable'=>$tab,'existing_cat'=>$existing_cat]);
+        $chk=ProductSettings::where('store_id',$this->sdc->storeID())->count();
+        if($chk==0)
+        {
+            return view('apps.pages.product.product',['existing_cat'=>$existing_cat]);
+        }
+        else
+        {
+            $chkPS=ProductSettings::where('store_id',$this->sdc->storeID())->first();
+            return view('apps.pages.product.product',['chkPS'=>$chkPS,'existing_cat'=>$existing_cat]);
+        }
+
+        
     }
 
     /**
@@ -174,6 +187,28 @@ class ProductController extends Controller
             'cost'=>'required|numeric',
         ]);
 
+        $chk=ProductSettings::where('store_id',$this->sdc->storeID())->count();
+
+        $pro_image=0;
+
+        if($chk>0)
+        {
+            $chkPS=ProductSettings::where('store_id',$this->sdc->storeID())->first();
+            $pro_image=$chkPS->product_image_status;
+        }
+
+        $filename_slider_0='';
+        if($pro_image==1)
+        {
+            if ($request->hasFile('product_image')) {
+                $img_slider = $request->file('product_image');
+                $upload_slider = 'upload/product';
+                $filename_slider_0 = time() . '.' . $img_slider->getClientOriginalExtension();
+                $img_slider->move($upload_slider, $filename_slider_0);
+            }
+        }
+        
+
         $tabCount=Product::where('name',$request->name)
                          ->where('category_id',$request->category_id)
                          ->where('store_id',$this->sdc->storeID())
@@ -201,6 +236,10 @@ class ProductController extends Controller
         $tab->quantity=$request->quantity;
         $tab->price=$request->price;
         $tab->cost=$request->cost;
+        if($pro_image==1)
+        {
+            $tab->image=$filename_slider_0;
+        }
         $tab->store_id=$this->sdc->storeID();
         $tab->created_by=$this->sdc->UserID();
         $tab->save();
@@ -930,8 +969,17 @@ class ProductController extends Controller
         $existing_cat=Category::where('store_id',$this->sdc->storeID())->get();
         $tab=$product::find($id);
         //dd($tab);
-        $tabData=$product::where('store_id',$this->sdc->storeID())->get();
-        return view('apps.pages.product.product',['existing_cat'=>$existing_cat,'dataRow'=>$tab,'dataTable'=>$tabData,'edit'=>true]);
+        //$tabData=$product::where('store_id',$this->sdc->storeID())->get();
+        $chk=ProductSettings::where('store_id',$this->sdc->storeID())->count();
+        if($chk==0)
+        {
+            return view('apps.pages.product.product',['existing_cat'=>$existing_cat,'dataRow'=>$tab,'edit'=>true]);
+        }
+        else
+        {
+            $chkPS=ProductSettings::where('store_id',$this->sdc->storeID())->first();
+            return view('apps.pages.product.product',['existing_cat'=>$existing_cat,'dataRow'=>$tab,'chkPS'=>$chkPS,'edit'=>true]);
+        }
     }
 
     /**

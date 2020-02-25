@@ -72,10 +72,20 @@ class InvoiceController extends Controller
 
         $this->sdc = new StaticDataController(); 
         $this->authorizenet = new AuthorizeNetPaymentController(); 
+    }
 
+    public function verifyMALogin(Request $request)
+    {
+        $auth = false;
+        $credentials = $request->only('email', 'password');
 
+        if (\Auth::attempt($credentials,$request->has('remember'))) {
+            $auth = true; // Success
+        }
 
-        
+        return response()->json([
+                'auth' => $auth
+        ]);
     }
 
     public function salesPartialFromSalesReport(Request $request,$sales_id=0)

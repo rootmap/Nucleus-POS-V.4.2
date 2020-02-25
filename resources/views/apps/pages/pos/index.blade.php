@@ -54,20 +54,20 @@
                 </div>
             </div>
 
-                <div class="col-md-3">
-                    <div class="card mb-1">
-                        <div class="card-body collapse in">
-                            <div class="bg-green bg-lighten-4 height-10"></div>
-                            <div class="p-1">
-                                <p class="text-xs-left mb-0">
-                                    <a href="javascript:void(0);"  data-toggle="modal" data-target="#General_Sale" style="text-decoration: none;">
-                                        <i class="icon-database"></i> General Sale
-                                    </a>
-                                </p>         
-                            </div>
-                        </div>    
-                    </div>
+            <div class="col-md-3">
+                <div class="card mb-1">
+                    <div class="card-body collapse in">
+                        <div class="bg-green bg-lighten-4 height-10"></div>
+                        <div class="p-1">
+                            <p class="text-xs-left mb-0">
+                                <a href="javascript:void(0);"  data-toggle="modal" data-target="#General_Sale" style="text-decoration: none;">
+                                    <i class="icon-database"></i> General Sale
+                                </a>
+                            </p>         
+                        </div>
+                    </div>    
                 </div>
+            </div>
 
             @if(isset($catInfo) && count($catInfo)>0)
                 <?php $i=1; ?>
@@ -325,31 +325,70 @@
             <div class="card-body collapse in" @if($userguideInit==1) data-step="11" data-intro="In this section, you see all the product you added also you can see the total, paid amount and due amount. you must be a select customer then you can access other action." @endif>
                 <div class="card-blockf">
                     <div class="card-text">
+                        <style type="text/css">
+                            table tbody tr td
+                            {
+                                line-height: 35px;
+                                font-weight: 600;
+                                font-family: Arial, Helvetica, sans-serif;
+                                font-size: 12px;
+                            }
+
+                            table tbody tr td div span
+                            {
+                                cursor: pointer;
+                            }
+
+                            table tfoot tr td
+                            {
+                                font-weight: 600;
+                                font-family: Arial, Helvetica, sans-serif;
+                                font-size: 14px;
+                            }
+
+                            table thead tr th
+                            {
+                                font-weight: 600;
+                                font-family: Arial, Helvetica, sans-serif;
+                                font-size: 16px;
+                            }
+                        </style>
                         <div class="table-responsive">
-                            <table class="table table-hover mb-0">
+                            <table class="table mb-0">
                                 <thead>
                                     <tr>
                                         <th>Product</th>
-                                        <th>Qty</th>
+                                        <th align="center" style="text-align: center; width: 150px;">Qty</th>
                                         <th>Price</th>
                                         <th>Total</th>
-                                        <th width="100">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody id="dataCart" class="">
                                     @if(isset($cart->items))
-                                    @foreach($cart->items as $index=>$row)
-                                    <tr id="{{$row['item_id']}}">
-                                        <td>{{$row['item']}}</td>
-                                        <td ondblclick="liveRowCartEdit({{$row['item_id']}})">{{$row['qty']}}</td>
-                                        <td ondblclick="liveRowCartEdit({{$row['item_id']}})" data-tax="{{$row['tax']}}"  data-price="{{$row['unitprice']}}">$<span>{{$row['unitprice']}}</span></td>
-                                        <td ondblclick="liveRowCartEdit({{$row['item_id']}})">$<span>{{$row['price']}}</span></td>
-                                        <td style="width: 83px;">
-                                            <a href="javascript:editRowLive({{$row['item_id']}});" title="Edit" class="btn btn-sm btn-outline-green hiddenLiveSave" style="margin-right:2px; display: none;"><i class="icon-pencil22"></i></a>
-                                            <a href="javascript:delposSinleRow({{$row['item_id']}});" title="Delete" class="btn btn-sm btn-outline-danger"><i class="icon-cross"></i></a>
-                                        </td>
-                                    </tr>
-                                    @endforeach
+                                        @if(count($cart->items)>0)
+                                            @foreach($cart->items as $index=>$row)
+                                            <tr id="{{$row['item_id']}}">
+                                                <td valign="center">{{$row['item']}}</td>
+                                                <td>
+                                                    <div class="input-group" style="border-spacing: 0px !important;">
+                                                        <span class="input-group-addon dedmoreqTv4Ex"><i class="{{($row['qty']==1)?'icon-remove':'icon-minus'}}"></i></span>
+                                                        <input style="text-align: center;" type="text" class="form-control directquantitypos" placeholder="Addon On Both Side" aria-label="Amount (to the nearest dollar)" value="{{$row['qty']}}">
+                                                        <span class="input-group-addon addmoreqTv4"><i class="icon-plus"></i></span>
+                                                    </div>
+                                                </td>
+                                                <td class="priceEdit" valign="center"  style="line-height: 35px;" data-tax="{{$row['tax']}}"  data-price="{{$row['unitprice']}}">$<span>{{number_format($row['unitprice'],2)}}</span></td>
+                                                <td  class="priceEdit" valign="center"  style="line-height: 35px;">$<span>{{number_format($row['price'],2)}}</span></td>
+                                            </tr>
+                                            @endforeach
+                                        @else
+                                            <tr>
+                                                <td colspan="5">
+                                                    <h3 style="height: 50px; text-align: center; line-height: 50px;">
+                                                        No Item on Cart
+                                                    </h3>
+                                                </td>
+                                            </tr>
+                                        @endif
                                     @endif
                                 </tbody>
                                 <tfoot id="posCartSummary">
@@ -371,7 +410,7 @@
                                         <td></td>
                                         <td colspan="2">$<span>0.00</span></td>
                                     </tr>
-                                    <tr>
+                                    <tr style="display: none;">
                                         <th>Total</th>
                                         <td></td>
                                         <td></td>
@@ -394,20 +433,6 @@
                                         <td></td>
                                         <td></td>
                                         <td colspan="2">$<span>0.00</span></td>
-                                    </tr> 
-                                    <tr>
-                                        <th colspan="5" align="center">
-                                            <!-- <label style="text-align: center; width: 300px; margin-left:15%;">
-                                                <input type="checkbox" name="counterPay" id="counterPay" 
-                                                @if(isset($cart->AllowCustomerPayBill)) 
-                                                    @if($cart->AllowCustomerPayBill>0) 
-                                                     checked="checked"   
-                                                    @endif 
-                                                @endif 
-                                            >
-                                            Allow Customer Pay  From Counter Display
-                                            </label> -->
-                                        </th>
                                     </tr>                                 
                                 </tfoot>
                             </table>
@@ -504,6 +529,8 @@
            @include('apps.include.modal.stripeCardModal',compact('stripe'))
            @include('apps.include.modal.cardPointeCardModal')
            @include('apps.include.modal.cardPointepartialCardModal')
+           @include('apps.include.modal.manager-approval')
+           @include('apps.include.modal.product-edit')
            {{-- @include('apps.include.modal.CustomerPartialCardModal') --}}
            @include('apps.include.modal.paymodal',compact('stripe'))
            @include('apps.include.modal.open-drawer')
@@ -515,6 +542,7 @@
            @include('apps.include.modal.warranty')
            @include('apps.include.modal.buyback')
            @include('apps.include.modal.pospaymentpartial')
+           
 
 
         </div>
@@ -588,192 +616,23 @@
     var estPriceJson=<?php echo json_encode($estPrice); ?>;
     var cusObjData=<?php echo json_encode($customerData); ?>;
 
- 
+    var selectedDefCusPOSSCRvFour="";
+    var defCusIDCusPOSSCRvFour=0;
+@if(!isset($cart->customerID))
+    @if(empty($cart->customerID))
+        selectedDefCusPOSSCRvFour=" selected='selected'  ";
+    @endif
+@endif
 
-    $('.dropableCartZone').droppable( {
-        drop: handleDropEvent
-    } ); 
-
-
-    $('select[name=customer_id]').parent('div').children('span:eq(1)').children('span').children('span').attr('style','border-radius:0px !important;');
-
-    function handleDropEvent( event, ui ) {
-        $("#cartMessageProShow").html(loadingOrProcessing("Processing, Please Wait....!!!!"));
-        var item_id=ui.draggable.attr("id");
-        console.log('ItemID=',item_id);
-
-        var data_pro_id=$("#"+item_id).attr("data-pro-id");
-        var data_pro_name=$("#"+item_id).attr("data-pro-name");
-        var data_pro_name=data_pro_name.replace(/'/g, "");;
-        var data_pro_price=$("#"+item_id).attr("data-pro-price");
-        //console.log('string in JS = ',exTasl);
-        add_pos_cart(data_pro_id,data_pro_price,data_pro_name);
-        //add_pos_cart
-        //$("#"+item_id).trigger( "click" )
-        //alert(ui.draggable.attr("id"));
-       // Here I want the id of the dropped object
-    }
-
-    function loadCustomerList()
-    {
-        var ff="<option ";
-        var fff="<option ";
-    
-        @if(!isset($cart->customerID))
-            @if(empty($cart->customerID))
-                ff+="selected='selected' "; 
-                fff+="selected='selected' "; 
-            @endif
-        @endif
-
-        ff+=" value=''>SELECT CUSTOMER</option>";
-        fff+=" value=''>SELECT CUSTOMER</option>";
-        ff+='<option value="0">CREATE NEW CUSTOMER</option>';
-        var defCusID=0;
-        @if(isset($cart->customerID))
-                defCusID="<?php echo $cart->customerID; ?>";
-        @endif
-
-        $.each(cusObjData,function(index,row){
-            //console.log(row);  
-
-            if(defCusID==row.id)
-            {
-                ff+="<option selected='selected' value='"+row.id+"'>"+row.name+"</option>";
-                fff+="<option selected='selected' value='"+row.id+"'>"+row.name+"</option>";
-            }
-            else
-            {
-                ff+="<option value='"+row.id+"'>"+row.name+"</option>";
-                fff+="<option value='"+row.id+"'>"+row.name+"</option>";
-            }
-
-            
-        });
-
-        $("select[name=customer_id]").html(ff);
-        $("select[name=sales_return_customer_id]").html(fff);
-        $("select[name=buyback_customer_id]").html(fff);
-        //$("select[name=partialpay_customer_id]").html(fff);
-
-        $("select[name=sales_return_customer_id]").select2({
-             dropdownParent: $("#salesReturn")
-        });
-        
-        $("select[name=sales_return_sales_invoice_id]").select2({
-             dropdownParent: $("#salesReturn")
-        });
+@if(isset($cart->customerID))
+        defCusIDCusPOSSCRvFour="<?php echo $cart->customerID; ?>";
+@endif
 
 
-        ff="";
-        fff="";
-    }
 
-    function liveRowCartEdit(rowID)
-    {
-        var rowData=$("#"+rowID).children("td:eq(1)").html();
-        if($("#"+rowID).children("td:eq(1)").children("input").val())
-        {
-
-            console.log(rowData);
-        }
-        else
-        {
-            var rowDataPrice=$("#"+rowID).children("td:eq(2)").find("span").html();
-            var inputDataQuantity='<input type="text" style="width:50px;" value="'+rowData+'" onkeyup="updateLiveCartQuantity('+rowID+')"  onchange="updateLiveCartQuantity('+rowID+')" />';
-            var inputDataPrice='<input type="text"  style="width:50px;"  value="'+rowDataPrice+'" onkeyup="updateLiveCartQuantity('+rowID+')"  onchange="updateLiveCartQuantity('+rowID+')" />';
-            $("#"+rowID).children("td:eq(1)").html(inputDataQuantity);
-            $("#"+rowID).children("td:eq(2)").find("span").html(inputDataPrice);
-            $("#"+rowID).children("td:eq(4)").children("a:eq(0)").show();
-        }
-        
-    }
-
-    function alignProductLine()
-    {
-        $.each($(".add-pos-cart"),function(index,row){
-            var charStr=$.trim($(row).html()).length;
-            if(charStr<=15)
-            {
-                $(row).addClass('one-make-full');
-            }
-        });
-    }
-
-    function storecloseLTTheme(name,price)
-    {
-        var conPrice=parseFloat(price).toFixed(2);
-        var data='<tr><td align="left">'+name+' Collected (+) :  </td><td align="left">$'+conPrice+'</td></tr>';
-        return data;
-    }
-
-    function loadCloseDrawer()
-    {
-        $("#closeStoreMsg").html("");
-        $("#close-drawer").modal('show');
-        //------------------------Ajax Customer Start-------------------------//
-         var AddHowMowKhaoUrl="{{url('/transaction/store')}}";
-         $.ajax({
-            'async': false,
-            'type': "POST",
-            'global': false,
-            'dataType': 'json',
-            'url': AddHowMowKhaoUrl,
-            'data': {'_token':"{{csrf_token()}}"},
-            'success': function (data) {
-                console.log(data);
-                var salesTotal=parseFloat(data.salesTotal).toFixed(2);
-                var totalTax=parseFloat(data.totalTax).toFixed(2);
-                var opening_amount=parseFloat(data.opening_amount).toFixed(2);
-                var totalPayout=parseFloat(data.totalPayout).toFixed(2);
-                var totalbuyback=parseFloat(data.buyback).toFixed(2);
-
-                var currectStoreTotal=(salesTotal-0)+(opening_amount-0)+(totalPayout-0)-totalbuyback;
-
-                    currectStoreTotal=parseFloat(currectStoreTotal).toFixed(2);
-
-                $("#storeCloseDate").html(data.opening_time);
-                $("#storeCloseTotalCollection").html(salesTotal);
-                $("#storeCloseOpeningAmount").html(opening_amount);
-                $("#storeCloseTaxAmount").html(totalTax);
-                $("#totalPayout").html(totalPayout);
-                $("#buybackStoreClosingAmount").html(totalbuyback);
-
-                //storeCloseTableTenderList
-                var salesDataTendr=data.totalSalesTender;
-                var salesDataTendrLength=salesDataTendr.length;
-                if(salesDataTendrLength>0)
-                {
-                    var htmlSalesString='';
-                    $("#storeCloseTableTenderList").html(htmlSalesString);
-                    $.each(salesDataTendr,function(key,row){
-                        console.log(row);
-                        htmlSalesString+=storecloseLTTheme(row.tender_name,row.tender_total);
-                    });
-                    $("#storeCloseTableTenderList").html(htmlSalesString);
-                }
-
-                $("#currectStoreTotal").html(currectStoreTotal);
-
-                $("#openStoreMsg").html("");
-            }
-        });
-        //------------------------Ajax Customer End---------------------------//
-    }
-
-
-    
-
-    
-
-
-    
-
-    
-
-    
+        var transactionStoreAddHowMowKhaoUrlCartPOSvfour="{{url('/transaction/store')}}";
         var AddHowMowKhaoUrlcounterdisplaystatuschangeCartPOSvfour="{{url('counter-display-status-change')}}";
-        var defaultProductimgURLCartPOSvfour="{{url('theme/app-assets/images/carousel/06.jpg')}}";
+        var defaultProductimgURLCartPOSvfour="{{url('images/product-avater.jpg')}}";
 
         var CounterCartPaymentStatusAddProductUrlCartPOSvfour="{{url('cart/counter-payment/status')}}";
 
@@ -818,6 +677,7 @@
         var GAddProductToCartAddPOSUrl="{{url('sales/cart/add')}}";
         var editRowLiveAddPOSUrl="{{url('sales/cart/custom/add')}}";
         var delposSinleRowAddPOSUrl="{{url('sales/cart/row/delete')}}";
+        var verifyManagerLogin="{{url('ma/verify')}}";
 
 
 
