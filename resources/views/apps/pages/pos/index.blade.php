@@ -678,6 +678,13 @@
         var editRowLiveAddPOSUrl="{{url('sales/cart/custom/add')}}";
         var delposSinleRowAddPOSUrl="{{url('sales/cart/row/delete')}}";
         var verifyManagerLogin="{{url('ma/verify')}}";
+        var cartProductImgUrl="{{url('upload/product')}}";
+        var product_image_status=0;
+        @if(isset($product_image_status))
+            @if($product_image_status->product_image_status==1)
+                product_image_status=1;
+            @endif
+        @endif
 
 
 

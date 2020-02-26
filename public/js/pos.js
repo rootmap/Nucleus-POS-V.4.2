@@ -644,6 +644,7 @@ function loadCatProduct(cid)
         var proHtml='';
         var productBgIn=1;
         var moveavleArray=[];
+        
         $.each(productJson,function(rindex,row){
             if(row.category_id==cid)
             {
@@ -652,26 +653,57 @@ function loadCatProduct(cid)
                 var moveableID = row.id+''+dt.getHours() +''+ dt.getMinutes()+''+dt.getSeconds();
                 moveavleArray.push(moveableID);
 
-                var imgURL=defaultProductimgURLCartPOSvfour;
+                if(product_image_status==1)
+                {
+                    //image available start
+                    var dataImg=row.image;
+                    if(dataImg == null)
+                    {
+                        var imgURL=defaultProductimgURLCartPOSvfour;
+                        
+                    }
+                    else
+                    {
+                        var imgURL=cartProductImgUrl+'/'+dataImg;
+                    }
 
-                var productName="'"+row.name+"'";
-                proHtml+='<div class="col-md-3">';
-                    proHtml+='<a id="'+moveableID+'" data-pro-id="'+row.id+'" data-pro-price="'+row.price+'"  data-pro-name="'+productName+'" href="javascript:add_pos_cart('+row.id+','+row.price+','+productName+');" class="card mb-1" style="border-bottom-right-radius:3px; border-bottom-left-radius: 3px;">';
+                    var productName="'"+row.name+"'";
+                    proHtml+='<div class="col-md-3">';
+                        proHtml+='<a id="'+moveableID+'" data-pro-id="'+row.id+'" data-pro-price="'+row.price+'"  data-pro-name="'+productName+'" href="javascript:add_pos_cart('+row.id+','+row.price+','+productName+');" class="card mb-1" style="border-bottom-right-radius:3px; border-bottom-left-radius: 3px;">';
 
-                        proHtml+='<div class="card-body" style="border-top-right-radius:3px; border-top-left-radius: 3px;">';
-                        proHtml+='<img class="card-img-top img-fluid" style="height:100px; width: 100%; border-top-right-radius:3px; border-top-left-radius: 3px;" src="'+imgURL+'" alt="'+productName+'">';
-                        proHtml+='</div>';
-
-                        proHtml+='<div class="card-body collapse in">';
-                                    
-                            proHtml+='<div class="p-1 card-header" style="padding: 0.7rem !important;">';
-                                proHtml+='<p style="margin-bottom: 0px !important; min-height: 40px; color: #fff;" class="text-xs-left green" style="color: #fff;">'+row.name+'</p>';          
+                            proHtml+='<div class="card-body" style="border-top-right-radius:3px; border-bottom: 2px green solid; border-top-left-radius: 3px;">';
+                            proHtml+='      <img class="card-img-top img-fluid" style="height:100px; width: 100%; border-top-right-radius:3px; border-top-left-radius: 3px;" src="'+imgURL+'" alt="'+productName+'">';
                             proHtml+='</div>';
-                        proHtml+='<div class="text-xs-right green" style="line-height: 30px; padding-right: 10px; font-weight: bolder; height: 30px; color: #545a63;">'+row.price+'</div>';
-                        proHtml+='</div>';    
-                    proHtml+='</a>';
-                proHtml+='</div>';
-                console.log(row);
+
+                            proHtml+='<div class="card-body collapse in">';
+                                        
+                                proHtml+='<div class="p-1 card-header" style="padding: 0.7rem !important;">';
+                                proHtml+='      <p style="margin-bottom: 0px !important; min-height: 40px; color: #fff;" class="text-xs-left green" style="color: #fff;">'+row.name+'</p>';          
+                                proHtml+='</div>';
+                            proHtml+='<div class="text-xs-right green" style="line-height: 30px; padding-right: 10px; font-weight: bolder; height: 30px; color: #545a63;">$'+row.price+'</div>';
+                            proHtml+='</div>';    
+                        proHtml+='</a>';
+                    proHtml+='</div>';
+                    //image available end
+                }
+                else
+                {
+                    //without image start
+                    var productName="'"+row.name+"'";
+                    proHtml+='<div class="col-md-3">';
+                        proHtml+='<a id="'+moveableID+'" data-pro-id="'+row.id+'" data-pro-price="'+row.price+'"  data-pro-name="'+productName+'" href="javascript:add_pos_cart('+row.id+','+row.price+','+productName+');" class="card mb-1" style="border-bottom-right-radius:3px; border-bottom-left-radius: 3px;">';
+                            proHtml+='<div class="card-body collapse in">';       
+                                proHtml+='<div class="p-1 card-header  bg-green" style="padding: 0.7rem !important;">';
+                                proHtml+='      <p style="margin-bottom: 0px !important; min-height: 40px; color: #fff;" class="text-xs-left" style="color: #fff;">'+row.name+'</p>';          
+                                proHtml+='</div>';
+                            proHtml+='<div class="text-xs-right green" style="line-height: 30px; padding-right: 10px; font-weight: bolder; height: 30px; color: #545a63;">$'+row.price+'</div>';
+                            proHtml+='</div>';    
+                        proHtml+='</a>';
+                    proHtml+='</div>';
+                    //without image end 
+                }
+                
+                //console.log(row);
             }
 
 

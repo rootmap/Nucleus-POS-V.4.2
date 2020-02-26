@@ -55,6 +55,7 @@ use Stripe;
 use App\StripeStoreSetting;
 use App\Buyback;
 use App\StripeTransactionHistory;
+use App\ProductSettings;
 
 class InvoiceController extends Controller
 {
@@ -3799,7 +3800,12 @@ class InvoiceController extends Controller
 
         }
 
-        
+        $chkPS=ProductSettings::select('id')->where('store_id',$this->sdc->storeID())->count();
+        if($chkPS>0)
+        {
+            $chkPSData=ProductSettings::select('product_image_status')->where('store_id',$this->sdc->storeID())->first();
+            $systemArray = array_merge($systemArray,['product_image_status'=>$chkPSData]);
+        }
 
         return view('apps.pages.pos.index',$systemArray);
     }
