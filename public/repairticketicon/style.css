@@ -1,0 +1,50 @@
+@font-face {
+  font-family: 'icomoon';
+  src:  url('fonts/icomoon.eot?nba3m4');
+  src:  url('fonts/icomoon.eot?nba3m4#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?nba3m4') format('truetype'),
+    url('fonts/icomoon.woff?nba3m4') format('woff'),
+    url('fonts/icomoon.svg?nba3m4#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+i {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-repairticket .path1:before {
+  content: "\e900";
+  color: rgb(43, 43, 51);
+}
+.icon-repairticket .path2:before {
+  content: "\e901";
+  margin-left: -1.0126953125em;
+  color: rgb(246, 246, 246);
+}
+.icon-repairticket .path3:before {
+  content: "\e902";
+  margin-left: -1.0126953125em;
+  color: rgb(119, 119, 122);
+}
+.icon-repairticket .path4:before {
+  content: "\e903";
+  margin-left: -1.0126953125em;
+  color: rgb(148, 148, 150);
+}
+.icon-repairticket .path5:before {
+  content: "\e904";
+  margin-left: -1.0126953125em;
+  color: rgb(140, 140, 148);
+}

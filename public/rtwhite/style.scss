@@ -1,0 +1,63 @@
+@import "variables";
+
+@font-face {
+  font-family: '#{$icomoon-font-family}';
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?ttaquz');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?ttaquz#iefix') format('embedded-opentype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?ttaquz') format('truetype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?ttaquz') format('woff'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?ttaquz##{$icomoon-font-family}') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+i {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: '#{$icomoon-font-family}' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-rtwhite .path1 {
+  &:before {
+    content: $icon-rtwhite-path1;  
+    color: rgb(236, 236, 236);
+  }
+}
+.icon-rtwhite .path2 {
+  &:before {
+    content: $icon-rtwhite-path2;  
+    margin-left: -1.0126953125em;  
+    color: rgb(252, 252, 252);
+  }
+}
+.icon-rtwhite .path3 {
+  &:before {
+    content: $icon-rtwhite-path3;  
+    margin-left: -1.0126953125em;  
+    color: rgb(228, 228, 230);
+  }
+}
+.icon-rtwhite .path4 {
+  &:before {
+    content: $icon-rtwhite-path4;  
+    margin-left: -1.0126953125em;  
+    color: rgb(214, 214, 220);
+  }
+}
+.icon-rtwhite .path5 {
+  &:before {
+    content: $icon-rtwhite-path5;  
+    margin-left: -1.0126953125em;  
+    color: rgb(244, 244, 244);
+  }
+}
+
