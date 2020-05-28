@@ -75,15 +75,15 @@ Route::get('coming-soon', 'HomeController@soon');
 Route::get('pdf', 'InvoiceController@GenaratePDF');
 Route::post('check/idle/user', 'ActivityController@idleCheck');
 
-Route::group(['middleware' => 'auth'], function () { 
+Route::group(['middleware' => ['auth', 'ssl']], function () { 
 
 	//======================= Paypal Start =======================//
 
 	Route::post('/product/settings', 'ProductSettingsController@store');
 	Route::post('/ma/verify', 'InvoiceController@verifyMALogin');
-Route::get('/paypal/account/setting', 'InvoiceController@paypalAccountSettings');
-Route::post('/paypal/account/setting', 'InvoiceController@paypalAccountSaveSettings');
-Route::post('/paypal/account/update/setting', 'InvoiceController@paypalAccountSaveSettings');
+	Route::get('/paypal/account/setting', 'InvoiceController@paypalAccountSettings');
+	Route::post('/paypal/account/setting', 'InvoiceController@paypalAccountSaveSettings');
+	Route::post('/paypal/account/update/setting', 'InvoiceController@paypalAccountSaveSettings');
 
 //====================== Paypal End ===========================//
 	Route::post('/chat/message/send', 'ChatController@store');

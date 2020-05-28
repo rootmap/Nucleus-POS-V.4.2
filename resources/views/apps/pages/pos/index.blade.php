@@ -551,18 +551,18 @@
 
 
 @section('counter-display-css')
-<link rel="stylesheet" type="text/css" href="{{url('theme/app-assets/css/plugins/forms/extended/form-extended.min.css')}}">
-<link rel="stylesheet" type="text/css" href="{{url('theme/app-assets/vendors/css/forms/toggle/bootstrap-switch.min.css')}}">
-<link rel="stylesheet" type="text/css" href="{{url('theme/app-assets/vendors/css/forms/toggle/switchery.min.css')}}">
-<link rel="stylesheet" type="text/css" href="{{url('theme/app-assets/css/plugins/forms/switch.min.css')}}">
-<link rel="stylesheet" type="text/css" href="{{url('theme/app-assets/css/core/colors/palette-switch.min.css')}}">
+<link rel="stylesheet" type="text/css" href="{{asset('theme/app-assets/css/plugins/forms/extended/form-extended.min.css')}}">
+<link rel="stylesheet" type="text/css" href="{{asset('theme/app-assets/vendors/css/forms/toggle/bootstrap-switch.min.css')}}">
+<link rel="stylesheet" type="text/css" href="{{asset('theme/app-assets/vendors/css/forms/toggle/switchery.min.css')}}">
+<link rel="stylesheet" type="text/css" href="{{asset('theme/app-assets/css/plugins/forms/switch.min.css')}}">
+<link rel="stylesheet" type="text/css" href="{{asset('theme/app-assets/css/core/colors/palette-switch.min.css')}}">
 @endsection
 
 @section('counter-display-js')
-<script src="{{url('theme/app-assets/vendors/js/forms/toggle/bootstrap-switch.min.js')}}" type="text/javascript"></script>
-<script src="{{url('theme/app-assets/vendors/js/forms/toggle/bootstrap-checkbox.min.js')}}" type="text/javascript"></script>
-<script src="{{url('theme/app-assets/vendors/js/forms/toggle/switchery.min.js')}}" type="text/javascript"></script>
-<script src="{{url('theme/app-assets/js/scripts/forms/switch.min.js')}}" type="text/javascript"></script>
+<script src="{{asset('theme/app-assets/vendors/js/forms/toggle/bootstrap-switch.min.js')}}" type="text/javascript"></script>
+<script src="{{asset('theme/app-assets/vendors/js/forms/toggle/bootstrap-checkbox.min.js')}}" type="text/javascript"></script>
+<script src="{{asset('theme/app-assets/vendors/js/forms/toggle/switchery.min.js')}}" type="text/javascript"></script>
+<script src="{{asset('theme/app-assets/js/scripts/forms/switch.min.js')}}" type="text/javascript"></script>
 
 @endsection
 
@@ -584,9 +584,9 @@
     line-height:1.3rem !important;
 }
 </style>
-<link rel="stylesheet" type="text/css" href="{{url('theme/app-assets/vendors/css/forms/selects/select2.min.css')}}">
-<link rel="stylesheet" type="text/css" href="{{url('theme/app-assets/css/pages/invoice.min.css')}}">
-<link rel="stylesheet" type="text/css" href="{{url('theme/app-assets/vendors/css/ui/dragula.min.css')}}">
+<link rel="stylesheet" type="text/css" href="{{asset('theme/app-assets/vendors/css/forms/selects/select2.min.css')}}">
+<link rel="stylesheet" type="text/css" href="{{asset('theme/app-assets/css/pages/invoice.min.css')}}">
+<link rel="stylesheet" type="text/css" href="{{asset('theme/app-assets/vendors/css/ui/dragula.min.css')}}">
 <script>
 
 var squareupPaymentFormload="{{url('intregation/squareup/form')}}";
@@ -594,22 +594,21 @@ var squareupPaymentFormload="{{url('intregation/squareup/form')}}";
 @endsection
 
 @section('js')
-<script src="{{url('theme/app-assets/vendors/js/forms/extended/card/jquery.card.js')}}" type="text/javascript"></script>
-<script src="{{url('theme/app-assets/js/scripts/forms/extended/form-typeahead.min.js')}}" type="text/javascript"></script>
-<script src="{{url('theme/app-assets/js/scripts/forms/extended/form-inputmask.min.js')}}" type="text/javascript"></script>
-<script src="{{url('theme/app-assets/js/scripts/forms/extended/form-formatter.min.js')}}" type="text/javascript"></script>
-<script src="{{url('theme/app-assets/js/scripts/forms/extended/form-maxlength.min.js')}}" type="text/javascript"></script>
-<script src="{{url('theme/app-assets/js/scripts/forms/extended/form-card.min.js')}}" type="text/javascript"></script>
+<script src="{{asset('theme/app-assets/vendors/js/forms/extended/card/jquery.card.js')}}" type="text/javascript"></script>
+<script src="{{asset('theme/app-assets/js/scripts/forms/extended/form-typeahead.min.js')}}" type="text/javascript"></script>
+<script src="{{asset('theme/app-assets/js/scripts/forms/extended/form-inputmask.min.js')}}" type="text/javascript"></script>
+<script src="{{asset('theme/app-assets/js/scripts/forms/extended/form-formatter.min.js')}}" type="text/javascript"></script>
+<script src="{{asset('theme/app-assets/js/scripts/forms/extended/form-maxlength.min.js')}}" type="text/javascript"></script>
+<script src="{{asset('theme/app-assets/js/scripts/forms/extended/form-card.min.js')}}" type="text/javascript"></script>
 
 
 
-<script src="{{url('theme/app-assets/vendors/js/forms/select/select2.full.min.js')}}" type="text/javascript"></script>
-<script src="{{url('theme/app-assets/js/scripts/forms/select/form-select2.min.js')}}" type="text/javascript"></script>
+<script src="{{asset('theme/app-assets/vendors/js/forms/select/select2.full.min.js')}}" type="text/javascript"></script>
+<script src="{{asset('theme/app-assets/js/scripts/forms/select/form-select2.min.js')}}" type="text/javascript"></script>
 
 
-<script src="{{url('theme/app-assets/vendors/js/extensions/dragula.min.js')}}" type="text/javascript"></script>
-<!-- <script src="{{url('theme/app-assets/js/scripts/cards/draggable.min.js')}}" type="text/javascript"></script> -->
-<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js" ></script>
+<script src="{{asset('theme/app-assets/vendors/js/extensions/dragula.min.js')}}" type="text/javascript"></script>
+<script src="{{asset('js/jquery-ui.js')}}" ></script>
 
 <script>
 //editRowLive

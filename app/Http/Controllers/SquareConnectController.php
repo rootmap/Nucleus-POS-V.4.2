@@ -93,17 +93,30 @@ class SquareConnectController extends Controller
           if($resultResponse['payment']['status']== "COMPLETED"){
               $this->savePaymentLog($request, $resultResponse);
               //dd($resultResponse);
-              $tender = Tender::where('squareup', 1)->first();
-              $request->request->add(['paymentID' => $tender->id, 'paidAmount' => $request->card_amount]); //add request
-              $getPaidCart = $this->InvoiceProductCntr->getPaidCart($request);
-              $getPaidCartResponse = json_decode($getPaidCart->content(), true);
-              if ($getPaidCartResponse == 1) {
-                $array = array('status' => 1, 'msg' => 'Transaction / Payment Capture, Complete', 'data' => $resultResponse);
-                return response()->json($array);
-              } else {
-                $array = array('status' => 1, 'msg' => 'Transaction / Payment Capture, But failed to save record.', 'data' => $result);
-                return response()->json($array);
+              $tender = Tender::where('squareup',1)->first();
+
+              try {
+                 // dd($tender);
+                  $request->request->add(['paymentID' => $tender->id, 'paidAmount' => $request->card_amount]); //add request
+                  $getPaidCart = $this->InvoiceProductCntr->getPaidCart($request);
+                  $getPaidCartResponse = json_decode($getPaidCart->content(), true);
+                  if ($getPaidCartResponse == 1) {
+                    $array = array('status' => 1, 'msg' => 'Transaction / Payment Capture, Complete', 'data' => $resultResponse);
+                    return response()->json($array);
+                  } else {
+                    $array = array('status' => 1, 'msg' => 'Transaction / Payment Capture, But failed to save record.', 'data' => $result);
+                    return response()->json($array);
+                  }
+              } catch (\Exception $e) {
+
+                    $array = array('status' => 0, 'msg' => 'Failed,  Card API Declined.', 'data' => $result);
+                    return response()->json($array);
+
               }
+
+              dd($request);
+
+              
           }
           else {
             $array = array('status' => 0, 'msg' => 'Failed,  Card is Declined.', 'data' => $result);
@@ -114,7 +127,14 @@ class SquareConnectController extends Controller
 
           
         } catch (\SquareConnect\ApiException $e) {
-            $array = array('status' => 0, 'msg' => 'Card API failed.', 'data' => $result);
+            $error= $e->getResponseBody();
+            $errorMsg= "Card API failed.";
+            if(isset($error->errors[0]->detail))
+            {
+                $errorMsg = $error->errors[0]->detail;
+            }
+
+            $array = array('status' => 0, 'msg' => $errorMsg, 'data' => $e->getResponseBody(), 'data_2' => $e->getResponseHeaders());
             return response()->json($array);
           /* echo "Caught exception!<br/>";
           print_r("<strong>Response body:</strong><br/>");

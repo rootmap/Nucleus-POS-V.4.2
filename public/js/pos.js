@@ -848,8 +848,6 @@ var doneTypingInterval = 1000; //time in ms, 5 second for example
 
 $(document).ready(function() {
 
-    $.getScript("https://cdn.jsdelivr.net/npm/sweetalert2@9");
-
     $('body').on('click', '.dedmoreqTv4Ex', function() {
         var product_ex = $('.directquantitypos').val();
 
@@ -2176,7 +2174,7 @@ $(document).ready(function() {
             var paid = expaid;
         }
 
-        if (paid < 1) {
+        if (paid < 0.001) {
             var c = confirm("Are you sure to create invoice without payment.!!!");
             if (c == false) {
                 return false;

@@ -10,6 +10,7 @@ use Auth;
 use Illuminate\Http\Request;
 use App\PosSetting;
 use App\UserTour;
+use App\Store;
 use App\InvoiceLayoutOne;
 use App\InvoiceLayoutTwo;
 use App\PrinterPrintSize;
@@ -64,6 +65,20 @@ class StaticDataController extends Facade {
         return "NucleusV4";
     }
 
+    public static function StoreInfo()
+    {
+        if (is_null(self::storeID())) {
+            return Store::orderBy('id', 'ASC')->first();;
+        } else {
+            $storeInfoCheck = Store::where('store_id', self::storeID())->count();
+            if ($storeInfoCheck > 0) {
+                return Store::where('store_id', self::storeID())->first();;
+            } else {
+                return Store::orderBy('id', 'ASC')->first();
+            }
+        }
+    }
+
     public static function slideCheck()
     {
 
@@ -101,16 +116,25 @@ class StaticDataController extends Facade {
         return $total;
     }
 
+    public static function urlOwnDomain()
+    {
+        $protocol = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') ||
+            $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+        $domainName = $_SERVER['HTTP_HOST'];
+        return $protocol . $domainName . "/";
+    }
+
     public static function urlForChangeData()
     {
-        return "http://v4.nucleuspos.com/";
+        return self::urlOwnDomain();
     }
+
+    
 
     public static function userguideInit() 
     {
         $currentFullURLReplacer=self::urlForChangeData();
-        $fullURL=str_replace($currentFullURLReplacer,"", URL::current());
-       
+        $fullURL=str_replace($currentFullURLReplacer,"",URL::current());
         $stReturn=0; 
         if (strpos($fullURL, 'repair/view/') !== false) {
             $sttopTour=1; 
@@ -136,6 +160,8 @@ class StaticDataController extends Facade {
         }
         else
         {
+            
+
             $chkeck=UserTour::where('user_id',self::UserID())
                         ->where('page_name',$fullURL)
                         ->count(); 
@@ -145,8 +171,7 @@ class StaticDataController extends Facade {
                         ->where('user_tour_status',2)
                         ->count();
         }
-        
-        
+
         if($sttopTour==1)
         {
             $stReturn=0;
@@ -163,16 +188,15 @@ class StaticDataController extends Facade {
                             ->where('page_name',$fullURL)
                             ->where('user_tour_status',1)
                             ->count();
+
                 if($chkeckSND==1)
                 {
                     $stReturn=1;
-                }
-
-                
+                }                
             }
         }
 
-
+        
         return $stReturn;
         
     }
@@ -403,69 +427,122 @@ class StaticDataController extends Facade {
     public static function ExcelLayout($excelArray=array())
     {
 
-        
-        Excel::create($excelArray['report_name'], function($excel) use($excelArray) {
 
-            $excel->sheet(date('d-M-Y').'_'.time(), function($sheet) use($excelArray) {
-        
-                $alpha = array('A','B','C','D','E','F','G','H','I','J','K', 'L','M','N','O','P','Q','R','S','T','U','V','W','X ','Y','Z');
-
-                $datacol=count($excelArray['data'][0]);
-
-                $colSP=$alpha[$datacol-1]."1";
+        $headers = array();
+        array_push($headers, array($excelArray['report_title']));
+        array_push($headers, array("Report Generated : " . formatDateTime(date('Y-m-d H:i:s'))));
+        $excelArray['data'] = array_merge($headers, $excelArray['data']);
 
 
-                $sheet->mergeCells('A1:'.$colSP);
+        //dd($excelArray['data']);
+        Excel::create($excelArray['report_name'], function ($excel) use ($excelArray) {
+
+            // Set the title
+            $excel->setTitle($excelArray['report_title']);
+
+            // Chain the setters
+            $excel->setCreator('Simpleretailpos.com')
+            ->setCompany(self::StoreInfo()->name);
+
+            // Call them separately
+            $excel->setDescription($excelArray['report_description']);
+
+            $excel->sheet(date('d-M-Y') . '_' . time(), function ($sheet) use ($excelArray) {
+
+                $alpha = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X ', 'Y', 'Z');
+
+                $datacol = count($excelArray['data'][2]);
+                $colSP = $alpha[$datacol - 1] . "1";
+                $colSPB = $alpha[$datacol - 1] . "2";
+                $colSPBC = $alpha[$datacol - 1] . "3";
+
+                //dd($colSPB);
+
+                $sheet->mergeCells('A1:' . $colSP);
                 $sheet->setBorder('A1', 'thin');
-                $sheet->cell('A1', function($cell) use ($excelArray) {
-                    $cell->setValue($excelArray['report_title']);
-                    //$cell->setBackground('#000000');
-                   // $cell->setFontColor('#FFF');
-                    $cell->setFontSize(16);
+                $sheet->cell('A1', function ($cell) use ($excelArray) {
+                    $cell->setValue(self::StoreInfo()->name);
+                    $cell->setBackground('#27A2CF');
+                    $cell->setFontColor('#FFF');
+                    $cell->setFontSize(20);
                     $cell->setFontWeight('bold');
                     //$cell->setBorder('solid', 'solid', 'solid', 'solid');
                     $cell->setAlignment('center');
                     $cell->setValignment('center');
                 });
+                $sheet->mergeCells('A2:' . $colSPB);
+                $sheet->cells('A2', function ($cells) use ($excelArray) {
+                    $cells->setFontSize(16);
+                    $cells->setBackground('#27A2CF');
+                    $cells->setFontColor('#FFF');
+                    $cells->setFontWeight('bold');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+                $sheet->mergeCells('A3:' . $colSPBC);
+                $sheet->cells('A3', function ($cells) use ($excelArray) {
+                    $cells->setFontSize(10);
+                    $cells->setBackground('#27A2CF');
+                    $cells->setFontColor('#FFF');
+                    $cells->setFontWeight('bold');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+
+
 
                 $sheet->fromArray($excelArray['data']);
                 //$sheet->setBorder('A1:F10', 'thin');
 
             });
-
         })->export('xlsx');
 
 
     }
-    
+
+    public static function url_get_contents($Url)
+    {
+        if (!function_exists('curl_init')) {
+            die('CURL is not installed!');
+        }
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $Url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $output = curl_exec($ch);
+        curl_close($ch);
+        return $output;
+    }
     
     public static function PDFLayout($report_name,$table='')
     {
-                $mpdf=new Mpdf;
-                $mpdf->SetTitle($report_name);
-                //$mpdf->SetDisplayMode('fullpage');
-                //$mpdf->list_indent_first_level=0; // 1 or 0 - whether to indent the first level of a list
-                // LOAD a stylesheet
-                $stylesheet=file_get_contents(url('assets/css/bootstrap.min.css'));
-                $stylesheet2=file_get_contents(url('assets/css/style.css'));
-                $html='<table  class="col-md-12" cellpadding="10" style="width:100%;" width="100%;">
+        //dd(self::StoreInfo()->name);
+        $mpdf = new Mpdf;
+        $mpdf->SetTitle($report_name);
+        $mpdf->SetWatermarkText('NucleusPOS.com');
+        $mpdf->watermarkTextAlpha = 0.1;
+        $mpdf->showWatermarkText = true;
+        //$mpdf->SetDisplayMode('fullpage');
+        //$mpdf->list_indent_first_level=0; // 1 or 0 - whether to indent the first level of a list
+        // LOAD a stylesheet
+        $stylesheet = file_get_contents(public_path('assets/css/bootstrap.min.css'));
+        $stylesheet2 = file_get_contents(public_path('assets/css/style.css'));
+        $html = '<table  class="col-md-12" cellpadding="10" style="width:100%;" width="100%;">
                         <tr>
                         
-                <td valign="top" style="border-bottom: 5px #000 solid; color: #008000; font-size: 20px; font-weight: bold; padding-left: 0px;">
-                
-                '.$report_name.' : NucleusPOSV4
-                <hr style="height:5px;">
-
-                <b>Report Genarated : '.formatDateTime(date('Y-m-d H:i:s')).'<br /><br /></b></td>
+                <td valign="top" style="border-bottom: 5px #000 solid; color: #43A047; text-align:center; font-size: 20px; font-weight: bold; padding-left: 0px;">
+                <h2>' . self::StoreInfo()->name . '</h2>
+                ' . $report_name . ' <br>
+                <small style="font-size:10px;">Report Genarated : ' . formatDateTime(date('Y-m-d H:i:s')) . '</small>
+                </td>
                 <tr>
                 </table>';
-                
-                $html.=$table;
-                $mpdf->WriteHTML($stylesheet, 1);
-                $mpdf->WriteHTML($stylesheet2, 1); // The parameter 1 tells that this is css/style only and no body/html/text
-                $mpdf->WriteHTML($html, 2);
-                $mpdf->Output('invoice_' . time() . '.pdf', 'I');
-                exit();
+
+        $html .= $table;
+        $mpdf->WriteHTML($stylesheet, 1);
+        $mpdf->WriteHTML($stylesheet2, 1); // The parameter 1 tells that this is css/style only and no body/html/text
+        $mpdf->WriteHTML($html, 2);
+        $mpdf->Output('invoice_' . time() . '.pdf', 'I');
+        exit();
     }
 
     public function initMail(
@@ -475,8 +552,7 @@ class StaticDataController extends Facade {
         $AltBody='This is the body in plain text for non-HTML mail clients',
         $attachment='',
         $debug=0
-    )
-    {
+    )    {
           $mail = new PHPMailer(true);
           try {
               $mail->SMTPDebug = $debug;

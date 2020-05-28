@@ -155,8 +155,8 @@
 	                                	@if($row->hour_gone > 168 && $row->refund_status==0)
 		                                	<button type="button" class="btn btn-default"><i class="icon-expeditedssl"></i> Refund Disable</button>
 	                                	@else
-		                                	@if($row->refund_status==1)
-		                                	<button onclick="refundTransaction({{$row->id}})" type="button" class="btn btn-green"  @if($userguideInit==1) data-step="7" data-intro="Payment could be refund using click on this button." @endif><i class="icon-minus-circle"></i> Refund Amount</button>
+		                                	@if($row->refund_status==0)
+		                                	    <button onclick="refundTransaction({{$row->id}})" type="button" class="btn btn-green"  @if($userguideInit==1) data-step="7" data-intro="Payment could be refund using click on this button." @endif><i class="icon-minus-circle"></i> Refund Amount</button>
 		                                	@else
 		                                		<button type="button" class="btn btn-green"><i class="icon-check"></i> Refund Complete</button>
 		                                	@endif
@@ -328,7 +328,7 @@
                             swalSuccessMsg(data.msg); 
                             setTimeout(() => {
                                 window.location.reload();
-                            }, 4000);
+                            }, 1560);
 		                	
 		                }
 		                else
