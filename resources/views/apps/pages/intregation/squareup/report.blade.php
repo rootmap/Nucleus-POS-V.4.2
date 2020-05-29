@@ -151,14 +151,14 @@
 	                                <td>{{$row->CardType}}</td>
 	                                <td>{{$row->transactionID}}</td>
 	                                <td>{{$row->paid_amount}}</td>
-	                                <td>
+	                                <td id="row_place_{{$row->id}}">
 	                                	@if($row->hour_gone > 168 && $row->refund_status==0)
-		                                	<button type="button" class="btn btn-default"><i class="icon-expeditedssl"></i> Refund Disable</button>
+		                                	<button type="button" class="btn btn-default danger"><i class="icon-expeditedssl"></i> Refund Disable</button>
 	                                	@else
 		                                	@if($row->refund_status==0)
 		                                	    <button onclick="refundTransaction({{$row->id}})" type="button" class="btn btn-green"  @if($userguideInit==1) data-step="7" data-intro="Payment could be refund using click on this button." @endif><i class="icon-minus-circle"></i> Refund Amount</button>
 		                                	@else
-		                                		<button type="button" class="btn btn-green"><i class="icon-check"></i> Refund Complete</button>
+		                                		<button type="button" class="btn btn-default success"><i class="icon-check"></i> Refund Complete</button>
 		                                	@endif
 	                                	@endif
 	                                </td>
@@ -191,7 +191,7 @@
    		var strHTML='';
  
            if(hour_gone > 168 && refund_status==0){
-                strHTML+='	<button type="button" class="btn btn-default"><i class="icon-expeditedssl"></i> Refund Disable</button>';
+                strHTML+='	<button type="button" class="btn btn-default danger"><i class="icon-expeditedssl"></i> Refund Disable</button>';
            }
            else{
                 if(refund_status==0){
@@ -201,7 +201,7 @@
                         @endif
                     strHTML+='><i class="icon-minus-circle"></i> Refund Amount</button>';
                 }else{
-                    strHTML+='	<button type="button" class="btn btn-default"><i class="icon-check"></i> Refund Complete</button>';
+                    strHTML+='	<button type="button" class="btn btn-default success"><i class="icon-check"></i> Refund Complete</button>';
                 }
            }
 	    	
@@ -260,7 +260,7 @@
 						strHTML+='		<td>'+replaceNull(row.CardType)+'</td>';
 						strHTML+='		<td>'+replaceNull(row.transactionID)+'</td>';
 						strHTML+='		<td>'+replaceNull(row.paid_amount)+'</td>';
-						strHTML+='		<td>'+actionTemplate(row.id,row.hour_gone,row.refund_status)+'</td>';
+						strHTML+='		<td id="row_place_'+row.id+'">'+actionTemplate(row.id,row.hour_gone,row.refund_status)+'</td>';
 						strHTML+='</tr>';
 
 						//totalPrice+=replaceNull(row.price)-0;
@@ -323,47 +323,15 @@
 		            'success': function (data) {
                         console.log(data);
                         Swal.hideLoading();
-		                if(data.status==1)
-		                {
+		                if(data.status==1){
                             swalSuccessMsg(data.msg); 
-                            setTimeout(() => {
+							$("#row_place_"+id).html('<button type="button" class="btn btn-default success"><i class="icon-check"></i> Refund Complete</button>');
+		                }
+		                else{
+                            swalErrorMsg('Something went wrong, Please try again.'); return false;
+							setTimeout(() => {
                                 window.location.reload();
                             }, 1560);
-		                	
-		                }
-		                else
-		                {
-                            swalErrorMsg('Something went wrong, Please try again.'); return false;
-		                }
-		            }
-		        });
-		        //------------------------Ajax Customer End---------------------------//
-			}
-		}
-
-		function VoidTransaction(id)
-		{
-			var c=confirm('Are you sure to void/cancel this transaction ?');
-			if(c)
-			{
-				//------------------------Ajax Customer Start-------------------------//
-		         var AddHowMowKhaoUrl="{{url('authorize/net/payment/void')}}";
-		         $.ajax({
-		            'async': true,
-		            'type': "POST",
-		            'global': false,
-		            'dataType': 'json',
-		            'url': AddHowMowKhaoUrl,
-		            'data': {'rid':id,'_token':"{{csrf_token()}}"},
-		            'success': function (data) {
-		            	console.log(data);
-		                if(data==1)
-		                {
-		                	window.location.reload();
-		                }
-		                else
-		                {
-		                	alert('Something went wrong, Please try again.');
 		                }
 		            }
 		        });
