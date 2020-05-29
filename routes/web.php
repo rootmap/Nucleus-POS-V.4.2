@@ -767,15 +767,11 @@ Route::group(['middleware' => ['auth', 'ssl']], function () {
 	Route::post('stripe', 'InvoiceController@stripeCardPayment')->name('stripe.post');
 	Route::post('stripepartial', 'InvoiceController@stripeMnaulPartialCardPayment')->name('stripe.partial');
 
-
-
-
-
 	Route::get('/intregation/squareup/form', 'SquareConnectController@init');
 	Route::post('/square/connect/capture/payment/nonce', 'SquareConnectController@capturePayment');
+	Route::post('/square/connect/capture/parrtial/nonce', 'SquareConnectController@squareMnaulPartialCardPayment');
 	Route::post('/square/connect/payment/refund', 'SquareConnectController@refund');
 	
-
 	Route::get('/square/payment/history', 'SquareConnectController@show');
 	Route::post('/square/payment/data/json', 'SquareConnectController@datajson');
 	Route::post('/square/payment/history/report', 'SquareConnectController@show');
@@ -784,9 +780,6 @@ Route::group(['middleware' => ['auth', 'ssl']], function () {
 
 	Route::get('/square/account/setting', 'SquareConnectController@storeAccount');
 	Route::post('/square/account/setting', 'SquareConnectController@storeAccount');
-
-
-
 
 	Route::get('/cardpointe/account/setting', 'CardPointeeController@cardPointeSettings');
 	Route::post('/cardpointe/account/setting', 'CardPointeeController@cardPointeSettingsSave');

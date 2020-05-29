@@ -5,7 +5,10 @@ use App\SquareConnect;
 use App\SquareAccount;
 use App\Pos;
 use App\SessionInvoice;
+use App\Invoice;
+use App\Customer;
 use App\Tender;
+use App\InvoicePayment;
 use Illuminate\Http\Request;
 use DB;
 
@@ -151,12 +154,19 @@ class SquareConnectController extends Controller
 
     private function savePaymentLog($request,$paymentArray){
 
-      $oldCart = $request->session()->has('Pos') ? $request->session()->get('Pos') : null;
-      $cart = new Pos($oldCart);
-      if (empty($oldCart->invoiceID)) {
-        $cart->genarateInvoiceID();
+      if(isset($request->card_invoice))
+      {
+          $invoice_id = $request->card_invoice;
       }
-      $invoice_id = $cart->invoiceID;
+      else {
+          $oldCart = $request->session()->has('Pos') ? $request->session()->get('Pos') : null;
+          $cart = new Pos($oldCart);
+          if (empty($oldCart->invoiceID)) {
+            $cart->genarateInvoiceID();
+          }
+          $invoice_id = $cart->invoiceID;
+      }
+      
 
       //dd($paymentArray);
       $payment_id= $paymentArray['payment']['id'];
@@ -300,6 +310,181 @@ class SquareConnectController extends Controller
             }
         }
         return view('apps.pages.intregation.squareup.squareAccount', $data);
+    }
+
+    public function squareMnaulPartialCardPayment(Request $request)
+    {
+
+
+        $squareAccountCheck = SquareAccount::where('store_id', $this->sdc->storeID())->count();
+        if ($squareAccountCheck == 0) {
+          $array = array('status' => 0, 'msg' => 'Failed, Please Setup your square account.');
+          return response()->json($array);
+        }
+
+        $squareAccount = SquareAccount::where('store_id', $this->sdc->storeID())->first();
+        if ($squareAccount->module_status == 0) {
+          $array = array('status' => 0, 'msg' => 'Failed, Please active your Square account from settings.');
+          return response()->json($array);
+        }
+
+        $access_token = $squareAccount->access_token;
+        $host_url = (env('USE_PROD') == 'true')  ?  "https://connect.squareup.com" :  "https://connect.squareupsandbox.com";
+        $api_config = new \SquareConnect\Configuration();
+        $api_config->setHost($host_url);
+        $api_config->setAccessToken($access_token);
+        $api_client = new \SquareConnect\ApiClient($api_config);
+
+        if (!$request->isMethod('post')) {
+          $array = array('status' => 0, 'msg' => 'Invalid Request');
+          return response()->json($array);
+        }
+
+        $nonce = $request->nonce;
+        if (is_null($nonce)) {
+          $array = array('status' => 0, 'msg' => 'Failed to validate card info. Please try different card.');
+          return response()->json($array);
+        }
+
+        $card_amount = $request->card_amount;
+        if (is_null($card_amount)) {
+          $array = array('status' => 0, 'msg' => 'Invalid Invoice Amount, Please Try Again .');
+          return response()->json($array);
+        }
+
+
+
+
+     
+
+        $invoice_id = $request->card_invoice;
+        $partial_today_paid = $card_amount;
+        $refId = $invoice_id;
+
+        $invoice = Invoice::where('invoice_id', $invoice_id)->first();
+        $customerInfo = Customer::find($invoice->customer_id);
+        $customerName = $customerInfo->name;
+        $totalInvoicePayable = $partial_today_paid;
+        if (empty($totalInvoicePayable)) {
+            $array = array('status' => 0, 'msg' => 'Invalid Invoice Amount, Please Try Again .');
+            return response()->json($array);
+        }
+
+        $payments_api = new \SquareConnect\Api\PaymentsApi($api_client);
+
+        $request_body = array(
+          "source_id" => $nonce,
+          "amount_money" => array(
+            "amount" => 100 * $totalInvoicePayable,
+            "currency" => "USD"
+          ),
+          "idempotency_key" => uniqid()
+        );
+
+        try {
+          $result = $payments_api->createPayment($request_body);
+
+          $resultResponse = json_decode($result, true);
+
+          if ($resultResponse['payment']['status'] == "COMPLETED") {
+            $this->savePaymentLog($request, $resultResponse);
+            $amountPaid = $totalInvoicePayable;
+            $tenderData = Tender::where('squareup', 1)->first();
+            $payment_method = $tenderData->id;
+            $loadInvoices = Invoice::join('customers', 'invoices.customer_id', '=', 'customers.id')
+            ->select(
+              'invoices.id',
+              'invoices.invoice_id',
+              'invoices.total_amount',
+              'invoices.paid_amount',
+              'customers.name as customer_name',
+              \DB::Raw('CASE WHEN lsp_invoices.paid_amount = 0 THEN 
+                                                  (SELECT SUM(paid_amount) FROM lsp_invoice_payments WHERE lsp_invoice_payments.invoice_id=lsp_invoices.invoice_id)
+                                              ELSE lsp_invoices.paid_amount END AS absPaid'),
+              'invoices.created_at'
+            )
+            ->where('invoices.store_id', $this->sdc->storeID())
+            ->where('invoices.invoice_id', $invoice_id)
+            ->whereRaw("lsp_invoices.invoice_status!='Paid'")
+            ->first();
+
+            $invoice = Invoice::where('invoice_id', $invoice_id)->first();
+            $cusInfo = Customer::find($invoice->customer_id);
+            $paid_amount = $totalInvoicePayable;
+
+            $load_total_amount = $loadInvoices->total_amount;
+            $load_absPaid = $loadInvoices->absPaid + $paid_amount;
+            $load_due = $load_total_amount - $load_absPaid;
+            if ($load_due > 0) {
+              $load_invoice_status = "Partial";
+            } elseif ($load_due <= 0) {
+              $load_invoice_status = "Paid";
+              $load_due = "0.00";
+            } else {
+              $load_invoice_status = "Partial";
+            }
+
+            $invoice->tender_id = $tenderData->id;
+            $invoice->tender_name = $tenderData->name;
+            $invoice->save();
+
+
+            $chkTicketInvoice = \DB::table('in_store_tickets')->where('store_id', $this->sdc->storeID())->where('invoice_id', $invoice_id)->count();
+            if ($chkTicketInvoice > 0) {
+              \DB::table('in_store_tickets')->where('store_id', $this->sdc->storeID())->where('invoice_id', $invoice_id)->update(['payment_status' => $load_invoice_status]);
+            }
+
+            $chkRepairInvoice = \DB::table('in_store_repairs')->where('store_id', $this->sdc->storeID())->where('invoice_id', $invoice_id)->count();
+            if ($chkRepairInvoice > 0) {
+              \DB::table('in_store_repairs')->where('store_id', $this->sdc->storeID())->where('invoice_id', $invoice_id)->update(['payment_status' => $load_invoice_status]);
+            }
+
+            $invoicePay = new InvoicePayment;
+            $invoicePay->invoice_id = $invoice_id;
+            $invoicePay->customer_id = $invoice->customer_id;
+            $invoicePay->customer_name = $cusInfo->name;
+            $invoicePay->tender_id = $tenderData->id;
+            $invoicePay->tender_name = $tenderData->name;
+            $invoicePay->total_amount = $invoice->total_amount;
+            $invoicePay->paid_amount = $amountPaid;
+            $invoicePay->store_id = $this->sdc->storeID();
+            $invoicePay->created_by = $this->sdc->UserID();
+            $invoicePay->save();
+
+            if ($load_due <= 0) {
+              $invoice->due_amount = "0.00";
+            }
+
+            $invoice->invoice_status = $load_invoice_status;
+            $invoice->save();
+
+
+            $array = array('status' => 1, 'msg' => 'Partial Transaction / Payment Capture Complete', 'data' => $resultResponse);
+            return response()->json($array);
+
+          }else{
+              $array = array('status' => 1, 'msg' => 'Failed, Please try again.', 'data' => $resultResponse);
+              return response()->json($array);
+          }
+
+
+            dd($request);
+        } catch (\SquareConnect\ApiException $e) {
+
+            $error = $e->getResponseBody();
+            $errorMsg = "Card API failed.";
+            if (isset($error->errors[0]->detail)) {
+              $errorMsg = $error->errors[0]->detail;
+            }
+
+            $array = array('status' => 0, 'msg' => $errorMsg, 'data' => $e->getResponseBody(), 'data_2' => $e->getResponseHeaders());
+            return response()->json($array);
+
+        }
+
+        
+
+      
     }
 
     /**
