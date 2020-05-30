@@ -2522,7 +2522,7 @@ class InvoiceController extends Controller
                     <tbody>
                         <tr>
                             <td align="center">
-                                <img class="logo" height="45" src="'.url('company/'.$invInfo->logo).'" alt="brand logo"/>
+                                <img class="logo" height="45" src="'.public_path('company/'.$invInfo->logo).'" alt="brand logo"/>
                             </td>
                         </tr>
                         <tr>
@@ -2677,8 +2677,8 @@ class InvoiceController extends Controller
 
             $mpdf=new Mpdf;
             $mpdf->SetTitle('Store Closing Detail-'.$closing_id);
-            $stylesheet=file_get_contents(url('assets/css/bootstrap.min.css'));
-            $stylesheet2=file_get_contents(url('assets/css/style.css'));
+            $stylesheet=file_get_contents(public_path('assets/css/bootstrap.min.css'));
+            $stylesheet2=file_get_contents(public_path('assets/css/style.css'));
             $mpdf->WriteHTML($stylesheet, 1);
             $mpdf->WriteHTML($stylesheet2, 1); // The parameter 1 tells that this is css/style only and no body/html/text
             $mpdf->WriteHTML($html, 2);
@@ -3927,8 +3927,8 @@ class InvoiceController extends Controller
                 //$mpdf->SetDisplayMode('fullpage');
                 //$mpdf->list_indent_first_level=0; // 1 or 0 - whether to indent the first level of a list
                 // LOAD a stylesheet
-                $stylesheet=file_get_contents(url('assets/css/bootstrap.min.css'));
-                $stylesheet2=file_get_contents(url('assets/css/style.css'));
+                $stylesheet=file_get_contents(public_path('assets/css/bootstrap.min.css'));
+                $stylesheet2=file_get_contents(public_path('assets/css/style.css'));
                 $html='<div class="container" id="report_container" style="border: 1px #ccc solid;">
                     <table  class="col-md-12" cellpadding="10" style="width:100%;" width="100%;">
                         <tr>
@@ -3978,7 +3978,7 @@ class InvoiceController extends Controller
                 </div>
 
                 <div class="col-md-12" style="padding-top: 30px; padding-bottom: 4px; padding-left: 0px;">
-                <img src="'.url('company/'.$invInfo->logo).'" style="width:100px; margin-top:10px;">
+                <img src="'.public_path('company/'.$invInfo->logo).'" style="width:100px; margin-top:10px;">
                 </div>
 
                 </div>
@@ -4128,7 +4128,7 @@ class InvoiceController extends Controller
                 </div>
                 </td>
                 <td width="50">
-                <img width="60" src="'.url('company/'.$invInfo->logo_fotter).'">
+                <img width="60" src="'.public_path('company/'.$invInfo->logo_fotter).'">
                 </td>
                 </tr>
                 </table>
@@ -4245,8 +4245,8 @@ class InvoiceController extends Controller
                 //$mpdf->SetDisplayMode('fullpage');
                 //$mpdf->list_indent_first_level=0; // 1 or 0 - whether to indent the first level of a list
                 // LOAD a stylesheet
-                $stylesheet=file_get_contents(url('assets/css/bootstrap.min.css'));
-                $stylesheet2=file_get_contents(url('assets/css/style.css'));
+                $stylesheet=file_get_contents(public_path('assets/css/bootstrap.min.css'));
+                $stylesheet2=file_get_contents(public_path('assets/css/style.css'));
                 $html='<div class="container" id="report_container" style="border: 1px #ccc solid;">
                     <table  class="col-md-12" cellpadding="10" style="width:100%;" width="100%;">
                         <tr>
@@ -4296,7 +4296,7 @@ class InvoiceController extends Controller
                 </div>
 
                 <div class="col-md-12" style="padding-top: 30px; padding-bottom: 4px; padding-left: 0px;">
-                <img src="'.url('company/'.$invInfo->logo).'" style="width:100px; margin-top:10px;">
+                <img src="'.public_path('company/'.$invInfo->logo).'" style="width:100px; margin-top:10px;">
                 </div>
 
                 </div>
@@ -4441,7 +4441,7 @@ class InvoiceController extends Controller
                 </div>
                 </td>
                 <td width="50">
-                <img src="'.url('company/'.$invInfo->logo_fotter).'">
+                <img src="'.public_path('company/'.$invInfo->logo_fotter).'">
                 </td>
                 </tr>
                 </table>
@@ -4629,7 +4629,7 @@ class InvoiceController extends Controller
                                     <tbody>
                                         <tr>
                                             <td align="center">
-                                                <img class="logo" height="45" src="'.url('company/'.$invInfo->logo).'" alt="brand logo"/>
+                                                <img class="logo" height="45" src="'.public_path('company/'.$invInfo->logo).'" alt="brand logo"/>
                                             </td>
                                         </tr>
                                         <tr>
@@ -4837,8 +4837,8 @@ class InvoiceController extends Controller
                                     ]);
                     $mpdf->SetDisplayMode('fullpage');
                     $mpdf->SetTitle('INV-'.$tab_invoice->id);
-                    $stylesheet=file_get_contents(url('pdf/thermal.css'));
-                    $stylesheet2=file_get_contents(url('assets/css/style.css'));
+                    $stylesheet=file_get_contents(public_path('pdf/thermal.css'));
+                    $stylesheet2=file_get_contents(public_path('assets/css/style.css'));
 
                     $mpdf->WriteHTML($stylesheet, 1);
                     $mpdf->WriteHTML($stylesheet2, 1); // The parameter 1 tells that this is css/style only and no body/html/text
@@ -4879,7 +4879,7 @@ class InvoiceController extends Controller
                                     <tbody>
                                         <tr>
                                             <td align="center">
-                                                <img class="logo" height="45" src="'.url('company/'.$invInfo->logo).'" alt="brand logo"/>
+                                                <img class="logo" height="45" src="'.public_path('company/'.$invInfo->logo).'" alt="brand logo"/>
                                             </td>
                                         </tr>
                                         <tr>
@@ -5087,8 +5087,8 @@ class InvoiceController extends Controller
                                     ]);
                     $mpdf->SetDisplayMode('fullpage');
                     $mpdf->SetTitle('INV-'.$tab_invoice->id);
-                    $stylesheet=file_get_contents(url('pdf/thermal.css'));
-                    $stylesheet2=file_get_contents(url('assets/css/style.css'));
+                    $stylesheet=file_get_contents(public_path('pdf/thermal.css'));
+                    $stylesheet2=file_get_contents(public_path('assets/css/style.css'));
 
                     $mpdf->WriteHTML($stylesheet, 1);
                     $mpdf->WriteHTML($stylesheet2, 1); // The parameter 1 tells that this is css/style only and no body/html/text
@@ -5114,8 +5114,8 @@ class InvoiceController extends Controller
                     $mpdf->SetDisplayMode('fullpage');
                     
                     $mpdf->SetTitle('INV-'.$tab_invoice->id);
-                    $stylesheet=file_get_contents(url('assets/css/bootstrap.min.css'));
-                    $stylesheet2=file_get_contents(url('assets/css/style.css'));
+                    $stylesheet=file_get_contents(public_path('assets/css/bootstrap.min.css'));
+                    $stylesheet2=file_get_contents(public_path('assets/css/style.css'));
                     $html='<div class="container" id="report_container" style="border: 1px #ccc solid;">
                         <table  class="col-md-12" cellpadding="10" style="width:100%;" width="100%;">
                             <tr>
@@ -5165,7 +5165,7 @@ class InvoiceController extends Controller
                     </div>
 
                     <div class="col-md-12" style="padding-top: 30px; padding-bottom: 4px; padding-left: 0px;">
-                    <img src="'.url('company/'.$invInfo->logo).'" style="width:100px; margin-top:10px;">
+                    <img src="'.public_path('company/'.$invInfo->logo).'" style="width:100px; margin-top:10px;">
                     </div>
 
                     </div>
@@ -5310,7 +5310,7 @@ class InvoiceController extends Controller
                     </div>
                     </td>
                     <td width="50">
-                    <img width="50" src="'.url('company/'.$invInfo->logo_fotter).'">
+                    <img width="50" src="'.public_path('company/'.$invInfo->logo_fotter).'">
                     </td>
                     </tr>
                     </table>

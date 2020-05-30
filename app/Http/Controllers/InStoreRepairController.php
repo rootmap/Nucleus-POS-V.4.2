@@ -1472,7 +1472,7 @@ class InStoreRepairController extends Controller
                 }
                 else
                 {
-                    $store_logo="<img src='".url('company/'.$invInfo->logo)."' width='130'>";
+                    $store_logo="<img src='".public_path('company/'.$invInfo->logo)."' width='130'>";
                 }
 
                 $report_cpmpany_name = $invInfo->company_name;
@@ -1764,8 +1764,8 @@ class InStoreRepairController extends Controller
 
                 //echo $html; die();
 
-                $stylesheet=file_get_contents(url('assets/css/bootstrap.min.css'));
-                $stylesheet2=file_get_contents(url('assets/css/style.css'));
+                $stylesheet=file_get_contents(public_path('assets/css/bootstrap.min.css'));
+                $stylesheet2=file_get_contents(public_path('assets/css/style.css'));
 
                 $mpdf->WriteHTML($stylesheet, 1);
                 $mpdf->WriteHTML($stylesheet2, 1); // The parameter 1 tells that this is css/style only and no body/html/text
