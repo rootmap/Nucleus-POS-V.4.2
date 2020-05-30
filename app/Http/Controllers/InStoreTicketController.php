@@ -763,7 +763,7 @@ class InStoreTicketController extends Controller
                 }
                 else
                 {
-                    $store_logo="<img src='".url('company/'.$invInfo->logo)."' width='130'>";
+                    $store_logo="<img src='".public_path('company/'.$invInfo->logo)."' width='130'>";
                 }
 
                 $report_cpmpany_name = $invInfo->company_name;
