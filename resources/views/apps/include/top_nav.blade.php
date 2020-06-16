@@ -135,38 +135,55 @@ $totalUnsavedInvoice=StaticDataController::checkUnsavedInvoice();
                 
               <li class="dropdown dropdown-user nav-item">
                 <a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown">
-                    <i class="icon-life-ring"></i>
+                    <i class="icon-link3"></i>
                     <span data-i18n="nav.templates.main"> Quick Links </span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right">
-                  <a href="javascript:void(0);" class="dropdown-item"  id="supportChatStart">
-                    <i class="icon-comments-o"></i> Chat Support Team
+                  <a href="{{url('pos')}}" class="dropdown-item">
+                    <i class="fa fa-shopping-basket"></i> Cash Register | POS
                   </a>
-                  <a href="{{url('SupportTicket')}}" target="_blank" class="dropdown-item">
-                    <i class="icon-ticket2"></i> Open Support Ticket 
+                  <a href="{{url('special/feature')}}" target="_blank" class="dropdown-item">
+                    <i class="icon-star4"></i> Special Feature
+                  </a>
+                  <a href="{{url('category')}}" class="dropdown-item">
+                    <i class="icon-ios-toggle-outline"></i> New Product Category
+                  </a>
+                  <a href="{{url('product')}}" class="dropdown-item">
+                    <i class="icon-levels"></i> New Product
                   </a>
                   <div class="dropdown-divider"></div>
-                  <a  href="http://v3.nucleuspos.com" target="_blank" class="dropdown-item">
-                    <i class="icon-open"></i> Access Old System
+                  <a  href="{{url('repair/create')}}" class="dropdown-item">
+                    <i class="icon-medkit"></i> New Inventory Repair
+                  </a>
+                  <div class="dropdown-divider"></div>
+                  <a  href="{{url('ticket/create')}}" class="dropdown-item">
+                    <i class="icon-cordlessscrewdriver"></i> New Non-Inventory Repair
                   </a>
                 </div>
               </li>
                 
               <li class="dropdown dropdown-user nav-item">
                 <a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown">
-                    <i class="icon-life-ring"></i>
+                    <i class="icon-bar-chart"></i>
                     <span data-i18n="nav.templates.main"> Quick Reports </span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right">
-                  <a href="javascript:void(0);" class="dropdown-item"  id="supportChatStart">
-                    <i class="icon-comments-o"></i> Chat Support Team
+                  <a  href="{{url('sales/report')}}" target="_blank" class="dropdown-item">
+                    <i class="icon-android-list"></i> Sales Report
                   </a>
-                  <a href="{{url('SupportTicket')}}" target="_blank" class="dropdown-item">
-                    <i class="icon-ticket2"></i> Open Support Ticket 
+                  <a href="{{url('payment/report')}}" target="_blank" class="dropdown-item">
+                    <i class="icon-cash"></i> Payment Report
+                  </a>
+                  <a href="{{url('report/tender')}}" target="_blank" class="dropdown-item">
+                    <i class="icon-money1"></i> Tender Report
                   </a>
                   <div class="dropdown-divider"></div>
-                  <a  href="http://v3.nucleuspos.com" target="_blank" class="dropdown-item">
-                    <i class="icon-open"></i> Access Old System
+                  <a  href="{{url('repair/report')}}" target="_blank" class="dropdown-item">
+                    <i class="icon-polaroid"></i> Inventory Repair Report
+                  </a>
+                  <div class="dropdown-divider"></div>
+                  <a  href="{{url('ticket/report')}}" target="_blank" class="dropdown-item">
+                    <i class="icon-presentation"></i> Non-Inventory Repair Report
                   </a>
                 </div>
               </li>
