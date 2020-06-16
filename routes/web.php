@@ -186,6 +186,8 @@ Route::group(['middleware' => ['auth', 'ssl']], function () {
 	Route::get('user/list', 'CustomerController@userList');
 	Route::post('user/save', 'CustomerController@userSave');
 	Route::get('user/edit/{id}', 'CustomerController@UserShow');
+	Route::get('user-info', 'CustomerController@UserInfoShow');
+	Route::get('change-password', 'CustomerController@change_password');
 	Route::post('/user/modify/{id}', 'CustomerController@userUpdate');
 	Route::get('/user/delete/{id}', 'CustomerController@Userdestroy');
 
@@ -194,6 +196,7 @@ Route::group(['middleware' => ['auth', 'ssl']], function () {
 	Route::get('store-shop/list', 'StoreController@index');
 	Route::post('store-shop/save', 'StoreController@store');
 	Route::get('store-shop/edit/{id}', 'StoreController@show');
+	Route::get('store-info', 'StoreController@storeInfo');
 	Route::post('store-shop/modify/{id}', 'StoreController@update');
 	Route::get('store-shop/delete/{id}', 'StoreController@destroy');
 	//------------------customer route End--------------------//

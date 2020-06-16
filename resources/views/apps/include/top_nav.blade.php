@@ -226,13 +226,13 @@ $totalUnsavedInvoice=StaticDataController::checkUnsavedInvoice();
                   <span class="user-name">{{Auth::user()->name}}</span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right">
-                  <a href="#" class="dropdown-item">
+                  <a href="{{url('store-info')}}" class="dropdown-item">
                     <i class="icon-user-check"></i> Store Info
                   </a>
-                  <a href="#" class="dropdown-item">
+                  <a href="{{url('user-info')}}" class="dropdown-item">
                     <i class="icon-user-check"></i> Profile
                   </a>
-                  <a href="#" class="dropdown-item">
+                  <a href="{{url('change-password')}}" class="dropdown-item">
                     <i class="icon-key22"></i> Change Password
                   </a>
                   <a href="{{url('event/calendar')}}" target="_blank" class="dropdown-item">

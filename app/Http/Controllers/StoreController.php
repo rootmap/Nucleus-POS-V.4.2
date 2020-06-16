@@ -150,6 +150,13 @@ class StoreController extends Controller
         return view('apps.pages.store.index',['edit'=>$tab]);
     }
 
+    public function storeInfo(Request $request)
+    {
+        $id=$this->sdc->storeID();
+        $tab=Store::where('store_id',$id)->first();
+        return view('apps.pages.user_info.index',['edit'=>$tab]);
+    }
+
     /**
      * Show the form for editing the specified resource.
      *

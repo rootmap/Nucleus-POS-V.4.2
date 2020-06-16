@@ -146,6 +146,7 @@ class CustomerController extends Controller
 
         return redirect('user')->with('status', $this->moduleName.' Added Successfully !');
     }
+    
     public function UserShow($id)
     {
         
@@ -167,6 +168,23 @@ class CustomerController extends Controller
             $role=\DB::table('roles')->select('id','name','store_id')->where('id','>',3)->get();
             return view('apps.pages.user.index',['edit'=>$edit,'role'=>$role]);
         }        
+    }
+
+    public function UserInfoShow(Request $request)
+    {
+        $id=$this->sdc->UserID();
+        $edit = User::leftJoin('roles','users.user_type','=','roles.id')
+                    ->leftJoin('stores','users.store_id','=','stores.store_id')
+                    ->where('users.id',$id)
+                    ->select('users.*','roles.name as role_name','stores.name as store_name')
+                    ->first();
+        return view('apps.pages.user_info.user_info',['edit'=>$edit]);        
+    }
+
+
+    public function change_password(Request $request)
+    {
+        return view('apps.pages.user_info.change_password');        
     }
 
     public function UserEdit(Customer $customer,$id=0)
