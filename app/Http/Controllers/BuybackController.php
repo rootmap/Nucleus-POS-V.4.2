@@ -1097,6 +1097,7 @@ class BuybackController extends Controller
     public function exportExcel(Request $request) 
     {
         //excel 
+        $total_price_amount=0;
         $data=array();
         $array_column=array('Buyback ID','Invoice ID','Customer Name','Model Name','Carrier','IMEI','Price','Condition','Tender','Parts | Sale');
         array_push($data, $array_column);
@@ -1105,8 +1106,13 @@ class BuybackController extends Controller
         foreach($inv as $voi):
             $inv_arry=array($voi->id,$voi->invoice_id,$voi->customer_name,$voi->model,$voi->carrier,$voi->imei,$voi->price,$voi->condition,$voi->payment_method_name,$voi->keep_this_on);
             array_push($data, $inv_arry);
+            $total_price_amount+=$voi->price;
         endforeach;
 
+       
+
+        $array_column=array('','','','','','Total =',$total_price_amount,'','','');
+        array_push($data, $array_column);
         $reportName="Buyback Report";
         $report_title="Buyback Report";
         $report_description="Report Genarated : ".formatDateTime(date('d-M-Y H:i:s a'));
@@ -1157,6 +1163,7 @@ class BuybackController extends Controller
                 </thead>
                 <tbody>';
 
+                    $total_price_amount=0;
                     $inv=$this->profitQuery($request);
                     foreach($inv as $voi):
                         $html .='<tr>
@@ -1171,7 +1178,7 @@ class BuybackController extends Controller
                         <td style="font-size:12px;" class="text-right">'.$voi->payment_method_name.'</td>
                         <td style="font-size:12px;" class="text-right">'.$voi->keep_this_on.'</td>
                         </tr>';
-
+                        $total_price_amount+= $voi->price;
                     endforeach;
 
 
@@ -1186,12 +1193,23 @@ class BuybackController extends Controller
                 <td style="font-size:12px;" class="text-right">00</td>
                 </tr>';*/
 
-                $html .='</tbody>
-                
-                </table>
+                $html .= '</tbody>';
 
-
-                ';
+                $html .='<tfoot>';
+                $html .='<tfoot>';
+                $html .='<tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>Total =</td>
+                                <td align="center">'.$total_price_amount .'</td>
+                                <td></td>
+                                <td></td>
+                            </tr>';
+                $html .='</table>';
 
 
 

@@ -448,14 +448,20 @@ class TenderController extends Controller
     {
         // dd($request);
         //excel 
+        $total_paid_amount=0;
         $data=array();
         $array_column=array('Invoice ID','Sold To','Tender','Paid Amount','Invoice Date');
         array_push($data, $array_column);
         $inv=$this->TenderReport($request);
         foreach($inv as $voi):
             $inv_arry=array($voi->invoice_id,$voi->customer_name,$voi->tender_name,$voi->paid_amount,formatDate($voi->created_at));
+
+            $total_paid_amount+=$voi->paid_amount;
             array_push($data, $inv_arry);
         endforeach;
+
+        $array_column=array('','','Total =',$total_paid_amount,'');
+        array_push($data, $array_column);
 
         $reportName="Tender Report";
         $report_title="Tender Report";
@@ -503,7 +509,7 @@ class TenderController extends Controller
                 </thead>
                 <tbody>';
 
-
+                $total_paid_amount=0;
 
                     $inv=$this->TenderReport($request);
                     foreach($inv as $index=>$voi):
@@ -515,7 +521,7 @@ class TenderController extends Controller
                         <td align="center">'.$voi->paid_amount.'</td>
                         <td>'.formatDate($voi->created_at).'</td>
                         </tr>';
-
+                        $total_paid_amount+=$voi->paid_amount;
                     endforeach;
 
 
@@ -531,7 +537,18 @@ class TenderController extends Controller
                 <td style="font-size:12px;" class="text-right">00</td>
                 </tr>';*/
 
-                $html .='</tbody></table>';
+                $html .='</tbody>';
+                    $html .='<tfoot>';
+                    $html .='<tfoot>';
+                    $html .='<tr>
+                    <td></td>
+                    <td></td>
+                    
+                    <td>Total =</td>
+                    <td align="center">'.$total_paid_amount.'</td>
+                    <td></td>
+                    </tr>';
+                    $html .='</table>';
 
                 //echo $html; die();
 

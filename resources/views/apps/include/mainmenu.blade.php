@@ -219,6 +219,10 @@
                     </li>
                     @endif
                     
+                    @if(in_array('purchase/create', $dataMenuAssigned))
+                    <li  class="{{ Request::path() == 'purchase/create' ? 'active' : '' }} border-bottom-purple"><a href="{{url('/purchase/create')}}" class="menu-item">Add New Purchase</a></li>
+                    @endif
+                    
                     @if(in_array('variance/create', $dataMenuAssigned))
                     <li  class="{{ Request::path() == 'variance/create' ? 'active' : '' }} border-bottom-purple"><a href="{{url('/variance/create')}}" class="menu-item">Add New Variance</a></li>
                     @endif 

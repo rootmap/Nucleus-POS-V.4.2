@@ -283,7 +283,8 @@ class AuthorizeNetPaymentHistoryController extends Controller
 	    {
 	        // dd($request);
 	        //excel 
-	        $data=array();
+            $data=array();
+            $total_paid_amount=0;
 	        $array_column=array('Invoice ID','Card Number','Card Type','Transaction ID','Paid Amount','Date');
 	        array_push($data, $array_column);
 	        $inv=$this->AuthReport($request);
@@ -295,9 +296,15 @@ class AuthorizeNetPaymentHistoryController extends Controller
 	            	$voi->transactionID,
 	            	$voi->paid_amount,
 	            	formatDateTime($voi->created_at)
-	            );
+                );
+                
+                $total_paid_amount+=$voi->paid_amount;
+
 	            array_push($data, $inv_arry);
-	        endforeach;
+            endforeach;
+            
+            $array_column=array('','','','Total = ',$total_paid_amount,'');
+	        array_push($data, $array_column);
 
 	        $reportName="Card Payment History Report";
 	        $report_title="Card Payment History Report";
@@ -347,7 +354,7 @@ class AuthorizeNetPaymentHistoryController extends Controller
 	                <tbody>';
 
 
-
+                        $total_paid_amount=0;
 	                    $inv=$this->AuthReport($request);
 	                    foreach($inv as $index=>$voi):
 	    
@@ -358,7 +365,9 @@ class AuthorizeNetPaymentHistoryController extends Controller
 	                        <td>'.$voi->transactionID.'</td>
 	                        <td align="center">'.$voi->paid_amount.'</td>
 	                        <td>'.formatDateTime($voi->created_at).'</td>
-	                        </tr>';
+                            </tr>';
+                            
+                            $total_paid_amount+=$voi->paid_amount;
 
 	                    endforeach;
 
@@ -375,7 +384,22 @@ class AuthorizeNetPaymentHistoryController extends Controller
 	                <td style="font-size:12px;" class="text-right">00</td>
 	                </tr>';*/
 
-	                $html .='</tbody></table>';
+                    $html .='</tbody>';
+
+                    $html .='<tfoot>';
+                    $html .='<tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>Total = </td>
+                    <td align="center">'.$total_paid_amount.'</td>
+                    <td></td>
+                    </tr>';
+                    $html .='<tfoot>';
+
+
+                    
+                    $html .='</table>';
 
 	                //echo $html; die();
 

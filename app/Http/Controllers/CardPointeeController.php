@@ -1531,6 +1531,7 @@ class CardPointeeController extends Controller
         {
             // dd($request);
             //excel 
+            $total_paid_amount=0;
             $data=array();
             $array_column=array('Invoice ID','Card Number','Transaction ID','Paid Amount','Date');
             array_push($data, $array_column);
@@ -1543,8 +1544,12 @@ class CardPointeeController extends Controller
                     $voi->amount,
                     formatDateTime($voi->created_at)
                 );
+                $total_paid_amount+= $voi->amount;
                 array_push($data, $inv_arry);
             endforeach;
+           
+            $array_column=array('','','Total =', $total_paid_amount,'');
+            array_push($data, $array_column);
 
             $reportName="CardPointe Payment History Report";
             $report_title="CardPointe Payment History Report";
@@ -1592,8 +1597,7 @@ class CardPointeeController extends Controller
                     </thead>
                     <tbody>';
 
-
-
+                        $total_paid_amount=0;
                         $inv=$this->AuthReport($request);
                         foreach($inv as $index=>$voi):
         
@@ -1604,7 +1608,7 @@ class CardPointeeController extends Controller
                             <td align="center">'.$voi->amount.'</td>
                             <td>'.formatDateTime($voi->created_at).'</td>
                             </tr>';
-
+                            $total_paid_amount+=$voi->amount;
                         endforeach;
 
 
@@ -1620,8 +1624,17 @@ class CardPointeeController extends Controller
                     <td style="font-size:12px;" class="text-right">00</td>
                     </tr>';*/
 
-                    $html .='</tbody></table>';
-
+                    $html .='</tbody>';
+                    $html .='<tfoot>';
+                    $html .='<tfoot>';
+                    $html .='<tr>
+                    <td></td>
+                    <td></td>
+                    <td>Total =</td>
+                    <td align="center">'.$total_paid_amount.'</td>
+                    <td></td>
+                    </tr>';
+                    $html .='</table>';
                     //echo $html; die();
 
 

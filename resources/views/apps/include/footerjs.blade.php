@@ -284,6 +284,7 @@ if($userguideInit==1)
 <script src="{{url('theme/sidebar/assets/js/typeahead.bundle.min.js')}}"></script>
 
 <script src="{{url('theme/sidebar/assets/js/jquery.nicescroll.min.js')}}"></script>
+<script src="{{url('theme/app-assets/js/scripts/ui/fullscreenSearch.min.js')}}" type="text/javascript"></script>
 
 
 
@@ -435,3 +436,4 @@ if($userguideInit==1)
 
     ?>
     <script src="{{url('chat/sc.js')}}"></script>
+    

@@ -577,14 +577,21 @@ class ProductStockinController extends Controller
     {
 
         //excel 
+        $total_quantity_invoice=0;
         $data=array();
         $array_column=array('Order ID','Vendor Name','Invoice Total Quantity','Order Date');
         array_push($data, $array_column);
         $inv=$this->StockInReport($request);
         foreach($inv as $voi):
             $inv_arry=array($voi->order_no,$voi->vendor_name,$voi->total_quantity,formatDate($voi->created_at));
+
+            $total_quantity_invoice+=$voi->total_quantity;
+
             array_push($data, $inv_arry);
         endforeach;
+
+        $array_column=array('','Total =',$total_quantity_invoice,'');
+        array_push($data, $array_column);
 
         $reportName="Stock In Order Report";
         $report_title="Stock In Order Report";
@@ -631,7 +638,7 @@ class ProductStockinController extends Controller
                 <tbody>';
 
 
-
+                    $total_quantity_invoice=0;
                     $inv=$this->StockInReport($request);
                     foreach($inv as $index=>$voi):
     
@@ -641,7 +648,7 @@ class ProductStockinController extends Controller
                         <td>'.$voi->total_quantity.'</td>
                         <td>'.formatDate($voi->created_at).'</td>
                         </tr>';
-
+                        $total_quantity_invoice+=$voi->total_quantity;
                     endforeach;
 
 
@@ -657,7 +664,16 @@ class ProductStockinController extends Controller
                 <td style="font-size:12px;" class="text-right">00</td>
                 </tr>';*/
 
-                $html .='</tbody></table>';
+                $html .='</tbody>';
+                $html .='<tfoot>';
+                $html .='<tfoot>';
+                $html .='<tr>
+                <td></td>
+                <td>Total =</td>
+                <td>'.$total_quantity_invoice.'</td>
+                <td></td>
+                </tr>';
+                $html .='</table>';
 
                 //echo $html; die();
 

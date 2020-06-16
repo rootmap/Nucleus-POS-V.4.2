@@ -258,14 +258,22 @@ class InvoicePaymentController extends Controller
     public function exportExcel(Request $request) 
     {
         //excel 
+        $total_paid_amount=0;
         $data=array();
         $array_column=array('Payment ID','Invoice ID','Customer Name','Tender','Paid Amount','Payment Date');
         array_push($data, $array_column);
         $inv=$this->profitQuery($request);
         foreach($inv as $voi):
             $inv_arry=array($voi->id,$voi->invoice_id,$voi->customer_name,$voi->tender_name,$voi->paid_amount,formatDate($voi->created_at));
+
+            $total_paid_amount+= $voi->paid_amount;
             array_push($data, $inv_arry);
+
+            
         endforeach;
+
+        $array_column=array('','','','Total =',$total_paid_amount,'');
+        array_push($data, $array_column);
 
         $reportName="Payment Report";
         $report_title="Payment Report";
@@ -313,6 +321,7 @@ class InvoicePaymentController extends Controller
                 </thead>
                 <tbody>';
 
+                $total_paid_amount=0;
                     $inv=$this->profitQuery($request);
                     foreach($inv as $voi):
                         $html .='<tr>
@@ -323,7 +332,7 @@ class InvoicePaymentController extends Controller
                         <td style="font-size:12px;" class="text-center">'.$voi->paid_amount.'</td>
                         <td style="font-size:12px;" class="text-right">'.$voi->invoice_id.'</td>
                         </tr>';
-
+                        $total_paid_amount+=$voi->paid_amount;
                     endforeach;
 
 
@@ -338,12 +347,22 @@ class InvoicePaymentController extends Controller
                 <td style="font-size:12px;" class="text-right">00</td>
                 </tr>';*/
 
-                $html .='</tbody>
-                
-                </table>
+               
+                $html .='</tbody>';
+                $html .='<tfoot>';
+                $html .='<tfoot>';
+                $html .='<tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td align="center">'.$total_paid_amount.'</td>
+                <td></td>
+                </tr>';
+                $html .='</table>';
 
 
-                ';
+               
 
 
 
@@ -628,14 +647,20 @@ class InvoicePaymentController extends Controller
     public function PaypalexportExcel(Request $request) 
     {
         //excel 
+        $total_paid_amount=0;
         $data=array();
         $array_column=array('Payment ID','Invoice ID','Customer Name','Tender','Paid Amount','Payment Date');
         array_push($data, $array_column);
         $inv=$this->PaypalprofitQuery($request);
         foreach($inv as $voi):
             $inv_arry=array($voi->id,$voi->invoice_id,$voi->customer_name,$voi->tender_name,$voi->paid_amount,formatDate($voi->created_at));
+
+            $total_paid_amount+=$voi->paid_amount;
             array_push($data, $inv_arry);
         endforeach;
+
+        $array_column=array('','','','Total =',$total_paid_amount,'');
+        array_push($data, $array_column);
 
         $reportName="Paypal Payment Report";
         $report_title="Paypal Payment Report";
@@ -683,6 +708,7 @@ class InvoicePaymentController extends Controller
                 </thead>
                 <tbody>';
 
+                    $total_paid_amount=0;
                     $inv=$this->PaypalprofitQuery($request);
                     foreach($inv as $voi):
                         $html .='<tr>
@@ -694,6 +720,7 @@ class InvoicePaymentController extends Controller
                         <td style="font-size:12px;" class="text-right">'.$voi->invoice_id.'</td>
                         </tr>';
 
+                        $total_paid_amount+=$voi->paid_amount;
                     endforeach;
 
 
@@ -708,12 +735,18 @@ class InvoicePaymentController extends Controller
                 <td style="font-size:12px;" class="text-right">00</td>
                 </tr>';*/
 
-                $html .='</tbody>
-                
-                </table>
-
-
-                ';
+                $html .='</tbody>';
+                $html .='<tfoot>';
+                $html .='<tfoot>';
+                $html .='<tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Total =</td>
+                <td>'.$total_paid_amount.'</td>
+                <td></td>
+                </tr>';
+                $html .='</table>';
 
 
 

@@ -304,6 +304,8 @@ class CloseDrawerController extends Controller
     public function exportExcel(Request $request) 
     {
         //excel 
+        $total_open_amount=0;
+        $total_close_amount=0;
         $data=array();
         $array_column=array('ID','Opeing Time','Opeing Amount','Closing Time','Closing Amount','Cashier Name');
         array_push($data, $array_column);
@@ -311,8 +313,14 @@ class CloseDrawerController extends Controller
 
         foreach($inv as $voi):
             $inv_arry=array($voi->id,formatDateTime($voi->opeing_time),$voi->opening_amount,formatDateTime($voi->closing_time),$voi->closing_amount,$voi->cashier_name);
+
+            $total_open_amount+=$voi->opening_amount;
+            $total_close_amount+=$voi->closing_amount;
             array_push($data, $inv_arry);
         endforeach;
+
+        $array_column=array('','Total =',$total_open_amount,'', $total_close_amount,'');
+        array_push($data, $array_column);
 
         $reportName="Close Store Report";
         $report_title="Close Store Report";
@@ -360,6 +368,9 @@ class CloseDrawerController extends Controller
                 </thead>
                 <tbody>';
 
+                $total_open_amount=0;
+                $total_close_amount=0;
+
                     $inv=$this->profitQuery($request);
                     foreach($inv as $voi):
                         $html .='<tr>
@@ -370,6 +381,9 @@ class CloseDrawerController extends Controller
                         <td style="font-size:12px;" class="text-right">'.$voi->closing_amount.'</td>
                         <td style="font-size:12px;" class="text-right">'.$voi->cashier_name.'</td>
                         </tr>';
+
+                        $total_open_amount+=$voi->opening_amount;
+                        $total_close_amount+=$voi->closing_amount;
 
                     endforeach;
 
@@ -385,12 +399,20 @@ class CloseDrawerController extends Controller
                 <td style="font-size:12px;" class="text-right">00</td>
                 </tr>';*/
 
-                $html .='</tbody>
-                
-                </table>
-
-
-                ';
+                $html .='</tbody>';
+                $html .='<tfoot>';
+                $html .='<tfoot>';
+                $html .='<tr>
+                <td></td>
+                <td></td>   
+                <td align="center">'.$total_open_amount.'</td>
+                <td></td>
+                <td align="center">'.$total_close_amount.'</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                </tr>';
+                $html .='</table>';
 
 
 

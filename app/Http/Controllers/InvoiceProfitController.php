@@ -263,6 +263,9 @@ GROUP BY d.invoice_id) as product"))
     {
 
         //excel 
+        $total_amount=0;
+        $total_cost_amount=0;
+        $total_profit_amount=0;
         $data=array();
         $array_column=array('Invoice ID','Product','Customer Name','Total Amount','Total Cost','Total Profit','Invoice Date');
         array_push($data, $array_column);
@@ -270,7 +273,14 @@ GROUP BY d.invoice_id) as product"))
         foreach($inv as $voi):
             $inv_arry=array($voi->invoice_id,$voi->product,$voi->customer_name,$voi->total_amount,$voi->total_cost,$voi->total_profit,formatDate($voi->created_at));
             array_push($data, $inv_arry);
+
+            $total_amount+=$voi->total_amount;
+            $total_cost_amount+=$voi->total_cost;
+            $total_profit_amount+=$voi->total_profit;
         endforeach;
+
+        $array_column=array('','','Total =',$total_amount,$total_cost_amount,$total_profit_amount);
+        array_push($data, $array_column);
 
         $reportName="Profit Report";
         $report_title="Profit Report";
@@ -319,7 +329,9 @@ GROUP BY d.invoice_id) as product"))
                 </thead>
                 <tbody>';
 
-
+                $total_amount=0;
+                $total_cost_amount=0;
+                $total_profit_amount=0;
 
                     $inv=$this->profitQuery($request);
                     foreach($inv as $index=>$voi):
@@ -333,6 +345,11 @@ GROUP BY d.invoice_id) as product"))
                         <td>'.$voi->total_cost.'</td>
                         <td>'.$voi->total_profit.'</td>
                         </tr>';
+
+                        
+                        $total_amount+=$voi->total_amount;
+                        $total_cost_amount+=$voi->total_cost;
+                        $total_profit_amount+=$voi->total_profit;
 
                     endforeach;
 
@@ -349,7 +366,20 @@ GROUP BY d.invoice_id) as product"))
                 <td style="font-size:12px;" class="text-right">00</td>
                 </tr>';*/
 
-                $html .='</tbody></table>';
+                
+                $html .='</tbody>';
+                $html .='<tfoot>';
+                $html .='<tfoot>';
+                $html .='<tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Total =</td>
+                <td>'.$total_amount.'</td>
+                <td>'.$total_cost_amount.'</td>
+                <td>'.$total_profit_amount.'</td>
+                </tr>';
+                $html .='</table>';
 
                 //echo $html; die();
 

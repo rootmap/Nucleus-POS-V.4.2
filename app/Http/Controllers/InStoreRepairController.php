@@ -1904,6 +1904,9 @@ class InStoreRepairController extends Controller
     public function exportExcel(Request $request) 
     {
         //excel 
+        $total_price_amount=0;
+        $total_re_price_amount=0;
+        $total_over_price_amount=0;
         $data=array();
         $array_column=array('Repair ID','Invoice ID','Customer Name','Device Name','Model Name','Problem Name','Product Name','Price','Repair Price','Override Repair Price','Password','IMEI','Tested Before By','Tested After By','Tech Notes','How Did You Hear About Us','Start Time','End Time','Salvage Part');
         array_push($data, $array_column);
@@ -1911,8 +1914,16 @@ class InStoreRepairController extends Controller
 
         foreach($inv as $voi):
             $inv_arry=array($voi->id,$voi->invoice_id,$voi->customer_name,$voi->device_name,$voi->model_name,$voi->problem_name,$voi->product_name,$voi->price,$voi->repair_price,$voi->override_repair_price,$voi->password,$voi->imei,$voi->tested_before_by,$voi->tested_after_by,$voi->tech_notes,$voi->how_did_you_hear_about_us,$voi->start_time,$voi->end_time,$voi->salvage_part);
+
+            $total_price_amount+=$voi->price;
+            $total_re_price_amount+=$voi->repair_price;
+            $total_over_price_amount+=$voi->override_repair_price;
             array_push($data, $inv_arry);
         endforeach;
+
+
+        $array_column=array('','','','','','','Total =',$total_price_amount,$total_re_price_amount,$total_over_price_amount,'','','','','','','','','');
+        array_push($data, $array_column);
 
         $reportName="Repair Report";
         $report_title="Repair Report";
@@ -1973,6 +1984,10 @@ class InStoreRepairController extends Controller
                 </thead>
                 <tbody>';
 
+                $total_price_amount=0;
+                $total_re_price_amount=0;
+                $total_over_price_amount=0;
+
                     $inv=$this->profitQuery($request);
                     foreach($inv as $voi):
                         $html .='<tr>
@@ -1997,6 +2012,10 @@ class InStoreRepairController extends Controller
                         <td style="font-size:12px;" class="text-right">'.$voi->salvage_part.'</td>
                         </tr>';
 
+                        $total_price_amount+=$voi->price;
+                        $total_re_price_amount+=$voi->repair_price;
+                        $total_over_price_amount+=$voi->override_repair_price;
+
                     endforeach;
 
 
@@ -2011,12 +2030,31 @@ class InStoreRepairController extends Controller
                 <td style="font-size:12px;" class="text-right">00</td>
                 </tr>';*/
 
-                $html .='</tbody>
-                
-                </table>
-
-
-                ';
+                $html .='</tbody>';
+                $html .='<tfoot>';
+                $html .='<tfoot>';
+                $html .='<tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Total =</td>
+                <td align="center">'.$total_price_amount.'</td>
+                <td align="center">'.$total_re_price_amount.'</td>
+                <td align="center">'.$total_over_price_amount.'</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                </tr>';
+                $html .='</table>';
 
 
 
@@ -2284,6 +2322,7 @@ class InStoreRepairController extends Controller
     public function exportExcelLCDStatus(Request $request) 
     {
         //excel 
+        $total_price_amount=0;
         $data=array();
         $array_column=array('Repair ID','Invoice ID','Customer Name','Product Name','Price','LCD Status');
         array_push($data, $array_column);
@@ -2291,8 +2330,13 @@ class InStoreRepairController extends Controller
 
         foreach($inv as $voi):
             $inv_arry=array($voi->id,$voi->invoice_id,$voi->customer_name,$voi->product_name,$voi->price,$voi->lcd_status);
+
+            $total_price_amount+=$voi->price;
             array_push($data, $inv_arry);
         endforeach;
+
+        $array_column=array('','','','Total =',$total_price_amount,'');
+        array_push($data, $array_column);
 
         $reportName="Repair LCD  Report";
         $report_title="Repair LCD Report";
@@ -2340,6 +2384,8 @@ class InStoreRepairController extends Controller
                 </thead>
                 <tbody>';
 
+                $total_price_amount=0;
+
                     $inv=$this->LCDStatusQuery($request);
                     foreach($inv as $voi):
                         $html .='<tr>
@@ -2351,6 +2397,7 @@ class InStoreRepairController extends Controller
                         <td style="font-size:12px;" class="text-right">'.$voi->lcd_status.'</td>
                         </tr>';
 
+                        $total_price_amount+=$voi->price;
                     endforeach;
 
 
@@ -2365,12 +2412,19 @@ class InStoreRepairController extends Controller
                 <td style="font-size:12px;" class="text-right">00</td>
                 </tr>';*/
 
-                $html .='</tbody>
-                
-                </table>
-
-
-                ';
+             
+                $html .='</tbody>';
+                $html .='<tfoot>';
+                $html .='<tfoot>';
+                $html .='<tr>
+                <td></td>
+                <td></td>
+                <td></td>
+               <td>Total =</td>
+                <td align="center">'.$total_price_amount.'</td>
+                <td></td>
+                </tr>';
+                $html .='</table>';
 
 
 
@@ -2620,6 +2674,7 @@ class InStoreRepairController extends Controller
     public function exportExcelSalvage(Request $request) 
     {
         //excel 
+        $total_paid_amount=0;
         $data=array();
         $array_column=array('Repair ID','Invoice ID','Customer Name','Product Name','Price','Salvage Part');
         array_push($data, $array_column);
@@ -2627,8 +2682,13 @@ class InStoreRepairController extends Controller
 
         foreach($inv as $voi):
             $inv_arry=array($voi->id,$voi->invoice_id,$voi->customer_name,$voi->product_name,$voi->price,"Yes");
+            $total_paid_amount+=$voi->price;
+
             array_push($data, $inv_arry);
         endforeach;
+
+        $array_column=array('','','','Total =',$total_paid_amount,'');
+        array_push($data, $array_column);
 
         $reportName="Repair Salvage  Report";
         $report_title="Repair Salvage Report";
@@ -2676,6 +2736,7 @@ class InStoreRepairController extends Controller
                 </thead>
                 <tbody>';
 
+                $total_paid_amount=0;
                     $inv=$this->SalvageQuery($request);
                     foreach($inv as $voi):
                         $html .='<tr>
@@ -2686,6 +2747,8 @@ class InStoreRepairController extends Controller
                         <td style="font-size:12px;" class="text-right">'.$voi->price.'</td>
                         <td style="font-size:12px;" class="text-right">Yes</td>
                         </tr>';
+
+                        $total_paid_amount+=$voi->price;
 
                     endforeach;
 
@@ -2701,12 +2764,18 @@ class InStoreRepairController extends Controller
                 <td style="font-size:12px;" class="text-right">00</td>
                 </tr>';*/
 
-                $html .='</tbody>
-                
-                </table>
-
-
-                ';
+                $html .='</tbody>';
+                $html .='<tfoot>';
+                $html .='<tfoot>';
+                $html .='<tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Total =</td>
+                <td align="center">'.$total_paid_amount.'</td>
+             <td></td>
+                </tr>';
+                $html .='</table>';
 
 
 

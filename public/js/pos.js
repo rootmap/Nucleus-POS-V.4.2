@@ -619,7 +619,8 @@ function loadCatProduct(cid) {
                     proHtml += '<div class="p-1 card-header" style="padding: 0.7rem !important;">';
                     proHtml += '      <p style="margin-bottom: 0px !important; min-height: 40px; color: #fff;" class="text-xs-left green" style="color: #fff;">' + row.name + '</p>';
                     proHtml += '</div>';
-                    proHtml += '<div class="text-xs-right green" style="line-height: 30px; padding-right: 10px; font-weight: bolder; height: 30px; color: #545a63;">$' + row.price + '</div>';
+                    proHtml += '<style type="text/css">#cb' + row.id + '::before { content: "Stock: ' + row.quantity + '"; left:3px; position:absolute; font-size: 9px; }</style>';
+                    proHtml += '<div id="cb' + row.id + '" class="text-xs-right green" style="line-height: 30px; padding-right: 10px; font-weight: bolder; height: 30px; color: #545a63;">$' + row.price + '</div>';
                     proHtml += '</div>';
                     proHtml += '</a>';
                     proHtml += '</div>';

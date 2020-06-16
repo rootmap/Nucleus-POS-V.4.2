@@ -32,7 +32,7 @@
   </style>
   <!-- navbar-fixed-top-->
   @include('apps.include.top_nav')
-  {{-- @include('apps.include.full-screen-search') --}}
+  @include('apps.include.full-screen-search')
   <!-- ////////////////////////////////////////////////////////////////////////////-->
   <!-- main menu-->
   @include('apps.include.mainmenu')

@@ -211,6 +211,7 @@ class HigherCashierSaleController extends Controller
     public function exportExcelhighestCashierSales(Request $request) 
     {
         //excel 
+        $total_amount=0;
         $data=array();
         $array_column=array('ID','Date','Cashier Name','Total');
         array_push($data, $array_column);
@@ -220,7 +221,12 @@ class HigherCashierSaleController extends Controller
             $inv_arry=array($ik,formatDate($voi->invoice_date),$voi->cashier_name,$voi->invoice_total);
             array_push($data, $inv_arry);
             $ik++;
+
+            $total_amount+=$voi->invoice_total; 
         endforeach;
+
+        $array_column=array('','','Total =',$total_amount);
+        array_push($data, $array_column);
 
         $reportName="Highest Cashier Datewise Sales  Report";
         $report_title="Highest Cashier Datewise Sales  Report";
@@ -266,6 +272,7 @@ class HigherCashierSaleController extends Controller
                 </thead>
                 <tbody>';
 
+                    $total_paid_amount=0;
                     $inv=$this->highestCashierSalesQuery($request);
                     $ik=1;
                     foreach($inv as $voi):
@@ -276,6 +283,8 @@ class HigherCashierSaleController extends Controller
                         <td style="font-size:12px;" class="text-right">'.$voi->invoice_total.'</td>
                         </tr>';
                         $ik++;
+
+                        $total_paid_amount+=$voi->invoice_total;
                     endforeach;
 
 
@@ -289,13 +298,16 @@ class HigherCashierSaleController extends Controller
                 <td></td>
                 <td style="font-size:12px;" class="text-right">00</td>
                 </tr>';*/
-
-                $html .='</tbody>
-                
-                </table>
-
-
-                ';
+                $html .='</tbody>';
+                $html .='<tfoot>';
+                $html .='<tfoot>';
+                $html .='<tr>
+                <td></td>
+                <td></td>
+                <td>Total =</td>
+                <td align="center">'.$total_paid_amount.'</td>
+                </tr>';
+                $html .='</table>';
 
 
 

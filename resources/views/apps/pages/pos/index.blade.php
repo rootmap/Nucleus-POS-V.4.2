@@ -568,6 +568,8 @@
 @endsection
 
 @section('css')
+<link rel="stylesheet" type="text/css" href="{{url('theme/app-assets/vendors/css/extensions/pace.css')}}">
+<link rel="stylesheet" type="text/css" href="{{url('theme/app-assets/vendors/css/extensions/datedropper.min.css')}}">
 <link rel="stylesheet" type="text/css" href="{{url('assets/css/pos.css')}}">
 <style type="text/css">
 .one-make-full
@@ -595,6 +597,32 @@ var squareupPaymentFormload="{{url('intregation/squareup/form')}}";
 @endsection
 
 @section('js')
+
+<script src="{{url('theme/app-assets/vendors/js/extensions/pace.min.js')}}" type="text/javascript"></script>
+<!-- /build-->
+<!-- BEGIN VENDOR JS-->
+<!-- BEGIN PAGE VENDOR JS-->
+<script src="{{url('theme/app-assets/vendors/js/extensions/datedropper.min.js')}}" type="text/javascript"></script>
+<!-- END PAGE VENDOR JS-->
+
+<!-- BEGIN PAGE LEVEL JS-->
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $(".DropDateWithformat").dateDropper({
+            dropWidth: 200,
+            maxYear: "<?=date('Y')?>",
+            minYear: "2010",
+            format: "Y-m-d",
+            init_animation: "bounce",
+            dropPrimaryColor: "#fa4420",
+            dropBorder: "1px solid #fa4420",
+            dropBorderRadius: "20",
+            dropShadow: "0 0 10px 0 rgba(250, 68, 32, 0.6)"
+        });
+    });
+</script>
+<!-- END PAGE LEVEL JS-->
+
 <script src="{{asset('theme/app-assets/vendors/js/forms/extended/card/jquery.card.js')}}" type="text/javascript"></script>
 <script src="{{asset('theme/app-assets/js/scripts/forms/extended/form-typeahead.min.js')}}" type="text/javascript"></script>
 <script src="{{asset('theme/app-assets/js/scripts/forms/extended/form-inputmask.min.js')}}" type="text/javascript"></script>

@@ -726,6 +726,7 @@ class SquareConnectController extends Controller
     {
       // dd($request);
       //excel 
+      $total_paid_amount=0;
       $data = array();
       $array_column = array('Invoice ID', 'Card Number', 'Card Type', 'Transaction ID', 'Paid Amount', 'Date', 'Status');
       array_push($data, $array_column);

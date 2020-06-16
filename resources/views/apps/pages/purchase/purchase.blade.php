@@ -1,5 +1,5 @@
 @extends('apps.layout.master')
-@section('title','Stock in Product')
+@section('title','Purchase')
 @section('content')
 <section id="form-action-layouts">
 
@@ -11,43 +11,16 @@
 	<div class="row">
 	    <div class="col-md-12" id="addingMessageArea"></div>
 	    <div class="clearfix"></div>
-	    <div class="col-md-3">
-			<div class="card">
-				<div class="card-header">
-					<h4 class="card-title" id="from-actions-bottom-right"><i class="icon-barcode"></i> Stockin with Barcode</h4>
-					<a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
-					<div class="heading-elements">
-						<ul class="list-inline mb-0">
-							<li><a data-action="expand"><i class="icon-expand2"></i></a></li>
-						</ul>
-					</div>
-				</div>
-				<div class="card-body collapse in">
-					<div class="card-block">
-
-						<form class="form" method="post" action="javascript:loadBarcodeITem();">
-							<div class="form-body">
-									<div class="form-group">
-										<label for="userinput2">Enter Your Barcode Here</label>
-										<input type="text" name="barcode" autocomplete="off" class="form-control" placeholder="Enter Barcode">
-									</div>
-									<div class="form-group">
-										<code>Please press enter if you don't have any barcode machine.</code>
-									</div>
-							</div>
-						</form>
-					</div>
-				</div>
-			</div>
-		</div>
+	    
 		
-		<div class="col-md-9">
+		<div class="col-md-12">
 			<div class="card">
 				<div class="card-header">
-					<h4 class="card-title" id="from-actions-bottom-right"><i class="icon-upload3"></i> Add New Stock</h4>
+					<h4 class="card-title" id="from-actions-bottom-right"><i class="icon-upload3"></i> Add New Purchase</h4>
 					<a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
 					<div class="heading-elements">
 						<ul class="list-inline mb-0">
+						<li><a class="btn btn-info" href="{{url('purchase')}}"><i class="icon-table"></i> Purchase Invoice List </a></li>
 							<li><a data-action="expand"><i class="icon-expand2"></i></a></li>
 						</ul>
 					</div>
@@ -55,10 +28,20 @@
 				<div class="card-body collapse in">
 					<div class="card-block">
 
-						<form class="form">
+					<form class="form">
 							<div class="form-body">
-							    <div class="col-md-6">
+							    <div class="col-md-3">
 							        <div class="form-group">
+										
+										<label for="userinput2">Your Barcode</label>
+										<div class="input-group">
+											<input type="text" name="barcode" autocomplete="off" class="form-control" placeholder="Enter Barcode">
+											<span class="input-group-addon" id="checkBarcode" style="cursor:pointer;"><i class="icon-barcode"></i> Check Barcode</span>
+										</div>
+									</div>
+							    </div>
+							    <div class="col-md-3">
+							        <div class="form-group" style="padding-right:10%;">
 										<label for="userinput1">Product Name</label>
 										<select name="pid" class="select2 form-control">
 											@if(isset($productData))
@@ -69,6 +52,22 @@
 												@endforeach
 											@endif
 										</select>
+										<input style="display: none;" type="text" name="product_name" autocomplete="off" class="form-control" placeholder="Enter new product name">
+									</div>
+							    </div>
+							    <div class="col-md-3">
+							        <div class="form-group" style="padding-right:10%;">
+										<label for="userinput1">Category</label>
+										<select name="cid" class="select2 form-control">
+											<option value="0">Select Category</option>
+											@if(isset($catData))
+												@foreach($catData as $pro)
+												<option value="{{$pro->id}}">{{$pro->name}}</option>
+												@endforeach
+											@endif
+											
+										</select>
+										
 									</div>
 							    </div>
 							    <div class="col-md-3">
@@ -76,7 +75,8 @@
 										<label for="userinput2">Purchase Price</label>
 										<input type="text" name="purchase_price" class="form-control"  value="0">
 									</div>
-							    </div>
+								</div>
+														    <div class="clearfix"></div>
 							    <div class="col-md-3">
 							        <div class="form-group">
 										<label for="userinput2">Sell Price</label>
@@ -84,7 +84,7 @@
 									</div>
 							    </div>
 							    
-							    <div class="clearfix"></div>
+	
 							    
 							    <div class="col-md-3">
 							        <div class="form-group">
@@ -98,7 +98,7 @@
 										<input type="number" disabled="disabled" name="systemquantity" class="form-control" id="number" value="0">
 									</div>
 							    </div>
-							    <div class="col-md-6">
+							    <div class="col-md-3">
 							        <div class="form-group mt-2">
 										<input type="hidden" name="barcode">
 										<button type="button" id="addCart" class="btn btn-info btn-accent-2">
@@ -118,13 +118,13 @@
 		</div>
 	</div>
 	<!-- Both borders end-->
-	<form class="form" action="{{url('product/stock/in/confirm')}}" method="post">
+	<form class="form" action="{{url('product/purchase/confirm')}}" method="post">
 		{{ csrf_field() }}
 		<div class="row">
 			<div class="col-xs-12">
 				<div class="card">
 					<div class="card-header">
-						<h4 class="card-title"><i class="icon-upload22"></i> New Inventory List</h4>
+						<h4 class="card-title"><i class="icon-upload22"></i> New Purchase Item List</h4>
 						<a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
 						<div class="heading-elements">
 							<ul class="list-inline mb-0">
@@ -208,7 +208,20 @@
 <script src="{{url('theme/app-assets/js/scripts/forms/select/form-select2.min.js')}}" type="text/javascript"></script>
 
 <script type="text/javascript">
-    
+    $(document).ready(function(){
+		$('input[name=barcode]').keypress(function(event){
+			var keycode = (event.keyCode ? event.keyCode : event.which);
+			if(keycode == '13'){
+				//alert('You pressed a "enter" key in textbox');  
+				loadBarcodeITem();
+			}
+		});
+
+		$("#checkBarcode").click(function(){
+			loadBarcodeITem();
+		});
+	});
+
     function dismissNotification()
     {
         setTimeout(function(){ $('.alert').hide(); }, 3000);
@@ -264,6 +277,10 @@
 	        $.each(productJson,function(key,row){
 	            if(row.barcode.toLowerCase()==barcode.toLowerCase())
 	            {
+					$('input[name=product_name]').hide();
+					$('select[name=pid]').next(".select2-container").show();
+				
+
 	            	found=1;
 	            	$("input[name=systemquantity]").val(row.quantity);
 	            	$("input[name=barcode]").val(row.barcode);
@@ -282,12 +299,19 @@
     	                $("input[name=purchase_price]").val(row.cost);
     	                $("input[name=sell_price]").val(row.price);
     	                $("select[name=pid] option[value="+row.id+"]").attr('selected',true).trigger('change');
+						$("select[name=cid] option[value="+row.category_id+"]").attr('selected',true).trigger('change');
 	                }
+
+					$("#addCart").click();
 	            }
 	        });
 
 	        if(found==0)
 	        {
+				$('select[name=pid]').next(".select2-container").hide();
+				$('input[name=product_name]').show();
+				$('input[name=product_name]').focus();
+
 	        	$("#addingMessageArea").html(warningMessage("No product found on this barcode."));
 	        }
 	    }
@@ -308,6 +332,7 @@
 		var productQ=[];
 		$("#addCart").click(function(){
 			var pid=$("select[name=pid]").val();
+			var cid=$("select[name=cid]").val();
 			var quantity=$("input[name=quantity]").val();
 			var price=$("select option[value="+pid+"]").attr("data-price");
 			var product_name=$("select option[value="+pid+"]").html();
@@ -317,25 +342,86 @@
 
 			//alert(price);
 
+			if(cid==0)
+			{
+				alert('Please select category.');
+				return false;
+			}
+
+			if(cid.length==0)
+			{
+				alert('Please select category.');
+				return false;
+			}
+
 			if(quantity.length==0)
 			{
 				alert('Please type quantity.');
 				return false;
 			}
+
 			if(quantity==0)
 			{
 				alert('Please type quantity.');
 				return false;
 			}
 
-			var timeStamp = Math.floor(Date.now() / 1000);
+			var product_name=$("select option[value="+pid+"]").html();
+			var fonPro=0;
+	        $.each(productJson,function(key,row){
+	            if(row.barcode.toLowerCase()==barcode.toLowerCase())
+	            {
+					fonPro=1;
+				}
+			});
 
-			var StrInputField='<input type="hidden" name="sell_price[]" value="'+sell_price+'"><input type="hidden" name="purchase_price[]" value="'+purchase_price+'"><input type="hidden" name="pid[]" value="'+pid+'"><input type="hidden" name="barcode[]" value="'+barcode+'"><input type="hidden" name="quantity[]" value="'+quantity+'"><input type="hidden" name="name[]" value="'+product_name+'"><input type="hidden" name="price[]" value="'+price+'">';
+			if(fonPro==0)
+			{
+				pid=0;
+				product_name=$("input[name=product_name]").val();
+			}
+			else
+			{
+				if(pid==0)
+				{
+					alert('Please select product or enter barcode.');
+					return false;
+				}
 
+				if(cid==0)
+				{
+					alert('Please select category.');
+					return false;
+				}
+			}
 
-			strString='<tr id="row_'+timeStamp+'"><td width="100" class="sl">'+pid+'</td><td>'+barcode+'</td><td>'+product_name+' '+StrInputField+' </td><td width="150">'+purchase_price+'</td><td width="150">'+sell_price+'</td><td width="150">'+quantity+'</td><td width="50"><button type="button" data-id="'+pid+'" class="btn btn-sm btn-danger close-row" onclick="removeRowCart('+timeStamp+')"><i class="icon-cross"></i></button></td></tr>';
+			var barcExists=0;
+			var roeID='';
+			$.each($("#ShoppingCartList").children('tr'),function(key,row){
+				var exbarcode=$(row).children('td:eq(1)').html();
+				var curroeID=$(row).attr('id');
+				if(exbarcode==barcode)
+				{
+					barcExists=1;
+					roeID=curroeID;
+				}
+			});
 
-			$("#ShoppingCartList").append(strString);
+			if(barcExists==1)
+			{
+				//alert(roeID);
+				var exQuan=parseInt($("#"+roeID).children('td:eq(5)').html())+parseInt(quantity);
+				$("#"+roeID).children('td:eq(5)').html(exQuan);
+				$("#"+roeID).children('td:eq(2)').children('input:eq(4)').val(exQuan);
+			}
+			else
+			{
+				var timeStamp = Math.floor(Date.now() / 1000);
+				var StrInputField='<input type="hidden" name="sell_price[]" value="'+sell_price+'"><input type="hidden" name="purchase_price[]" value="'+purchase_price+'"><input type="hidden" name="pid[]" value="'+pid+'"><input type="hidden" name="barcode[]" value="'+barcode+'"><input type="hidden" name="quantity[]" value="'+quantity+'"><input type="hidden" name="name[]" value="'+product_name+'"><input type="hidden" name="price[]" value="'+price+'"><input type="hidden" name="cid[]" value="'+cid+'">';
+				strString='<tr id="row_'+timeStamp+'"><td width="100" class="sl">'+pid+'</td><td>'+barcode+'</td><td>'+product_name+' '+StrInputField+' </td><td width="150">'+purchase_price+'</td><td width="150">'+sell_price+'</td><td width="150">'+quantity+'</td><td width="50"><button type="button" data-id="'+pid+'" class="btn btn-sm btn-danger close-row" onclick="removeRowCart('+timeStamp+')"><i class="icon-cross"></i></button></td></tr>';
+				$("#ShoppingCartList").append(strString);
+			}
+			
 			genarateSL();
 
 		});
@@ -371,4 +457,5 @@
 	}
 
 </script>
+
 @endsection

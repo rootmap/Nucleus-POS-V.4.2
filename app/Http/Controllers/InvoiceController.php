@@ -872,6 +872,8 @@ class InvoiceController extends Controller
     public function exportPayoutExcel(Request $request) 
     {
         //excel 
+        $total_amount=0;
+        $totla_negative_amount=0;
         $data=array();
         $array_column=array('ID','Cashier/Manager Name','Amount','Negative Amount','Reason','Created');
         array_push($data, $array_column);
@@ -879,8 +881,15 @@ class InvoiceController extends Controller
 
         foreach($inv as $voi):
             $inv_arry=array($voi->id,$voi->cashier_name,$voi->amount,$voi->negative_amount,$voi->reason,formatDateTime($voi->created_at));
+            
+            $total_amount+=$voi->amount;
+            $totla_negative_amount+=$voi->negative_amount;
+
             array_push($data, $inv_arry);
         endforeach;
+
+        $array_column=array('','Total =',$total_amount,$totla_negative_amount,'','');
+        array_push($data, $array_column);
 
         $reportName="Payout Report";
         $report_title="Payout Report";
@@ -928,6 +937,9 @@ class InvoiceController extends Controller
                 </thead>
                 <tbody>';
 
+                $total_amount=0;
+                $totla_negative_amount=0;
+
                     $inv=$this->PayoutQuery($request);
                     foreach($inv as $voi):
                         $html .='<tr>
@@ -938,6 +950,9 @@ class InvoiceController extends Controller
                         <td style="font-size:12px;" class="text-right">'.$voi->reason.'</td>
                         <td style="font-size:12px;" class="text-right">'.formatDateTime($voi->created_at).'</td>
                         </tr>';
+
+                        $total_amount+=$voi->amount;
+                        $totla_negative_amount+=$voi->negative_amount;
 
                     endforeach;
 
@@ -953,7 +968,18 @@ class InvoiceController extends Controller
                 <td style="font-size:12px;" class="text-right">00</td>
                 </tr>';*/
 
-                $html .='</tbody></table>';
+               
+                $html .='</tbody>';
+                $html .='<tfoot>';
+                $html .='<tfoot>';
+                $html .='<tr>
+                <td></td>
+                <td>Total =</td>
+                <td align="center">'.$total_amount.'</td>
+                <td align="center">'.$totla_negative_amount.'</td>
+                <td></td>
+                </tr>';
+                $html .='</table>';
 
                 $this->sdc->PDFLayout($reportName,$html);
     }
@@ -6627,15 +6653,24 @@ GROUP BY d.invoice_id) as product"))
     public function ExcelReport(Request $request) 
     {
         // dd($request);
-        //excel 
+        //excel
+        $total_amount=0;
+        
         $data=array();
         $array_column=array('Invoice ID','Product','Sold To','Tender','Status','Invoice Total Amount','Invoice Date');
         array_push($data, $array_column);
         $inv=$this->SalesReport($request);
         foreach($inv as $voi):
             $inv_arry=array($voi->invoice_id,$voi->product,$voi->customer_name,$voi->tender_name,$voi->invoice_status,$voi->total_amount,formatDate($voi->created_at));
+
+            $total_amount+=$voi->total_amount;
+           
             array_push($data, $inv_arry);
+
         endforeach;
+
+        $array_column=array('','','','','Total =',$total_amount,'');
+        array_push($data, $array_column);
 
         $reportName="Sales Report";
         $report_title="Sales Report";
@@ -6686,7 +6721,7 @@ GROUP BY d.invoice_id) as product"))
                 <tbody>';
 
 
-
+                $total_amount=0;
                     $inv=$this->SalesReport($request);
                     foreach($inv as $index=>$voi):
     
@@ -6699,7 +6734,7 @@ GROUP BY d.invoice_id) as product"))
                         <td align="center">'.$voi->total_amount.'</td>
                         <td>'.formatDateTime($voi->created_at).'</td>
                         </tr>';
-
+                        $total_amount+=$voi->total_amount;
                     endforeach;
 
 
@@ -6715,7 +6750,20 @@ GROUP BY d.invoice_id) as product"))
                 <td style="font-size:12px;" class="text-right">00</td>
                 </tr>';*/
 
-                $html .='</tbody></table>';
+                $html .='</tbody>';
+                $html .='<tfoot>';
+                $html .='<tfoot>';
+                $html .='<tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Total =</td>
+                <td align="center">'.$total_amount.'</td>
+                <td></td>
+                
+                </tr>';
+                $html .='</table>';
 
                 //echo $html; die();
 
@@ -7016,6 +7064,10 @@ GROUP BY d.invoice_id) as product"))
     public function exportExcelmakeSalesReturnShow(Request $request) 
     {
         //excel 
+        $total_amount=0;
+        $total_sales_amount=0;
+        $total_re_amount=0;
+
         $data=array();
         $array_column=array('Invoice ID','Sales Return Date','Return To','Sales Total','Return Amount','Return Note');
         array_push($data, $array_column);
@@ -7023,6 +7075,10 @@ GROUP BY d.invoice_id) as product"))
 
         foreach($inv as $voi):
             $inv_arry=array($voi->invoice_id,formatDate($voi->created_at),$voi->customer_name,$voi->invoice_total,$voi->sales_return_amount,$voi->sales_return_note);
+
+            $total_amount+=$voi->invoice_total;
+            $total_sales_amount+=$voi->sales_return_amount;
+            $total_re_amount+=$voi->sales_return_amount;
             array_push($data, $inv_arry);
         endforeach;
 
@@ -7421,10 +7477,109 @@ GROUP BY d.invoice_id) as product"))
 
     public function loadCustomerInvoice(Request $request)
     {
+        
         $customer_id=$request->customer_id;
-        $loadInvoices=Invoice::where('customer_id',$customer_id)->where('store_id',$this->sdc->storeID())->get();
+        $invoice_id=$request->invoice_id;
+        $invoice_date=$request->invoice_date;
+        $barcode=$request->barcode;
+        $loadInvoices=Invoice::leftJoin("invoice_products","invoices.invoice_id","=","invoice_products.invoice_id")
+                             ->leftJoin("products","invoice_products.product_id","=","products.id")
+                             ->where('invoices.store_id',$this->sdc->storeID())
+                             ->when($invoice_id, function ($query) use ($invoice_id) {
+                                       return $query->where('invoices.invoice_id','=', $invoice_id);
+                             })
+                             ->when($barcode, function ($query) use ($barcode) {
+                                       return $query->where('products.barcode','=', $barcode);
+                             })
+                             ->when($customer_id, function ($query) use ($customer_id) {
+                                       return $query->where('invoices.customer_id','=', $customer_id);
+                             })
+                             ->when($invoice_date, function ($query) use ($invoice_date) {
+                                       return $query->whereDate('invoices.created_at','=', $invoice_date);
+                             })
+                             ->select("invoices.*")
+                             ->get();
 
         return response()->json($loadInvoices);
+    }
+
+    public function loadCustomerReturnInvoice(Request $request){
+        //dd($request->invoice_id);
+        $sql_invoice = InvoiceProduct::where('invoice_id',$request->invoice_id)
+                                     ->leftJoin('products','invoice_products.product_id','=','products.id')
+                                     ->select('invoice_products.*','products.name as product_name','products.barcode as product_barcode')
+                                     ->get();
+
+        $table_data = [];
+        if(count($sql_invoice)>0){
+            foreach ($sql_invoice as $key => $row) {
+                 //-$row->return_item
+                 $tdrows=json_decode(json_encode($row)); 
+                 //dd(json_decode(json_encode($row)));
+                 for($i=1; $i<=$row->quantity; $i++) {
+                    $tdrow=[]; 
+
+                    foreach($tdrows as $index=>$td){
+                        $tdrow[$index]=$td;
+                     }
+
+                     if($i<=$row->return_item)
+                     {
+                        $tdrow['item_return_status']="1";
+                     }
+                     else
+                     {
+                        $tdrow['item_return_status']="0";
+                     }
+
+                     $table_data[]=$tdrow; 
+                 }
+                //$table_data[]=$row;
+            }
+        }                             
+        return response()->json($table_data);
+    }
+
+    public function saveCustomerReturnItem(Request $request){
+        //dd($request);
+        $product = InvoiceProduct::where('invoice_products.id',$request->item_id)
+                                     ->leftJoin('products','invoice_products.product_id','=','products.id')
+                                     ->leftJoin('invoices','invoice_products.invoice_id','=','invoices.invoice_id')
+                                     ->select('invoice_products.*','invoices.customer_id','products.name as product_name','products.barcode as product_barcode')
+                                     ->first();
+
+        $product_quantity = $product->quantity;
+        $product_return_item = $product->return_item;
+
+        if($product_quantity == $product_return_item){
+            return response()->json(array('status'=>1,'data'=>$sr));
+        }
+        else
+        {
+            $product->return_item=$product->return_item + 1;
+            $product->save();
+
+            Product::find($product->product_id)->increment('quantity',1);
+        }
+
+        //dd($product);
+
+        $invoice=Invoice::where('invoice_id',$product->invoice_id)->first();
+        $customer=Customer::find($product->customer_id);
+        $sr=new SalesReturn;
+        $sr->invoice_id=$product->invoice_id;
+        $sr->customer_id=$product->customer_id;
+        $sr->customer_name=$customer->name;
+        $sr->product_id=$product->product_id;
+        $sr->product_name=$product->product_name;
+        $sr->invoice_total=$invoice->total_amount;
+        $sr->sales_return_amount=$request->return_amount;
+        $sr->sales_return_note=$request->return_reason;
+        $sr->store_id=$this->sdc->storeID();
+        $sr->created_by=$this->sdc->UserID();
+        $sr->save();
+
+        return response()->json(array('status'=>1,'data'=>$sr));
     }
 
     public function loadInvoiceOnly()

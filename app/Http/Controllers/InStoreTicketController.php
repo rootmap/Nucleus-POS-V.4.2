@@ -1166,6 +1166,8 @@ class InStoreTicketController extends Controller
     public function exportExcel(Request $request) 
     {
         //excel 
+        $total_cost=0;
+        $total_re_price=0;
         $data=array();
         $array_column=array('Repair ID','Invoice ID','Customer Name','Device Type','Problem Name','Product Name','Our Cost','Retail Price','Color Type','Carrier','Password','IMEI','Tested Before By','Tested After By','Tech Notes','How Did You Hear About Us','isdropoff');
         array_push($data, $array_column);
@@ -1173,8 +1175,14 @@ class InStoreTicketController extends Controller
 
         foreach($inv as $voi):
             $inv_arry=array($voi->id,$voi->invoice_id,$voi->customer_name,$voi->device_type,$voi->problem_name,$voi->product_name,$voi->our_cost,$voi->retail_price,$voi->type_n_color,$voi->carrier,$voi->password,$voi->imei,$voi->tested_before_by,$voi->tested_after_by,$voi->tech_notes,$voi->how_did_you_hear_about_us,$voi->isdropoff,);
+
+            $total_cost+=$voi->our_cost;
+            $total_re_price+=$voi->retail_price;
             array_push($data, $inv_arry);
         endforeach;
+
+        $array_column=array('','','','','','Total =',$total_cost,$total_re_price,'','','','','','','','','');
+        array_push($data, $array_column);
 
         $reportName="Repair Report";
         $report_title="Repair Report";
@@ -1233,6 +1241,9 @@ class InStoreTicketController extends Controller
                 </thead>
                 <tbody>';
 
+
+                    $total_cost=0;
+                    $total_re_price=0;
                     $inv=$this->profitQuery($request);
                     foreach($inv as $voi):
                         $html .='<tr>
@@ -1254,7 +1265,8 @@ class InStoreTicketController extends Controller
                         <td style="font-size:12px;" class="text-right">'.$voi->how_did_you_hear_about_us.'</td>
                         <td style="font-size:12px;" class="text-right">'.$voi->isdropoff.'</td>
                         </tr>';
-
+                        $total_cost+=$voi->our_cost;
+                        $total_re_price+=$voi->retail_price;
                     endforeach;
 
 
@@ -1268,13 +1280,28 @@ class InStoreTicketController extends Controller
                 <td></td>
                 <td style="font-size:12px;" class="text-right">00</td>
                 </tr>';*/
-
-                $html .='</tbody>
-                
-                </table>
-
-
-                ';
+                $html .='</tbody>';
+                $html .='<tfoot>';
+                $html .='<tfoot>';
+                $html .='<tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Total =</td>
+                <td align="center">'.$total_cost.'</td>
+                <td align="center">'.$total_re_price.'</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                </tr>';
+                $html .='</table>';
 
 
 

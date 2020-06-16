@@ -267,7 +267,7 @@ class ExpenseController extends Controller
         //excel 
 
         //echo "1"; die();
- 
+        $total_expense_amount=0;
         $data=array();
         $array_column=array('Voucher ID','Expense Head','Expense DATE','Description','Expense AMOUNT','Created at');
         array_push($data, $array_column);
@@ -275,8 +275,11 @@ class ExpenseController extends Controller
         foreach($inv as $voi):
             $inv_arry=array($voi->id,$voi->expense_name,formatDate($voi->expense_date),$voi->expense_description,$voi->expense_amount,formatDateTime($voi->created_at));
             array_push($data, $inv_arry);
+            $total_expense_amount+=$voi->expense_amount;
         endforeach;
 
+        $array_column=array('','','','Total =',$total_expense_amount,'');
+        array_push($data, $array_column);
         $reportName="Expense Voucher Report";
         $report_title="Expense Voucher Report";
         $report_description="Report Genarated : ".formatDateTime(date('d-M-Y H:i:s a'));
@@ -324,7 +327,7 @@ class ExpenseController extends Controller
                 <tbody>';
 
 
-
+                    $total_expense_amount=0;
                     $inv=$this->filterDataExpense($request);
                     foreach($inv as $index=>$voi):
     
@@ -337,6 +340,7 @@ class ExpenseController extends Controller
                         <td>'.formatDateTime($voi->created_at).'</td>
                         </tr>';
 
+                        $total_expense_amount+=$voi->expense_amount;
                     endforeach;
 
 
@@ -352,7 +356,18 @@ class ExpenseController extends Controller
                 <td style="font-size:12px;" class="text-right">00</td>
                 </tr>';*/
 
-                $html .='</tbody></table>';
+                $html .='</tbody>';
+                $html .='<tfoot>';
+                $html .='<tfoot>';
+                $html .='<tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Total =</td>
+                <td align="center">'.$total_expense_amount.'</td>
+                <td></td>
+                </tr>';
+                $html .='</table>';
 
                 //echo $html; die();
 

@@ -289,6 +289,7 @@ class CustomerController extends Controller
     {
         //echo "string"; die();
         //excel 
+        
         $data=array();
         $array_column=array('ID','Invoice ID','Name','Address','Phone','Email');
         array_push($data, $array_column);
