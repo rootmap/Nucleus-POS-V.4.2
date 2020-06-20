@@ -123,6 +123,7 @@
                                 <th>Invoice ID</th>
                                 <th>Sales Return</th>
                                 <th width="200">Return To</th>
+                                <th>Product Returned</th>
                                 <th>Sales Total</th>
                                 <th>Return Amount</th>
                                 <th>Return Note</th>
@@ -136,6 +137,7 @@
                                 <td>{{$row->invoice_id}}</td>
                                 <td>{{formatDate($row->created_at)}}</td>
                                 <td>{{$row->customer_name}}</td>
+                                <td>{{$row->product_name}}</td>
                                 <td>{{$row->invoice_total}}</td>
                                 <td>{{$row->sales_return_amount}}</td>
                                 <td>{{$row->sales_return_note}}</td>
@@ -208,6 +210,7 @@
                         strHTML+='      <td>'+row.invoice_id+'</td>';
                         strHTML+='      <td>'+formatDate(replaceNull(row.created_at))+'</td>';
                         strHTML+='      <td>'+replaceNull(row.customer_name)+'</td>';
+                        strHTML+='      <td>'+replaceNull(row.product_name)+'</td>';
                         strHTML+='      <td>'+replaceNull(row.invoice_total)+'</td>';
                         strHTML+='      <td>'+replaceNull(row.sales_return_amount)+'</td>';
                         strHTML+='      <td>'+replaceNull(row.sales_return_note)+'</td>';

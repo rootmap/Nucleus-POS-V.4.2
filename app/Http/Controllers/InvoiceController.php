@@ -6809,7 +6809,10 @@ GROUP BY d.invoice_id) as product"))
     private function salesReturnJson($start, $length,$search=''){
 
         $tab=Invoice::join('customers','invoices.customer_id','=','customers.id')
-                     ->select('invoices.id','invoices.invoice_id','invoices.total_amount','invoices.created_at','customers.name as customer_name')
+                     ->select(
+                         'invoices.id',
+                         'invoices.invoice_id',
+                         'invoices.total_amount','invoices.created_at','customers.name as customer_name')
                      ->where('invoices.store_id',$this->sdc->storeID())->orderBy('id','DESC')
                      ->when($search, function ($query) use ($search) {
                         $query->where('invoices.id','LIKE','%'.$search.'%');
@@ -6949,6 +6952,8 @@ GROUP BY d.invoice_id) as product"))
                         $query->orWhere('invoice_id','LIKE','%'.$search.'%');
                         $query->orWhere('created_at','LIKE','%'.$search.'%');
                         $query->orWhere('customer_name','LIKE','%'.$search.'%');
+                        $query->orWhere('product_id','LIKE','%'.$search.'%');
+                        $query->orWhere('product_name','LIKE','%'.$search.'%');
                         $query->orWhere('invoice_total','LIKE','%'.$search.'%');
                         $query->orWhere('sales_return_amount','LIKE','%'.$search.'%');
                         $query->orWhere('sales_return_note','LIKE','%'.$search.'%');
@@ -6962,13 +6967,24 @@ GROUP BY d.invoice_id) as product"))
 
     private function salesReturnListJson($start, $length,$search=''){
 
-        $tab=SalesReturn::select('id','invoice_id','created_at','customer_name','invoice_total','sales_return_amount','sales_return_note')
+        $tab=SalesReturn::select(
+            'id',
+            'invoice_id',
+            'product_id',
+            'product_name',
+            'created_at',
+            'customer_name',
+            'invoice_total',
+            'sales_return_amount',
+            'sales_return_note')
                      ->where('store_id',$this->sdc->storeID())->orderBy('id','DESC')
                      ->when($search, function ($query) use ($search) {
                         $query->where('id','LIKE','%'.$search.'%');
                         $query->orWhere('invoice_id','LIKE','%'.$search.'%');
                         $query->orWhere('created_at','LIKE','%'.$search.'%');
                         $query->orWhere('customer_name','LIKE','%'.$search.'%');
+                        $query->orWhere('product_id','LIKE','%'.$search.'%');
+                        $query->orWhere('product_name','LIKE','%'.$search.'%');
                         $query->orWhere('invoice_total','LIKE','%'.$search.'%');
                         $query->orWhere('sales_return_amount','LIKE','%'.$search.'%');
                         $query->orWhere('sales_return_note','LIKE','%'.$search.'%');
@@ -7069,12 +7085,12 @@ GROUP BY d.invoice_id) as product"))
         $total_re_amount=0;
 
         $data=array();
-        $array_column=array('Invoice ID','Sales Return Date','Return To','Sales Total','Return Amount','Return Note');
+        $array_column=array('Invoice ID','Sales Return Date','Return To','Product Returned','Sales Total','Return Amount','Return Note');
         array_push($data, $array_column);
         $inv=$this->makeSalesReturnShowQuery($request);
 
         foreach($inv as $voi):
-            $inv_arry=array($voi->invoice_id,formatDate($voi->created_at),$voi->customer_name,$voi->invoice_total,$voi->sales_return_amount,$voi->sales_return_note);
+            $inv_arry=array($voi->invoice_id,formatDate($voi->created_at),$voi->customer_name,$voi->product_name,$voi->invoice_total,$voi->sales_return_amount,$voi->sales_return_note);
 
             $total_amount+=$voi->invoice_total;
             $total_sales_amount+=$voi->sales_return_amount;
@@ -7121,6 +7137,7 @@ GROUP BY d.invoice_id) as product"))
                 <th class="text-center" style="font-size:12px;" >Invoice ID</th>
                 <th class="text-center" style="font-size:12px;" >Sales Return Date</th>
                 <th class="text-center" style="font-size:12px;" >Return To</th>
+                <th class="text-center" style="font-size:12px;" >Product Return</th>
                 <th class="text-center" style="font-size:12px;" >Sales Total</th>
                 <th class="text-center" style="font-size:12px;" >Return Amount</th>
                 <th class="text-center" style="font-size:12px;" >Return Note</th>
@@ -7135,6 +7152,7 @@ GROUP BY d.invoice_id) as product"))
                         <td style="font-size:12px;" class="text-center">'.$voi->invoice_id.'</td>
                         <td style="font-size:12px;" class="text-center">'.formatDate($voi->created_at).'</td>
                         <td style="font-size:12px;" class="text-center">'.$voi->customer_name.'</td>
+                        <td style="font-size:12px;" class="text-center">'.$voi->product_name.'</td>
                         <td style="font-size:12px;" class="text-right">'.$voi->invoice_total.'</td>
                         <td style="font-size:12px;" class="text-right">'.$voi->sales_return_amount.'</td>
                         <td style="font-size:12px;" class="text-right">'.$voi->sales_return_note.'</td>

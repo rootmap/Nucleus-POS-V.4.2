@@ -718,9 +718,7 @@ var squareupPaymentFormload="{{url('intregation/squareup/form')}}";
         @endif
 
 
-        $(document).ready(function(){
-            $.getScript("https://cdn.jsdelivr.net/npm/sweetalert2@9");
-        });
+        
 
         
 

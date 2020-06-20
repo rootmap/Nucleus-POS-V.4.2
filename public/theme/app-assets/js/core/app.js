@@ -259,6 +259,8 @@
             }
         }
     });
+
+    
     if (typeof screenfull != 'undefined'){
         if (screenfull.enabled) {
             $(document).on(screenfull.raw.fullscreenchange, function(){

@@ -30,6 +30,7 @@
             } else {
                 fullscreenSearch.addClass('open');
                 body.addClass('search-open')
+                
             }
             isOpen = !isOpen;
         };

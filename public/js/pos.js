@@ -1,55 +1,7 @@
 var csrftLarVe = $('meta[name="csrf-token"]').attr("content");
 
-function loadingOrProcessing(sms) {
-    var strHtml = '';
-    strHtml += '<div class="alert alert-icon-right alert-green alert-dismissible fade in mb-2" role="alert">';
-    strHtml += '      <i class="icon-spinner10 spinner"></i> ' + sms;
-    strHtml += '</div>';
-    strHtml += '<script>setTimeout(function(){ $(".alert-dismissible").hide(); }, 4000);</script>';
 
-    return strHtml;
 
-}
-
-function warningMessage(sms) {
-    var strHtml = '';
-    strHtml += '<div class="alert alert-icon-left alert-danger alert-dismissible fade in mb-2" role="alert">';
-    strHtml += '<button type="button" class="close" data-dismiss="alert" aria-label="Close">';
-    strHtml += '<span aria-hidden="true">×</span>';
-    strHtml += '</button>';
-    strHtml += sms;
-    strHtml += '</div>';
-    strHtml += '<script>setTimeout(function(){ $(".alert-dismissible").hide(); }, 4000);</script>';
-    return strHtml;
-}
-
-function successMessage(sms) {
-    var strHtml = '';
-    strHtml += '<div class="alert alert-icon-left alert-success alert-dismissible fade in mb-2" role="alert">';
-    strHtml += '<button type="button" class="close" data-dismiss="alert" aria-label="Close">';
-    strHtml += '<span aria-hidden="true">×</span>';
-    strHtml += '</button>';
-    strHtml += sms;
-    strHtml += '</div>';
-    strHtml += '<script>setTimeout(function(){ $(".alert-dismissible").hide(); }, 4000);</script>';
-    return strHtml;
-}
-
-function swalErrorMsg(msg) {
-    Swal.fire({
-        icon: 'error',
-        title: '<h3 class="text-danger">Warning</h3>',
-        html: '<h5>' + msg + '!!!</h5>'
-    });
-}
-
-function swalSuccessMsg(msg) {
-    Swal.fire({
-        icon: 'success',
-        title: '<h3 class="text-success">Thank You</h3>',
-        html: '<h5>' + msg + '</h5>'
-    });
-}
 
 $('.dropableCartZone').droppable({
     drop: handleDropEvent

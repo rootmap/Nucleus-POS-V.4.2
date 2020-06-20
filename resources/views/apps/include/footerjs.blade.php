@@ -72,7 +72,7 @@ if($userguideInit==1)
         var chatMessPhotoUrl="{{url('chat/conv/usr/image')}}";
         var chatInterfaceUserID="{{Auth::user()->id}}";
         var chatInterfaceUserName="{{Auth::user()->name}}";
-
+        var searchnucleus = "{{secure_url('search-nucleus')}}";
         function logoutFRM()
 
         {
@@ -436,4 +436,5 @@ if($userguideInit==1)
 
     ?>
     <script src="{{url('chat/sc.js')}}"></script>
+    <script src="{{secure_url('js/site.js')}}"></script>
     

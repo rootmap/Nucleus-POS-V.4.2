@@ -65,6 +65,15 @@ Route::post('check/idle/user', 'ActivityController@idleCheck');
 
 Route::group(['middleware' => ['auth', 'ssl']], function () { 
 
+	//======================== Search In Nucleus Start =================//
+	Route::get('/search-nucleus', 'SearchSiteController@search');
+	Route::post('/search-nucleus', 'SearchSiteController@search');
+	Route::post('/search-nuc/inventory/repair', 'SearchSiteController@SearchinventoryRepair');
+	Route::post('/search-nuc/non-inventory/repair', 'SearchSiteController@SearchNoninventoryRepair');
+	Route::post('/search-nuc/customer', 'SearchSiteController@SearchCustomer');
+	Route::post('/search-nuc/product', 'SearchSiteController@SearchProduct');
+	//======================== Search In Nucleus End =================//
+
 	//======================= Paypal Start =======================//
 	Route::post('/product/settings', 'ProductSettingsController@store');
 	Route::post('/ma/verify', 'InvoiceController@verifyMALogin');
@@ -188,6 +197,7 @@ Route::group(['middleware' => ['auth', 'ssl']], function () {
 	Route::get('user/edit/{id}', 'CustomerController@UserShow');
 	Route::get('user-info', 'CustomerController@UserInfoShow');
 	Route::get('change-password', 'CustomerController@change_password');
+	Route::post('change-password', 'CustomerController@do_change_password');
 	Route::post('/user/modify/{id}', 'CustomerController@userUpdate');
 	Route::get('/user/delete/{id}', 'CustomerController@Userdestroy');
 

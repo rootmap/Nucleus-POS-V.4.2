@@ -9,6 +9,8 @@ use App\Store;
 use App\RetailPosSummary;
 use App\RetailPosSummaryDateWise;
 use Illuminate\Http\Request;
+use App\Rules\MatchOldPassword;
+use Illuminate\Support\Facades\Hash;
 use App\Invoice;
 use Excel;
 use Auth;
@@ -185,6 +187,29 @@ class CustomerController extends Controller
     public function change_password(Request $request)
     {
         return view('apps.pages.user_info.change_password');        
+    }
+
+    public function do_change_password(Request $request)
+    {
+
+        $this->validate($request, [
+            'current_password'=>'required',
+            'new_password'=>'required_with:retype_password|same:retype_password',
+            'retype_password'=>'required',
+        ]);
+        $id=$this->sdc->UserID();
+        $user_data=User::find($id);
+        if(Hash::check($request->current_password,$user_data->password))
+        {
+            $this->sdc->log("User","User [".$user_data->name."] changed account password.");
+            User::find($id)->update(['password'=> Hash::make($request->new_password)]);
+            return redirect(url('change-password'))->with('status','Password Changed Successfully.');
+        }
+        else
+        {
+            $this->sdc->log("User","User [".$user_data->name."] failed to change account password.");
+            return redirect(url('change-password'))->with('error','Current Password Mismatch.');
+        }
     }
 
     public function UserEdit(Customer $customer,$id=0)

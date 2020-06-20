@@ -227,7 +227,7 @@ $totalUnsavedInvoice=StaticDataController::checkUnsavedInvoice();
                 </a>
                 <div class="dropdown-menu dropdown-menu-right">
                   <a href="{{url('store-info')}}" class="dropdown-item">
-                    <i class="icon-user-check"></i> Store Info
+                    <i class="icon-home"></i> Store Info
                   </a>
                   <a href="{{url('user-info')}}" class="dropdown-item">
                     <i class="icon-user-check"></i> Profile

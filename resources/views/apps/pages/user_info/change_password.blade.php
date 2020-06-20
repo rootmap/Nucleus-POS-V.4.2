@@ -17,22 +17,23 @@
 				<div class="card-body collapse in">
 					<div class="card-block">
 						<span id="pageMSG"></span>
-						
+                        <form class="form" method="post" action="{{url('change-password')}}">
+						{{ csrf_field() }}
 							<div class="form-body">
 
 								<div class="row">
 									<div class="col-md-12">
 										<div class="form-group">
 			                            	<label for="projectinput1"> Current Password </label>
-				                            <input type="text" id="eventRegInput1" class="form-control border-primary" placeholder="Enter Your Current Password" name="current_password">
+				                            <input type="password" id="eventRegInput1" class="form-control border-primary" placeholder="Enter Your Current Password" name="current_password">
 				                        </div>
                                         <div class="form-group">
 			                            	<label for="projectinput1"> New Password </label>
-				                            <input type="text" id="eventRegInput1" class="form-control border-primary" placeholder="Enter Your New Password" name="new_password">
+				                            <input type="password" id="eventRegInput1" class="form-control border-primary" placeholder="Enter Your New Password" name="new_password">
 				                        </div>
                                         <div class="form-group">
 			                            	<label for="projectinput1"> Re-Type Password </label>
-				                            <input type="text" id="eventRegInput1" class="form-control border-primary" placeholder="Enter Your Re-Type Password" name="re_password">
+				                            <input type="password" id="eventRegInput1" class="form-control border-primary" placeholder="Enter Your Re-Type Password" name="retype_password">
 				                        </div>
                                         <div class="form-actions center">
                                             <a href="{{url('change-password')}}" class="btn btn-green btn-lighten-2 mr-1" @if($userguideInit==1) data-step="3" data-intro="if you want clear all information then click the cancel button." @endif>
@@ -48,6 +49,7 @@
 									
                                     
 								</div> 
+                                </form>
 					</div>
 				</div>
 			</div>

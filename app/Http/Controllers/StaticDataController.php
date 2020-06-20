@@ -136,7 +136,10 @@ class StaticDataController extends Facade {
         $currentFullURLReplacer=self::urlForChangeData();
         $fullURL=str_replace($currentFullURLReplacer,"",URL::current());
         $stReturn=0; 
-        if (strpos($fullURL, 'repair/view/') !== false) {
+        if (strpos($fullURL, 'search-nucleus') !== false) {
+            $sttopTour=1; 
+        }
+        elseif (strpos($fullURL, 'repair/view/') !== false) {
             $sttopTour=1; 
         }
         elseif (strpos($fullURL, 'ticket/view/') !== false) {
