@@ -162,7 +162,7 @@
 		<div id="invoice-footer">
 			<div class="row">
 				<div class="col-md-12 col-sm-12 text-xs-center" @if($userguideInit==1) data-step="3" data-intro="when you click this button then your stock will be saved and generate the invoice." @endif>
-					<button type="button" id="invoiceSubmit" class="btn btn-primary">
+					<button type="button" id="invoiceSubmit" class="btn btn-green">
 						<i class="icon-shopping-cart"></i> Save Purchase Invoice
 					</button>
 				</div>

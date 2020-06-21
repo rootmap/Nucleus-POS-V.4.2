@@ -17,13 +17,6 @@
 			<div class="card">
 				<div class="card-header">
 					<h4 class="card-title" id="from-actions-bottom-right"><i class="icon-upload3"></i> Add New Purchase</h4>
-					<a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
-					<div class="heading-elements">
-						<ul class="list-inline mb-0">
-						<li><a class="btn btn-info" href="{{url('purchase')}}"><i class="icon-table"></i> Purchase Invoice List </a></li>
-							<li><a data-action="expand"><i class="icon-expand2"></i></a></li>
-						</ul>
-					</div>
 				</div>
 				<div class="card-body collapse in">
 					<div class="card-block">
@@ -86,24 +79,28 @@
 							    
 	
 							    
-							    <div class="col-md-3">
+							    <div class="col-md-2">
 							        <div class="form-group">
 										<label for="userinput2">Quantity To Add</label>
 										<input type="number" name="quantity" class="form-control" id="number" value="0">
 									</div>
 							    </div>
-							    <div class="col-md-3">
+							    <div class="col-md-2">
 							        <div class="form-group">
 										<label for="userinput2">Quantity In System</label>
 										<input type="number" disabled="disabled" name="systemquantity" class="form-control" id="number" value="0">
 									</div>
 							    </div>
-							    <div class="col-md-3">
-							        <div class="form-group mt-2">
-										<input type="hidden" name="barcode">
-										<button type="button" id="addCart" class="btn btn-info btn-accent-2">
+							    <div class="col-md-5">
+							        <div class="form-group">
+										<label for="userinput2"></label>
+										<h4></h4>
+										<button type="button" id="addCart" class="btn btn-green">
 											<i class="icon-plus"></i> Add to cart
 										</button>
+										<a href="{{url('purchase')}}" class="btn btn-green btn-accent-2">
+											<i class="icon-table"></i> Back To Purchase List
+										</a>
 									</div>
 							    </div>
 									
@@ -174,7 +171,7 @@
 		<div id="invoice-footer">
 			<div class="row">
 				<div class="col-md-12 col-sm-12 text-xs-center">
-					<button type="submit" class="btn btn-info btn-accent-3">
+					<button type="submit" class="btn btn-green btn-accent-3">
 						<i class="icon-point-right"></i>  Proceed 
 					</button>
 				</div>

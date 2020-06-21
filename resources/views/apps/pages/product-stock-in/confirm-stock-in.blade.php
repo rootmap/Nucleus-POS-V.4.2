@@ -84,8 +84,11 @@
 								<thead>
 									<tr>
 										<th width="100">SL</th>
+										<th>Barcode</th>
 										<th>Product Name</th>
 										<th width="150">Quantity For Stock</th>
+										<th>Purchase Cost</th>
+										<th>Sell Price</th>
 										<th width="50">Action</th>
 									</tr>
 								</thead>
@@ -102,11 +105,18 @@
 										@foreach($req_pid as $index=>$pid)
 											<tr id="row_{{$dataLoop}}">
 												<td width="100" class="sl">{{$dataLoop}}</td>
+												<td>{{$barcode[$index]}}</td>
 												<td>{{$req_name[$index]}}</td>
+												
 												<td width="150">
 													<input type="hidden" name="pid[]" class="form-control" value="{{$pid}}">
 													<input type="number" name="quantity[]" class="form-control typed_quantity" id="number" value="{{$req_quantity[$index]}}">
+													
+													
+													<input type="hidden" name="barcode[]" class="form-control typed_quantity" id="number" value="{{$barcode[$index]}}">
 												</td>
+												<td width="150"><input type="text" name="purchase_price[]" class="form-control typed_quantity" id="number" value="{{$purchase_price[$index]}}"></td>
+												<td width="150"><input type="text" name="sell_price[]" class="form-control typed_quantity" id="number" value="{{$sell_price[$index]}}"></td>
 												<td width="50">
 													<button type="button" data-id="1" class="btn btn-sm btn-danger close-row" onclick="removeRowCart(<?=$dataLoop?>)">
 														<i class="icon-cross"></i>

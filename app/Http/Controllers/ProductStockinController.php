@@ -62,7 +62,16 @@ class ProductStockinController extends Controller
         }
 
         return view('apps.pages.product-stock-in.confirm-stock-in',
-            ['req_pid'=>$request->pid,'req_quantity'=>$request->quantity,'req_name'=>$request->name,'req_price'=>$request->price,'autoOrderID'=>$autoOrderID,'vendorData'=>$vendorInfo]);
+            [
+                'sell_price'=>$request->sell_price,
+                'purchase_price'=>$request->purchase_price,
+                'barcode'=>$request->barcode,
+                'req_pid'=>$request->pid,
+                'req_quantity'=>$request->quantity,
+                'req_name'=>$request->name,
+                'req_price'=>$request->price,
+                'autoOrderID'=>$autoOrderID,
+                'vendorData'=>$vendorInfo]);
     }
 
     /**
@@ -176,14 +185,19 @@ class ProductStockinController extends Controller
         $invoice_id=time();
         $total_quantity_invoice=0;
         foreach($request->pid as $key=>$pid):
+            
             $pro=Product::find($pid);
+            $pro->cost=$request->purchase_price[$key];
+            $pro->price=$request->sell_price[$key];
+            $pro->save();
+
             Product::find($pid)->increment('quantity',$request->quantity[$key]);
             $tab_stock=new ProductStockin;
             $tab_stock->order_tracking_id=$invoice_id;
             $tab_stock->product_id=$pid;
             $tab_stock->quantity=$request->quantity[$key];
-            $tab_stock->price=$pro->price;
-            $tab_stock->cost=$pro->cost;
+            $tab_stock->price=$request->sell_price[$key];
+            $tab_stock->cost=$request->purchase_price[$key];
             $tab_stock->store_id=$this->sdc->storeID();
             $tab_stock->created_by=$this->sdc->UserID();
             $tab_stock->save();
@@ -231,7 +245,7 @@ class ProductStockinController extends Controller
             ]);
         }
 
-        return redirect('product/stock/in')->with('status', $this->moduleName.' Saved & Genarated Successfully !'); 
+        return redirect('product/stock/in')->with('status', $this->moduleName.' Saved & Genarated Successfully !');
     }
 
     /**
@@ -713,7 +727,7 @@ class ProductStockinController extends Controller
                              ->first();
         $tab_invoice_product=$productStockin::join('products','product_stockins.product_id','=','products.id')->where('product_stockins.order_tracking_id',$tab_invoice->order_tracking_id)
                                            ->where('product_stockins.store_id',$this->sdc->storeID())
-                                           ->select('product_stockins.*','products.name as product_name')
+                                           ->select('product_stockins.*','products.name as product_name','products.barcode as barcode')
                                            ->get();
 
         //dd($tab_invoice);

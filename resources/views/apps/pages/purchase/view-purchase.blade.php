@@ -76,7 +76,7 @@
 										<th width="150">Quantity For Stock</th>
 										<th>Purchase Cost</th>
 										<th>Sell Price</th>
-										<th>Cost Total</th>
+										<th>Purchase Total</th>
 									</tr>
 								</thead>
 								<tbody id="ShoppingCartList">
@@ -134,7 +134,7 @@
 		<div id="invoice-footer">
 			<div class="row">
 				<div class="col-md-12 col-sm-12 text-xs-center">
-				<a type="button" href="{{url('purchase')}}" id="invoiceSubmit" class="btn btn-primary">
+				<a type="button" href="{{url('purchase')}}" id="invoiceSubmit" class="btn btn-green">
 						<i class="icon-shopping-cart"></i> Back To Purchase Invoice List
 					</a>
 				</div>

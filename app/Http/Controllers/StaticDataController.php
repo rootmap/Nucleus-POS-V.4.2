@@ -142,6 +142,9 @@ class StaticDataController extends Facade {
         elseif (strpos($fullURL, 'repair/view/') !== false) {
             $sttopTour=1; 
         }
+        elseif (strpos($fullURL, 'receipt') !== false) {
+            $sttopTour=1; 
+        }
         elseif (strpos($fullURL, 'ticket/view/') !== false) {
             $sttopTour=1; 
         }

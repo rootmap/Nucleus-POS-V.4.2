@@ -355,6 +355,9 @@
                     @if(in_array('product/report', $dataMenuAssigned))
                     <li class="{{ Request::path() == 'product/report' ? 'active' : '' }} border-bottom-purple"><a href="{{url('/product/report')}}" class="menu-item">Product Status Report</a></li>
                     @endif 
+                    @if(in_array('purchase', $dataMenuAssigned))
+                    <li class="{{ Request::path() == 'purchase' ? 'active' : '' }} border-bottom-purple"><a href="{{url('/purchase')}}" class="menu-item">Purchase Report</a></li>
+                    @endif 
                     @if(in_array('paypal/payment/report', $dataMenuAssigned))
                     <li class="{{ Request::path() == '/paypal/payment/report' ? 'active' : '' }} border-bottom-purple"><a href="{{url('/paypal/payment/report')}}" class="menu-item">Paypal Payment History Report</a></li>
                     @endif 

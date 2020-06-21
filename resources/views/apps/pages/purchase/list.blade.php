@@ -80,19 +80,19 @@
 	                                <div class="col-md-12">
 	                                    
 	                                    <div class="input-group" style="margin-top:32px;">
-	                                        <button type="submit" class="btn btn-info btn-darken-1 mr-1" @if($userguideInit==1) data-step="2" data-intro="If you click this button then it will generate your report." @endif>
+	                                        <button type="submit" class="btn btn-green btn-darken-1 mr-1" @if($userguideInit==1) data-step="2" data-intro="If you click this button then it will generate your report." @endif>
 												<i class="icon-check2"></i> Generate Report
 											</button>
-											<a href="javascript:void(0);" data-url="{{url('purchase/excel/report')}}" class="btn btn-info btn-darken-2 mr-1 change-action" @if($userguideInit==1) data-step="3" data-intro="If you click this button then it will generate excel file." @endif>
+											<a href="javascript:void(0);" data-url="{{url('purchase/excel/report')}}" class="btn btn-green btn-darken-2 mr-1 change-action" @if($userguideInit==1) data-step="3" data-intro="If you click this button then it will generate excel file." @endif>
 												<i class="icon-file-excel-o"></i> Generate Excel
 											</a>
-											<a href="javascript:void(0);" data-url="{{url('purchase/pdf/report')}}" class="btn btn-info btn-darken-3 mr-1 change-action" @if($userguideInit==1) data-step="4" data-intro="If you click this button then it will generate pdf file." @endif>
+											<a href="javascript:void(0);" data-url="{{url('purchase/pdf/report')}}" class="btn btn-green btn-darken-3 mr-1 change-action" @if($userguideInit==1) data-step="4" data-intro="If you click this button then it will generate pdf file." @endif>
 												<i class="icon-file-pdf-o"></i> Generate PDF
 											</a>
-											<a href="{{url('purchase')}}" style="margin-left: 5px;" class="btn btn-info btn-darken-4" @if($userguideInit==1) data-step="5" data-intro="if you want clear all information then click the reset button." @endif>
+											<a href="{{url('purchase')}}" style="margin-left: 5px;" class="btn btn-green btn-darken-4" @if($userguideInit==1) data-step="5" data-intro="if you want clear all information then click the reset button." @endif>
 												<i class="icon-refresh"></i> Reset
 											</a>
-											<a href="{{url('purchase/create')}}" style="margin-left: 5px;" class="btn btn-info btn-darken-4">
+											<a href="{{url('purchase/create')}}" style="margin-left: 5px;" class="btn btn-green btn-darken-4">
 												<i class="icon-plus"></i> Create new purchase invoice
 											</a>
 	                                    </div>
@@ -114,7 +114,6 @@
                 <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
                 <div class="heading-elements">
                     <ul class="list-inline mb-0">
-                    <li><a class="btn btn-info" href="{{url('purchase/create')}}"><i class="icon-plus"></i> Add New Purchase Invoice</a></li>
                         <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
                         <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
                     </ul>
@@ -147,7 +146,7 @@
                                 <td>{{$row->vendor_name}}</td>
                                 <td>
                                     <span class="dropdown">
-                                        <button id="btnSearchDrop4" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" class="btn btn-info dropdown-toggle dropdown-menu-right"><i class="icon-cog3"></i></button>
+                                        <button id="btnSearchDrop4" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" class="btn btn-green dropdown-toggle dropdown-menu-right"><i class="icon-cog3"></i></button>
                                         <span aria-labelledby="btnSearchDrop4" class="dropdown-menu mt-1 dropdown-menu-right">
                                             <a href="{{url('purchase/receipt/'.$row->id)}}" title="View Detail" class="dropdown-item"><i class="icon-clipboard2"></i> View Detail</a>
                                             <a href="{{url('purchase/delete/'.$row->id)}}" title="Delete" class="dropdown-item"><i class="icon-cross"></i> Delete</a>

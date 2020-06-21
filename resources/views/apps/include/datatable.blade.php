@@ -369,7 +369,18 @@
 	    <!-- END PAGE LEVEL JS-->
     @endif
 
-    @if(isset($confirmStockIN))
+	@if(isset($confirmStockIN))
+	<script>
+		$('select[name=vendor_id]').change(function(){
+			var ven=$(this).val();
+			if(ven=='new')
+			{
+				$('select[name=vendor_id]').hide();
+				$('input[name=new_vendor_name]').show();
+			}
+			
+		});
+	</script>
     	<script type="text/javascript">
 			$(document).ready(function(){
 				$(".typed_quantity").keyup(function(){
@@ -407,6 +418,7 @@
 				$("#invoiceSubmit").click(function(){
 					var order_no=$("input[name=order_no]").val();
 					var order_date=$("input[name=order_date]").val();
+					var vendor_id=$("select[name=vendor_id]").val();
 
 					if(order_no.length==0)
 					{
@@ -417,6 +429,12 @@
 					if(order_date.length==0)
 					{
 						alert('Please select a Date.!!!');
+						return false;
+					}
+
+					if(vendor_id.length==0)
+					{
+						alert('Please select a Vendor/Supplier.!!!');
 						return false;
 					}
 

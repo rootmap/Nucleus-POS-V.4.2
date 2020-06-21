@@ -99,11 +99,16 @@
 									</div>
 							    </div>
 							    <div class="col-md-6">
-							        <div class="form-group mt-2">
+							        <div class="form-group">
+										<h4>&nbsp;</h4>
 										<input type="hidden" name="barcode">
-										<button type="button" id="addCart" class="btn btn-info btn-accent-2">
+										
+										<button type="button" id="addCart" class="btn btn-green">
 											<i class="icon-plus"></i> Add to cart
 										</button>
+										<a href="{{secure_url('product/stock/in/list')}}" class="btn btn-green">
+											<i class="icon-table"></i> Back To Stockin List
+										</a>
 									</div>
 							    </div>
 									
@@ -174,7 +179,7 @@
 		<div id="invoice-footer">
 			<div class="row">
 				<div class="col-md-12 col-sm-12 text-xs-center">
-					<button type="submit" class="btn btn-info btn-accent-3">
+					<button type="submit" class="btn btn-green btn-accent-3">
 						<i class="icon-point-right"></i>  Proceed 
 					</button>
 				</div>
