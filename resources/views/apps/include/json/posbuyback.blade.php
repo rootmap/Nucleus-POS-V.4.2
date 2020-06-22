@@ -76,13 +76,12 @@
 
                 $("#buybackMSG").html(loadingOrProcessing("Please wait, Processing Buyback Info."));
 
-                var AddPOSUrl="{{url('buyback/pos/ajax')}}";
                  $.ajax({
                     'async': true,
                     'type': "POST",
                     'global': true,
                     'dataType': 'json',
-                    'url': AddPOSUrl,
+                    'url': buyback_buyback_pos_ajax,
                     'data': {
                         'buyback_customer_id':buyback_customer_id,
                         'buyback_model':buyback_model,
@@ -94,7 +93,7 @@
                         'buyback_condition':buyback_condition,
                         'buyback_price':buyback_price,
                         'buyback_payment_method':buyback_payment_method,
-                        '_token':"{{csrf_token()}}"},
+                        '_token':csrftLarVe},
                     'success': function (data) {
                         //tmp = data;
                         if(data.status==0)

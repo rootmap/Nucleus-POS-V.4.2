@@ -57,6 +57,7 @@ use App\StripeStoreSetting;
 use App\Buyback;
 use App\StripeTransactionHistory;
 use App\ProductSettings;
+use App\PartialPayment;
 
 class InvoiceController extends Controller
 {
@@ -1220,6 +1221,18 @@ class InvoiceController extends Controller
             $invoicePay->store_id=$this->sdc->storeID();
             $invoicePay->created_by=$this->sdc->UserID();
             $invoicePay->save();
+
+            $partialPay=new PartialPayment;
+            $partialPay->invoice_id=$invoice_id;
+            $partialPay->customer_id=$invoice->customer_id;
+            $partialPay->customer_name=$cusInfo->name;
+            $partialPay->tender_id=$tenderData->id;
+            $partialPay->tender_name=$tenderData->name;
+            $partialPay->total_amount=$invoice->total_amount;
+            $partialPay->paid_amount=$amountPaid;
+            $partialPay->store_id=$this->sdc->storeID();
+            $partialPay->created_by=$this->sdc->UserID();
+            $partialPay->save();
 
             if($load_due<=0)
             {
@@ -3197,6 +3210,8 @@ class InvoiceController extends Controller
                 $tab->created_by=$this->sdc->UserID();
                 $tab->save();
 
+                
+
                 $amountPaid=$paidAmount;
                 //dd($amountPaid);
 
@@ -3278,6 +3293,18 @@ class InvoiceController extends Controller
                 $invoicePay->store_id=$this->sdc->storeID();
                 $invoicePay->created_by=$this->sdc->UserID();
                 $invoicePay->save();
+
+                $partialPay=new PartialPayment;
+                $partialPay->invoice_id=$invoice_id;
+                $partialPay->customer_id=$invoice->customer_id;
+                $partialPay->customer_name=$cusInfo->name;
+                $partialPay->tender_id=$tenderData->id;
+                $partialPay->tender_name=$tenderData->name;
+                $partialPay->total_amount=$invoice->total_amount;
+                $partialPay->paid_amount=$amountPaid;
+                $partialPay->store_id=$this->sdc->storeID();
+                $partialPay->created_by=$this->sdc->UserID();
+                $partialPay->save();
 
                 if($load_due<=0)
                 {
@@ -3667,7 +3694,7 @@ class InvoiceController extends Controller
 
         $this->getSalesCartTokenID();
         $filter=$this->GenaratePageDataFilter();
-        $tab_customer=Customer::select('id','name')->where('store_id',$this->sdc->storeID())->get();
+        //$tab_customer=Customer::select('id','name')->where('store_id',$this->sdc->storeID())->get();
         $Cart = $request->session()->has('Pos') ? $request->session()->get('Pos') : null;
         if(isset($Cart))
         {
@@ -3710,7 +3737,7 @@ class InvoiceController extends Controller
 
 
         $ps=PosSetting::where('store_id',$this->sdc->storeID())->first();
-        $pro=Product::where('store_id',$this->sdc->storeID())->where('general_sale',0)->get();
+        //$pro=Product::where('store_id',$this->sdc->storeID())->where('general_sale',0)->get();
         //dd($pro);
         /*->when($filter, function($query) use ($filter){
             if($filter=='id-desc'){ return $query->orderby('id','desc'); }
@@ -3741,9 +3768,9 @@ class InvoiceController extends Controller
         $catInfo=Category::where('store_id',$this->sdc->storeID())->get(); 
 
         $device=InStoreRepairDevice::select('id','name')->where('store_id',$this->sdc->storeID())->get();
-        $model=InStoreRepairModel::select('id','name','device_id')->where('store_id',$this->sdc->storeID())->get();
-        $problem=InStoreRepairProblem::select('id','name','model_id')->where('store_id',$this->sdc->storeID())->get();
-        $estPrice=InStoreRepairPrice::select('id','price','device_id','model_id','problem_id','device_name','model_name','problem_name')->where('store_id',$this->sdc->storeID())->get();
+        //$model=InStoreRepairModel::select('id','name','device_id')->where('store_id',$this->sdc->storeID())->get();
+        //$problem=InStoreRepairProblem::select('id','name','model_id')->where('store_id',$this->sdc->storeID())->get();
+        //$estPrice=InStoreRepairPrice::select('id','price','device_id','model_id','problem_id','device_name','model_name','problem_name')->where('store_id',$this->sdc->storeID())->get();
         $ticketAsset=\DB::table('repair_ticket_assets')->where('asset_type','ticket')->where('store_id',$this->sdc->storeID())->get();
         $repairAsset=\DB::table('repair_ticket_assets')->where('asset_type','repair')->where('store_id',$this->sdc->storeID())->get();
 
@@ -3791,22 +3818,27 @@ class InvoiceController extends Controller
         }
 
         $systemArray=[
-                'product'=>$pro,
+                //'product'=>$pro,
+                'product'=>[],
                 'tender'=>$tender,
                 'catInfo'=>$catInfo,
                 'drawerStatus'=>$drawerStatus,
                 'ps'=>$ps,
                 'cart'=>$Cart,
-                'customerData'=>$tab_customer,
+                //'customerData'=>$tab_customer,
+                'customerData'=>[],
                 "last_invoice_id"=>$last_invoice_id,
                 'CounterDisplay'=>$CounterDisplay,
                 'device'=>$device,
-                'model'=>$model,
-                'problem'=>$problem,
+                //'model'=>$model,
+                'model'=>[],
+                //'problem'=>$problem,
+                'problem'=>[],
                 'addPartialPayment'=>$addPartialPayment,
                 'partial_invoice'=>$partial_invoice,
                 'ticketProblem'=>$ticketProblem,
-                'estPrice'=>$estPrice,
+                //'estPrice'=>$estPrice,
+                'estPrice'=>[],
                 'repairAsset'=>$repairAsset,
                 'ticketAsset'=>$ticketAsset,
                 'ticket_id'=>time(),
@@ -3851,6 +3883,22 @@ class InvoiceController extends Controller
         }
 
         return view('apps.pages.pos.index',$systemArray);
+    }
+
+    public function productConfigjson(Request $request){
+        $tab_customer=Customer::select('id','name')->where('store_id',$this->sdc->storeID())->get();
+        $pro=Product::where('store_id',$this->sdc->storeID())->where('general_sale',0)->get();
+        $model=InStoreRepairModel::select('id','name','device_id')->where('store_id',$this->sdc->storeID())->get();
+        $problem=InStoreRepairProblem::select('id','name','model_id')->where('store_id',$this->sdc->storeID())->get();
+        $estPrice=InStoreRepairPrice::select('id','price','device_id','model_id','problem_id','device_name','model_name','problem_name')->where('store_id',$this->sdc->storeID())->get();
+        
+        return response()->json([
+            'product'=>$pro,
+            'model'=>$model,
+            'problem'=>$problem,
+            'estPrice'=>$estPrice,
+            'customer'=>$tab_customer
+            ]);
     }
 
     public function GenaratePDF()
@@ -6316,6 +6364,8 @@ class InvoiceController extends Controller
                 $load_invoice_status="Partial";
             }
 
+            
+
             if(empty($invoice->tender_id))
             {
                 $tender=Tender::find($request->payment_method_id);
@@ -6328,11 +6378,13 @@ class InvoiceController extends Controller
             }
             else
             {
-                $tender_id=$invoice->tender_id;
+                $tender_id=$request->payment_method_id;
                 $tender=Tender::find($tender_id);
                 $tender_name=$tender->name;
                 $invoice->save();
             }
+
+            //dd($tender);
 
             $total_amount_invoice=$invoice->total_amount;
 
@@ -6360,6 +6412,18 @@ class InvoiceController extends Controller
             $tabInPay->store_id=$this->sdc->storeID();
             $tabInPay->created_by=$this->sdc->UserID();
             $tabInPay->save();
+
+            $partialPay=new PartialPayment;
+            $partialPay->invoice_id=$invoice_id;
+            $partialPay->customer_id=$customer_id;
+            $partialPay->customer_name=$customer_name;
+            $partialPay->tender_id=$tender_id;
+            $partialPay->tender_name=$tender_name;
+            $partialPay->total_amount=$total_amount_invoice;
+            $partialPay->paid_amount=$paid_amount;
+            $partialPay->store_id=$this->sdc->storeID();
+            $partialPay->created_by=$this->sdc->UserID();
+            $partialPay->save();
 
             if($load_due<=0)
             {
@@ -7500,8 +7564,12 @@ GROUP BY d.invoice_id) as product"))
         $invoice_id=$request->invoice_id;
         $invoice_date=$request->invoice_date;
         $barcode=$request->barcode;
-        $loadInvoices=Invoice::leftJoin("invoice_products","invoices.invoice_id","=","invoice_products.invoice_id")
-                             ->leftJoin("products","invoice_products.product_id","=","products.id")
+
+        if(!empty($request->barcode))
+        {
+            $loadInvoices=Invoice::join('customers','invoices.customer_id','=','customers.id')
+                             ->join("invoice_products","invoices.invoice_id","=","invoice_products.invoice_id")
+                             ->join("products","invoice_products.product_id","=","products.id")
                              ->where('invoices.store_id',$this->sdc->storeID())
                              ->when($invoice_id, function ($query) use ($invoice_id) {
                                        return $query->where('invoices.invoice_id','=', $invoice_id);
@@ -7515,8 +7583,28 @@ GROUP BY d.invoice_id) as product"))
                              ->when($invoice_date, function ($query) use ($invoice_date) {
                                        return $query->whereDate('invoices.created_at','=', $invoice_date);
                              })
-                             ->select("invoices.*")
+                             ->select("invoices.*",'customers.name as customer_name')
+                             ->groupBy('invoices.id')
                              ->get();
+        }
+        else
+        {
+            $loadInvoices=Invoice::join('customers','invoices.customer_id','=','customers.id')
+                             ->where('invoices.store_id',$this->sdc->storeID())
+                             ->when($invoice_id, function ($query) use ($invoice_id) {
+                                       return $query->where('invoices.invoice_id','=', $invoice_id);
+                             })
+                             ->when($customer_id, function ($query) use ($customer_id) {
+                                       return $query->where('invoices.customer_id','=', $customer_id);
+                             })
+                             ->when($invoice_date, function ($query) use ($invoice_date) {
+                                       return $query->whereDate('invoices.created_at','=', $invoice_date);
+                             })
+                             ->select("invoices.*",'customers.name as customer_name')
+                             ->get();
+        }
+
+        
 
         return response()->json($loadInvoices);
     }

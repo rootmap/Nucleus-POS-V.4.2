@@ -65,6 +65,10 @@ Route::post('check/idle/user', 'ActivityController@idleCheck');
 
 Route::group(['middleware' => ['auth', 'ssl']], function () { 
 
+
+	//====================== Json Record Parse =======================//
+	Route::get('/product-config/json', 'InvoiceController@productConfigjson');
+
 	//======================== Search In Nucleus Start =================//
 	Route::get('/search-nucleus', 'SearchSiteController@search');
 	Route::post('/search-nucleus', 'SearchSiteController@search');
@@ -502,23 +506,42 @@ Route::group(['middleware' => ['auth', 'ssl']], function () {
 
 	//------------------Report route start--------------------//
 	Route::get('/profit', 'InvoiceProfitController@index');
+	
+	Route::get('/item/sales/report', 'ItemWiseSalesController@index');
+	Route::post('/item/sales/data/report/json', 'ItemWiseSalesController@datajson');
+	Route::post('/item/sales/excel/report', 'ItemWiseSalesController@export');
+	Route::post('/item/sales/pdf/report', 'ItemWiseSalesController@invoicePDF');
+	Route::post('/item/sales/report', 'ItemWiseSalesController@index');
+
 	Route::get('/profit/report', 'InvoiceProfitController@index');
 	Route::post('/profit/data/report/json', 'InvoiceProfitController@datajson');
 	Route::post('/profit/excel/report', 'InvoiceProfitController@export');
 	Route::post('/profit/pdf/report', 'InvoiceProfitController@invoicePDF');
 	Route::post('/profit/report', 'InvoiceProfitController@index');
+
+
 	Route::get('/product/profit', 'ProductController@indexProfit');
 	Route::get('/product/profit/report', 'ProductController@indexProfit');
 	Route::post('/product/profit/data/report/json', 'ProductController@dataProductProfitjson');
 	Route::post('/product/profit/excel/report', 'ProductController@exportProfit');
 	Route::post('/product/profit/pdf/report', 'ProductController@invoicePDFProfit');
 	Route::post('/product/profit/report', 'ProductController@indexProfit');
+
+	Route::get('/partial/payment/report', 'PartialPaymentController@index');
+	Route::post('/partial/payment/report/json', 'PartialPaymentController@datajson');
+	Route::post('/partial/payment/report', 'PartialPaymentController@index');
+	Route::post('/partial/payment/report/excel/report', 'PartialPaymentController@exportExcel');
+	Route::post('/partial/payment/report/pdf/report', 'PartialPaymentController@invoicePDF');
+
 	Route::get('/payment', 'InvoicePaymentController@index');
 	Route::get('/payment/report', 'InvoicePaymentController@index');
 	Route::post('/payment//data/report/json', 'InvoicePaymentController@datajson');
 	Route::post('/payment/report', 'InvoicePaymentController@index');
 	Route::post('/payment/excel/report', 'InvoicePaymentController@exportExcel');
 	Route::post('/payment/pdf/report', 'InvoicePaymentController@invoicePDF');
+
+
+
 	Route::get('/paypal/payment/report', 'InvoicePaymentController@Paypalindex');
 	Route::post('/paypal/payment/data/json', 'InvoicePaymentController@paypalPaymentReportjson');
 	Route::post('/paypal/payment/report', 'InvoicePaymentController@Paypalindex');

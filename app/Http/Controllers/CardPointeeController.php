@@ -12,6 +12,7 @@ use Session;
 use DB;
 use App\Pos;
 use App\SessionInvoice;
+use App\PartialPayment;
 use Illuminate\Http\Request;
 use Dewbud\CardConnect\CardPointe;
 class CardPointeeController extends Controller
@@ -521,6 +522,18 @@ class CardPointeeController extends Controller
                                         $invoicePay->created_by=$this->sdc->UserID();
                                         $invoicePay->save();
 
+                                        $partialPay=new PartialPayment;
+                                        $partialPay->invoice_id=$invoice_id;
+                                        $partialPay->customer_id=$invoice->customer_id;
+                                        $partialPay->customer_name=$cusInfo->name;
+                                        $partialPay->tender_id=$tenderData->id;
+                                        $partialPay->tender_name=$tenderData->name;
+                                        $partialPay->total_amount=$invoice->total_amount;
+                                        $partialPay->paid_amount=$amountPaid;
+                                        $partialPay->store_id=$this->sdc->storeID();
+                                        $partialPay->created_by=$this->sdc->UserID();
+                                        $partialPay->save();
+
                                         if($load_due<=0)
                                         {
                                             $invoice->due_amount="0.00";
@@ -820,6 +833,18 @@ class CardPointeeController extends Controller
                 $invoicePay->store_id=$this->sdc->storeID();
                 $invoicePay->created_by=$this->sdc->UserID();
                 $invoicePay->save();
+
+                $partialPay=new PartialPayment;
+                $partialPay->invoice_id=$invoice_id;
+                $partialPay->customer_id=$invoice->customer_id;
+                $partialPay->customer_name=$cusInfo->name;
+                $partialPay->tender_id=$tenderData->id;
+                $partialPay->tender_name=$tenderData->name;
+                $partialPay->total_amount=$invoice->total_amount;
+                $partialPay->paid_amount=$amountPaid;
+                $partialPay->store_id=$this->sdc->storeID();
+                $partialPay->created_by=$this->sdc->UserID();
+                $partialPay->save();
 
                 if($load_due<=0)
                 {

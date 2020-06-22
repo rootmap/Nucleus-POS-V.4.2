@@ -352,6 +352,9 @@
                     @if(in_array('payment/report', $dataMenuAssigned))
                     <li class="{{ Request::path() == 'payment/report' ? 'active' : '' }} border-bottom-purple"><a href="{{url('/payment/report')}}" class="menu-item">Payment Report</a></li>
                     @endif 
+                    @if(in_array('partial/payment/report', $dataMenuAssigned))
+                    <li class="{{ Request::path() == 'partial/payment/report' ? 'active' : '' }} border-bottom-purple"><a href="{{url('/partial/payment/report')}}" class="menu-item">Partial Payment Report</a></li>
+                    @endif 
                     @if(in_array('product/report', $dataMenuAssigned))
                     <li class="{{ Request::path() == 'product/report' ? 'active' : '' }} border-bottom-purple"><a href="{{url('/product/report')}}" class="menu-item">Product Status Report</a></li>
                     @endif 
@@ -390,17 +393,15 @@
                     @if(in_array('sales/report', $dataMenuAssigned))
                     <li class="{{ Request::path() == 'sales/report' ? 'active' : '' }}  border-bottom-purple"><a href="{{url('sales/report')}}" class="menu-item">Sales Report</a></li>
                     @endif 
+                    @if(in_array('item/sales/report', $dataMenuAssigned))
+                    <li class="{{ Request::path() == 'item/sales/report' ? 'active' : '' }}  border-bottom-purple"><a href="{{url('item/sales/report')}}" class="menu-item">Item Wise Sales Report</a></li>
+                    @endif 
                     @if(in_array('paypal/payment/report', $dataMenuAssigned))
                     <li class="{{ Request::path() == '/report/tender' ? 'active' : '' }} border-bottom-purple"><a href="{{url('/report/tender')}}" class="menu-item">Tender Report</a></li>
                     @endif 
                     @if(in_array('paypal/payment/report', $dataMenuAssigned))
                     <li class="{{ Request::path() == '/ticket/report' ? 'active' : '' }} border-bottom-purple"><a href="{{url('/ticket/report')}}" class="menu-item">Ticket Report</a></li>
                     @endif 
-                    
-
-                    
-                    
-                    
                 </ul>
             </li>
             @endif 

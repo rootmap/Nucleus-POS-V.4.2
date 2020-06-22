@@ -1,4 +1,3 @@
-<script type="text/javascript">
     var csrftLarVe = $('meta[name="csrf-token"]').attr("content");
     function addToRepairList(repairFidAr,customerID,productID,price)
     {
@@ -865,6 +864,117 @@
 
             });
 
-	});
+    });
+    
+    $("#punch").click(function(){
+        $(".hideDIv").hide();
+        $("#punchMSG").hide();
+        //------------------------Ajax POS Start-------------------------//
+        var timevalue=$("#punch_time").val();
+        var timeLen=timevalue.length;
+        if(timeLen==19)
+        {
+            $("#punchMSG").show();
+            $("#punchMSG").html(loadingOrProcessing("Processing Your Attendance Info, Please wait....."));
+            
+            $.ajax({
+                'async': false,
+                'type': "POST",
+                'global': false,
+                'dataType': 'json',
+                'url': punch_attendance_punch_save,
+                'data': {'date':timevalue,'_token':csrftLarVe},
+                'success': function (data) {
+                    //tmp = data;
+                    $("#punchMSG").show();
+                    $("#punchMSG").html(successMessage("Your Attendance Saved Successfully."));
+                    console.log("Attendance Processing : "+data);
+                    
+                    if(data.length>0)
+                    {
+                        $(".hideDIv").show();
+                        $("#punchLogTimes").html("");
+                        $.each(data,function(key,row){
+                            var elapsed_time=row.elapsed_time;
+                            if(row.out_time=="00:00:00")
+                            {
+                                elapsed_time="00:00:00";
+                            }
+                            var htmlStr='<tr><td>'+row.in_date+'</td><td>'+row.in_time+'</td><td>'+row.out_date+'</td><td>'+row.out_time+'</td><td>'+elapsed_time+'</td></tr>';
+                            $("#punchLogTimes").append(htmlStr);
+                        });
+                    }
+                    
+//punchLogTimes
 
-</script>
+                }
+            });
+        }
+        else
+        {
+            $("#punchMSG").show();
+            $("#punchMSG").html(warningMessage("Invalid Time Format Please Contact With Site Administrator."));
+            return false;
+        }
+        
+        //------------------------Ajax POS End---------------------------//
+        //attendance/punch/json
+        //attendanceJson
+});
+
+    function pushTax(taxRate)
+    {
+        var taxRate=taxRate;
+        $.each($("#dataCart").find("tr"),function(index,row){
+                //var singlePrice=$(row).find("td:eq(2)").children("span").html();
+                var rowPrice=parseFloat($(row).find("td:eq(3)").children("span").html()).toFixed(2); 
+                var calcTax=((rowPrice*taxRate)/100);
+                $(row).find("td:eq(2)").attr("data-tax",calcTax); 
+                //parseFloat().toFixed(2); 
+        });
+    }
+
+
+    $(document).ready(function(){
+        $(".apply-tax").click(function(){
+
+            $("#cartMessageProShow").html(loadingOrProcessing("Please wait, Changing your tax status......."));
+
+            var taxType="No Tax";
+            if(document.getElementById("tax_0").checked==true)
+            {
+                taxType="Full Tax";
+            }
+            else if(document.getElementById("tax_1").checked==true)
+            {
+                taxType="Part Tax";
+            }
+            else if(document.getElementById("tax_2").checked==true)
+            {
+                taxType="No Tax";
+            }
+
+
+             //------------------------Ajax Customer Start-------------------------//
+             $.ajax({
+                'async': false,
+                'type': "POST",
+                'global': false,
+                'dataType': 'json',
+                'url': tax_settings_tax_settype,
+                'data': {'setTaxType':taxType,'_token':csrftLarVe},
+                'success': function (data) {
+                    console.log(data.TaxRate);
+                    $("#taxRate").val(data.TaxRate);
+                    pushTax(data.TaxRate);
+                    $("#TaxManagement").modal('hide');
+                    $("#cartMessageProShow").html(successMessage("Your tax status has been chnaged successfully."));
+                    genarateSalesTotalCart();
+                }
+            });
+            //------------------------Ajax Customer End---------------------------//
+
+        });
+    });
+
+    

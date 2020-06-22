@@ -137,13 +137,12 @@
             
                             </div>
         <div class="row" id="defaultProductView">
-
-        <script type="text/javascript">
+        <style type="text/css">
             .height-30
             {
                 height:30px !important;
             }
-        </script>
+        </style>
         <span id="product_place"></span>
 
                         </div>    
@@ -568,9 +567,9 @@
 @endsection
 
 @section('css')
-<link rel="stylesheet" type="text/css" href="{{url('theme/app-assets/vendors/css/extensions/pace.css')}}">
-<link rel="stylesheet" type="text/css" href="{{url('theme/app-assets/vendors/css/extensions/datedropper.min.css')}}">
-<link rel="stylesheet" type="text/css" href="{{url('assets/css/pos.css')}}">
+<link rel="stylesheet" type="text/css" href="{{secure_url('theme/app-assets/vendors/css/extensions/pace.css')}}">
+<link rel="stylesheet" type="text/css" href="{{secure_url('theme/app-assets/vendors/css/extensions/datedropper.min.css')}}">
+<link rel="stylesheet" type="text/css" href="{{secure_url('assets/css/pos.css')}}">
 <style type="text/css">
 .one-make-full
 {
@@ -592,17 +591,17 @@
 <link rel="stylesheet" type="text/css" href="{{asset('theme/app-assets/vendors/css/ui/dragula.min.css')}}">
 <script>
 
-var squareupPaymentFormload="{{url('intregation/squareup/form')}}";
+var squareupPaymentFormload="{{secure_url('intregation/squareup/form')}}";
 </script>
 @endsection
 
 @section('js')
 
-<script src="{{url('theme/app-assets/vendors/js/extensions/pace.min.js')}}" type="text/javascript"></script>
+<script src="{{secure_url('theme/app-assets/vendors/js/extensions/pace.min.js')}}" type="text/javascript"></script>
 <!-- /build-->
 <!-- BEGIN VENDOR JS-->
 <!-- BEGIN PAGE VENDOR JS-->
-<script src="{{url('theme/app-assets/vendors/js/extensions/datedropper.min.js')}}" type="text/javascript"></script>
+<script src="{{secure_url('theme/app-assets/vendors/js/extensions/datedropper.min.js')}}" type="text/javascript"></script>
 <!-- END PAGE VENDOR JS-->
 
 <!-- BEGIN PAGE LEVEL JS-->
@@ -641,11 +640,14 @@ var squareupPaymentFormload="{{url('intregation/squareup/form')}}";
 
 <script>
 //editRowLive
-    var productJson=<?php echo json_encode($product); ?>;
-    var modelJson=<?php echo json_encode($model); ?>;
-    var problemJson=<?php echo json_encode($problem); ?>;
-    var estPriceJson=<?php echo json_encode($estPrice); ?>;
-    var cusObjData=<?php echo json_encode($customerData); ?>;
+    var product_pos_settings_product_url = "{{secure_url('product-config/json')}}";
+</script>
+<script src="{{secure_url('js/product-config.js')}}"></script>
+<script>
+    //var modelJson=<?php //echo json_encode($model); ?>;
+    //var problemJson=<?php //echo json_encode($problem); ?>;
+    //var estPriceJson=<?php //echo json_encode($estPrice); ?>;
+    //var cusObjData=<?php //echo json_encode($customerData); ?>;
 
     var selectedDefCusPOSSCRvFour="";
     var defCusIDCusPOSSCRvFour=0;
@@ -661,11 +663,11 @@ var squareupPaymentFormload="{{url('intregation/squareup/form')}}";
 
 
 
-        var transactionStoreAddHowMowKhaoUrlCartPOSvfour="{{url('/transaction/store')}}";
-        var AddHowMowKhaoUrlcounterdisplaystatuschangeCartPOSvfour="{{url('counter-display-status-change')}}";
-        var defaultProductimgURLCartPOSvfour="{{url('images/product-avater-2.jpg')}}";
+        var transactionStoreAddHowMowKhaoUrlCartPOSvfour="{{secure_url('/transaction/store')}}";
+        var AddHowMowKhaoUrlcounterdisplaystatuschangeCartPOSvfour="{{secure_url('counter-display-status-change')}}";
+        var defaultProductimgURLCartPOSvfour="{{secure_url('images/product-avater-2.jpg')}}";
 
-        var CounterCartPaymentStatusAddProductUrlCartPOSvfour="{{url('cart/counter-payment/status')}}";
+        var CounterCartPaymentStatusAddProductUrlCartPOSvfour="{{secure_url('cart/counter-payment/status')}}";
 
         @if($drawerStatus==0) 
             $(".checkDrawer").fadeOut('fast');
@@ -673,14 +675,14 @@ var squareupPaymentFormload="{{url('intregation/squareup/form')}}";
             $(".checkDrawer").fadeIn('fast');
         @endif
 
-        var payoutFromPOSScreenCartPOSvfour="{{url('cart/pos/payout')}}";
-        var changeSalesViewTwoCartPOSvfour="{{url('sales')}}";
-        var OpenStoreAddHowMowKhaoUrlUrlCartPOSvfour="{{url('open/store')}}";
-        var closeStorePrintLocationAddHowMowKhaoUrlCartPOSvfour="{{url('close/print/store')}}";
-        var closeStoreAddHowMowKhaoUrlCartPOSvfour="{{url('close/store')}}";
-        var addAuthrizePaymentURLCartPOSvfour="{{url('authorize/net/capture/pos/payment')}}";
-        var paPaymentypaHowMawHkhawl="{{url('invoice/pos/pay/paypal')}}";
-        var clposLinkClearPOSScreen="{{url('pos/clear')}}";
+        var payoutFromPOSScreenCartPOSvfour="{{secure_url('cart/pos/payout')}}";
+        var changeSalesViewTwoCartPOSvfour="{{secure_url('sales')}}";
+        var OpenStoreAddHowMowKhaoUrlUrlCartPOSvfour="{{secure_url('open/store')}}";
+        var closeStorePrintLocationAddHowMowKhaoUrlCartPOSvfour="{{secure_url('close/print/store')}}";
+        var closeStoreAddHowMowKhaoUrlCartPOSvfour="{{secure_url('close/store')}}";
+        var addAuthrizePaymentURLCartPOSvfour="{{secure_url('authorize/net/capture/pos/payment')}}";
+        var paPaymentypaHowMawHkhawl="{{secure_url('invoice/pos/pay/paypal')}}";
+        var clposLinkClearPOSScreen="{{secure_url('pos/clear')}}";
         
 
 
@@ -690,70 +692,67 @@ var squareupPaymentFormload="{{url('intregation/squareup/form')}}";
         var taxRatePOSCartInit=0;
     @endif
 
-        var pingDeviceURLCartPOSvfour="{{url('bolt/ping')}}";
-        var boltTokenCaptureURLCartPOSvfour="{{url('bolt/token')}}";
-        var boltCaptureURLCartPOSvfour="{{url('bolt/capture')}}";
-        var addCardPointePaymentURLCartPOSvfour="{{url('cardpointe/pos/payment')}}";
-        var savenewcustomerAddNewCustomerUrl="{{url('customer/pos/ajax/add')}}";
-        var savenewcustomerAddCustomerPOSUrl="{{url('sales/cart/customer')}}";
-        var AddHowMowKhaoUrlCartPOSvfour="{{url('sales/cart/complete-sales')}}";
-        var AddHowMowKhaoUrlCartPOSvfourPrintPDFSalesRec="{{url('sales/invoice/print/media/pdf')}}";
+        var pingDeviceURLCartPOSvfour="{{secure_url('bolt/ping')}}";
+        var boltTokenCaptureURLCartPOSvfour="{{secure_url('bolt/token')}}";
+        var boltCaptureURLCartPOSvfour="{{secure_url('bolt/capture')}}";
+        var addCardPointePaymentURLCartPOSvfour="{{secure_url('cardpointe/pos/payment')}}";
+        var savenewcustomerAddNewCustomerUrl="{{secure_url('customer/pos/ajax/add')}}";
+        var savenewcustomerAddCustomerPOSUrl="{{secure_url('sales/cart/customer')}}";
+        var AddHowMowKhaoUrlCartPOSvfour="{{secure_url('sales/cart/complete-sales')}}";
+        var AddHowMowKhaoUrlCartPOSvfourPrintPDFSalesRec="{{secure_url('sales/invoice/print/media/pdf')}}";
 
            // sales/cart/payment
-        var addAuthrizePaymentURLauthorizenetcapturepospayment="{{url('authorize/net/capture/pos/payment')}}";
+        var addAuthrizePaymentURLauthorizenetcapturepospayment="{{secure_url('authorize/net/capture/pos/payment')}}";
 
-        var makePaymentInitialDefaultAddPOSUrl="{{url('sales/cart/payment')}}";
-        var ApplyDiscountInCartAddProductUrl="{{url('sales/cart/assign/discount')}}";
-        var GAddProductToCartAddProductUrl="{{url('product/ajax/save')}}";
-        var GAddProductToCartAddPOSUrl="{{url('sales/cart/add')}}";
-        var editRowLiveAddPOSUrl="{{url('sales/cart/custom/add')}}";
-        var delposSinleRowAddPOSUrl="{{url('sales/cart/row/delete')}}";
-        var verifyManagerLogin="{{url('ma/verify')}}";
-        var cartProductImgUrl="{{url('upload/product')}}";
+        var makePaymentInitialDefaultAddPOSUrl="{{secure_url('sales/cart/payment')}}";
+        var ApplyDiscountInCartAddProductUrl="{{secure_url('sales/cart/assign/discount')}}";
+        var GAddProductToCartAddProductUrl="{{secure_url('product/ajax/save')}}";
+        var GAddProductToCartAddPOSUrl="{{secure_url('sales/cart/add')}}";
+        var editRowLiveAddPOSUrl="{{secure_url('sales/cart/custom/add')}}";
+        var delposSinleRowAddPOSUrl="{{secure_url('sales/cart/row/delete')}}";
+        var verifyManagerLogin="{{secure_url('ma/verify')}}";
+        var cartProductImgUrl="{{secure_url('upload/product')}}";
         var product_image_status=0;
         @if(isset($product_image_status))
             @if($product_image_status->product_image_status==1)
                 product_image_status=1;
             @endif
         @endif
-
-
-        
-
-        
-
-
 </script>
 
-<script src="{{url('js/pos.js')}}" type="text/javascript"></script>
-<script src="{{url('js/intregation.js')}}" type="text/javascript"></script>
-
-{{-- Instore repair js * Start  --}}
-@include('apps.include.json.posinstorerepair')
-{{-- Instore repair js * End  --}}
-
-{{-- Punch js * Start  --}}
-@include('apps.include.json.punch')
-{{-- Punch js * End  --}}
-
-{{-- Punch js * Start  --}}
-@include('apps.include.json.tax')
-{{-- Punch js * End  --}}
-
-{{-- Punch js * Start  --}}
-@include('apps.include.json.salesreturn')
-{{-- Punch js * End  --}}
-
-{{-- Punch js * Start  --}}
-@include('apps.include.json.warranty')
-{{-- Punch js * End  --}}
-
-{{-- Punch js * Start  --}}
-@include('apps.include.json.posbuyback')
-{{-- Punch js * End  --}}
-
-{{-- Punch js * Start  --}}
-@include('apps.include.json.pospaymentpartial',compact('addPartialPayment','partial_invoice'))
-{{-- Punch js * End  --}}
+<script src="{{secure_url('js/pos.js')}}" type="text/javascript"></script>
+<script src="{{secure_url('js/intregation.js')}}" type="text/javascript"></script>
+<script type="text/javascript">
+    var sales_return_invoice_detail = "{{secure_url('sales/return/invoice/detail')}}";
+    var sales_return_item = "{{secure_url('sales/return/item')}}";
+    var sales_return_invoice_ajax="{{secure_url('sales/return/invoice/ajax')}}";
+    var sales_return_save_ajax="{{secure_url('sales/return/save/ajax')}}";
+    var posinstorerepair_repair_info_pos_ajax = "{{secure_url('repair/info/pos/ajax')}}";
+    var posinstorerepair_repair_list = "{{secure_url('repair/list')}}";
+    var posinstorerepair_ticket_list = "{{secure_url('ticket/list')}}";
+    var posinstorerepair_ticket_info_pos_ajax = "{{secure_url('ticket/info/pos/ajax')}}";
+    var posinstorerepair_repair_product_ajax = "{{secure_url('repair/product/ajax')}}";
+    var posinstorerepair_product_ajax_ticket_save = "{{secure_url('product/ajax/ticket/save')}}";
+    var punch_attendance_punch_save="{{secure_url('attendance/punch/save')}}";
+    var tax_settings_tax_settype="{{secure_url('settings/tax/settype')}}";
+    var warranty_warranty_invoice_ajax = "{{secure_url('warranty/invoice/ajax')}}";
+    var warranty_warranty_invoice_product_ajax = "{{secure_url('warranty/invoice/product/ajax')}}";
+    var warranty_warranty_cart_add_invoice_id = "{{secure_url('warranty/cart/add')}}";
+    var buyback_buyback_pos_ajax="{{secure_url('buyback/pos/ajax')}}";
+    var partialpayment_partialpay_invoice_ajax = "{{secure_url('partialpay/invoice/ajax')}}";
+    var partialpayment_partial_pay_paypal = "{{secure_url('partial/pay/paypal')}}";
+    var partialpayment_cardpointe_partial_payment="{{secure_url('cardpointe/partial/payment')}}";
+    var partialpayment_bolt_pingDevice = "{{secure_url('bolt/ping')}}";
+    var partialpayment_bolt_token="{{secure_url('bolt/token')}}";
+    var partialpayment_bolt_partial_capture="{{secure_url('bolt/partial/capture')}}";
+    var partialpayment_stripepartialURL="{{secure_url('stripepartial')}}";
+    var partialpayment_authorize_net_capture_pos_partial_payment = "{{secure_url('authorize/net/capture/pos/partial/payment')}}";
+    var partialpayment_addPartialPayment_env = "{{$addPartialPayment}}";
+    var partialpayment_partial_invoice_invoiceID = "{{$partial_invoice}}";
+</script>
+<script src="{{secure_url('js/sales-return.js')}}"></script>
+<script src="{{secure_url('js/posinstorerepair.js')}}"></script>
+<script src="{{secure_url('js/warranty.js')}}"></script>
+<script src="{{secure_url('js/partial-payment.js')}}"></script>
 @endsection
 

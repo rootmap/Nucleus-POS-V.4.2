@@ -1,4 +1,3 @@
-<script type="text/javascript">
     var csrftLarVe = $('meta[name="csrf-token"]').attr("content");
 
     function loadSalesReturnItem(itemID){
@@ -355,4 +354,3 @@
         });
 
     });
-</script>
