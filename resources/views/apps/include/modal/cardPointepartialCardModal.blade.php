@@ -6,23 +6,11 @@
           <span aria-hidden="true">&times;</span>
       </button>
       <h3 class="modal-title" id="myModalLabel35"> Partial Payment With CardPointe 
-        <img class="img-responsive pull-left" src="http://i76.imgup.net/accepted_c22e0.png">
+        <img class="img-responsive pull-left" src="{{secure_url('intregation/accepted_c22e0.png')}}">
       </h3>
   </div>
       <div class="card-body collapse in">
-                    <div class="card-block">
-
-
-    {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" /> --}}
-    <style type="text/css">
-       .hidestripemsg
-       {
-            display: none;
-       }
-    </style>
-
-
-  
+                    <div class="card-block">  
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default credit-card-box">

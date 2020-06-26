@@ -12,7 +12,7 @@ var productConfig = (function () {
         return productConfig;
 })(); 
 
-console.log('Total Json',productConfig);
+//console.log('Total Json',productConfig);
 
 var productJson=productConfig.product;
 var modelJson=productConfig.model;

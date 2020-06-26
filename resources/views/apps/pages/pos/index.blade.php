@@ -35,6 +35,70 @@
               vertical-align: middle;
               line-height: normal;
             }
+
+            .height-30
+            {
+                height:30px !important;
+            }
+
+            .height-10{ height: 10px !important; }
+            .table td, .table th
+            {
+                padding: 0.1rem .75rem;
+            }
+            .paper-cut:after {
+            content: " ";
+            display: block;
+            position: relative;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 36px;
+            background: -webkit-linear-gradient(#FFFFFF 0%, transparent 0%), -webkit-linear-gradient(135deg, #e9ebee 33.33%, transparent 33.33%) 0 0%, #e9ebee -webkit-linear-gradient(45deg, #e9ebee 33.33%, #FFFFFF 33.33%) 0 0%;
+            background: -o-linear-gradient(#FFFFFF 0%, transparent 0%), -o-linear-gradient(135deg, #e9ebee 33.33%, transparent 33.33%) 0 0%, #e9ebee -o-linear-gradient(45deg, #e9ebee 33.33%, #FFFFFF 33.33%) 0 0%;
+            background: -moz-linear-gradient(#FFFFFF 0%, transparent 0%), -moz-linear-gradient(135deg, #e9ebee 33.33%, transparent 33.33%) 0 0%, #e9ebee -moz-linear-gradient(45deg, #e9ebee 33.33%, #FFFFFF 33.33%) 0 0%;
+            background-repeat: repeat-x;
+            background-size: 0px 100%, 14px 27px, 14px 27px;
+            }
+
+            table tbody tr td
+            {
+                line-height: 35px;
+                font-weight: 600;
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 12px;
+            }
+
+            table tbody tr td div span
+            {
+                cursor: pointer;
+            }
+
+            table tfoot tr td
+            {
+                font-weight: 600;
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 14px;
+            }
+
+            table thead tr th
+            {
+                font-weight: 600;
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 16px;
+            }
+
+            .hellvetia{
+                font-family: 'Helvetica Neue', 'Nunito', sans-serif;
+                font-weight: 600;
+            }
+
+            .select2-container--default .select2-selection--single .select2-selection__rendered
+            {
+                font-weight: bolder !important;
+                text-align: center !important;
+                font-size: 16px !important;
+            }
         </style>
         <div class="row">
             <div class="col-md-12" @if($userguideInit==1) data-step="6" data-intro="Here you will have categories which you have created. Also after you click on category it will show all the product on top & after you click on product it will add on POS Cart." @endif>
@@ -137,53 +201,12 @@
             
                             </div>
         <div class="row" id="defaultProductView">
-        <style type="text/css">
-            .height-30
-            {
-                height:30px !important;
-            }
-        </style>
         <span id="product_place"></span>
 
                         </div>    
     <hr>
-            <style type="text/css">
-                .height-10{ height: 10px !important; }
-            </style>
-            
+
         </div>
-        <style type="text/css">
-        /* Desktop 
-        media (min-width:960px) {
-
-            .testerPickup {
-                position: fixed; top:42px;
-            }   
-
-        }*/
-        .table td, .table th
-        {
-            padding: 0.1rem .75rem;
-        }
-    </style>
-
-
-    <style type="text/css">
-        .paper-cut:after {
-          content: " ";
-          display: block;
-          position: relative;
-          top: 0px;
-          left: 0px;
-          width: 100%;
-          height: 36px;
-          background: -webkit-linear-gradient(#FFFFFF 0%, transparent 0%), -webkit-linear-gradient(135deg, #e9ebee 33.33%, transparent 33.33%) 0 0%, #e9ebee -webkit-linear-gradient(45deg, #e9ebee 33.33%, #FFFFFF 33.33%) 0 0%;
-          background: -o-linear-gradient(#FFFFFF 0%, transparent 0%), -o-linear-gradient(135deg, #e9ebee 33.33%, transparent 33.33%) 0 0%, #e9ebee -o-linear-gradient(45deg, #e9ebee 33.33%, #FFFFFF 33.33%) 0 0%;
-          background: -moz-linear-gradient(#FFFFFF 0%, transparent 0%), -moz-linear-gradient(135deg, #e9ebee 33.33%, transparent 33.33%) 0 0%, #e9ebee -moz-linear-gradient(45deg, #e9ebee 33.33%, #FFFFFF 33.33%) 0 0%;
-          background-repeat: repeat-x;
-          background-size: 0px 100%, 14px 27px, 14px 27px;
-        }
-    </style>
 
     <div class="col-lg-5 col-md-12 mr-0 pr-0 dropableCartZone">
         <!-- CSS Classes -->
@@ -322,34 +345,6 @@
             <div class="card-body collapse in" @if($userguideInit==1) data-step="11" data-intro="In this section, you see all the product you added also you can see the total, paid amount and due amount. you must be a select customer then you can access other action." @endif>
                 <div class="card-blockf">
                     <div class="card-text">
-                        <style type="text/css">
-                            table tbody tr td
-                            {
-                                line-height: 35px;
-                                font-weight: 600;
-                                font-family: Arial, Helvetica, sans-serif;
-                                font-size: 12px;
-                            }
-
-                            table tbody tr td div span
-                            {
-                                cursor: pointer;
-                            }
-
-                            table tfoot tr td
-                            {
-                                font-weight: 600;
-                                font-family: Arial, Helvetica, sans-serif;
-                                font-size: 14px;
-                            }
-
-                            table thead tr th
-                            {
-                                font-weight: 600;
-                                font-family: Arial, Helvetica, sans-serif;
-                                font-size: 16px;
-                            }
-                        </style>
                         <div class="table-responsive">
                             <table class="table mb-0">
                                 <thead>
@@ -442,13 +437,6 @@
                     </div>
                 </div>
             </div>
-
-                        <style type="text/css">
-                .hellvetia{
-                    font-family: 'Helvetica Neue', 'Nunito', sans-serif;
-                    font-weight: 600;
-                }
-            </style>
             <div class="card-header" style="padding: 0.50rem 1.5rem !important;">
 
                 <div class="row">
@@ -484,14 +472,6 @@
             <div class="card-header" style="padding: 0.50rem 1.5rem !important;">
 
                 <div class="row">
-                    <style type="text/css">
-                            .select2-container--default .select2-selection--single .select2-selection__rendered
-                            {
-                                font-weight: bolder !important;
-                                text-align: center !important;
-                                font-size: 16px !important;
-                            }
-                        </style>
                         <div class="col-xs-12 button-group">
                             @include('apps.include.modal.pos_quick_link')
                         </div>
@@ -596,16 +576,14 @@ var squareupPaymentFormload="{{secure_url('intregation/squareup/form')}}";
 @endsection
 
 @section('js')
-
 <script src="{{secure_url('theme/app-assets/vendors/js/extensions/pace.min.js')}}" type="text/javascript"></script>
 <!-- /build-->
 <!-- BEGIN VENDOR JS-->
 <!-- BEGIN PAGE VENDOR JS-->
 <script src="{{secure_url('theme/app-assets/vendors/js/extensions/datedropper.min.js')}}" type="text/javascript"></script>
 <!-- END PAGE VENDOR JS-->
-
 <!-- BEGIN PAGE LEVEL JS-->
-    <script type="text/javascript">
+<script type="text/javascript">    
     $(document).ready(function() {
         $(".DropDateWithformat").dateDropper({
             dropWidth: 200,
@@ -621,12 +599,16 @@ var squareupPaymentFormload="{{secure_url('intregation/squareup/form')}}";
     });
 </script>
 <!-- END PAGE LEVEL JS-->
+<!-- Stripe Start ---------------------->
+<script type="text/javascript" src="https://js.stripe.com/v2/" crossorigin="anonymous" SameSite="none Secure"></script>
+<script type="text/javascript" src="{{secure_url('js/stripe.js')}}"></script>
+<!-- Stripe End ---------------------->
 
 <script src="{{asset('theme/app-assets/vendors/js/forms/extended/card/jquery.card.js')}}" type="text/javascript"></script>
 <script src="{{asset('theme/app-assets/js/scripts/forms/extended/form-typeahead.min.js')}}" type="text/javascript"></script>
-<script src="{{asset('theme/app-assets/js/scripts/forms/extended/form-inputmask.min.js')}}" type="text/javascript"></script>
+{{-- <script src="{{asset('theme/app-assets/js/scripts/forms/extended/form-inputmask.min.js')}}" type="text/javascript"></script>
 <script src="{{asset('theme/app-assets/js/scripts/forms/extended/form-formatter.min.js')}}" type="text/javascript"></script>
-<script src="{{asset('theme/app-assets/js/scripts/forms/extended/form-maxlength.min.js')}}" type="text/javascript"></script>
+<script src="{{asset('theme/app-assets/js/scripts/forms/extended/form-maxlength.min.js')}}" type="text/javascript"></script> --}}
 <script src="{{asset('theme/app-assets/js/scripts/forms/extended/form-card.min.js')}}" type="text/javascript"></script>
 
 

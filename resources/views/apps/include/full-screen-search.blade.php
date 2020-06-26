@@ -1,6 +1,5 @@
 <div id="fullscreen-search" class="fullscreen-search">
       <form  autocomplete="off" class="fullscreen-search-form" method="get" action="{{secure_url('search-nucleus')}}">
-        {{csrf_field()}}
         <input type="search" name="search" autocomplete="off" id="search-nucleusv4" placeholder="Search..." class="fullscreen-search-input">
         <input type="hidden" name="search_param" autocomplete="off" placeholder="Search Param...">
         <button type="submit" class="fullscreen-search-submit">Search</button>

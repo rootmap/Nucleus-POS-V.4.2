@@ -154,7 +154,7 @@ class StoreController extends Controller
     {
         $id=$this->sdc->storeID();
         $tab=Store::where('store_id',$id)->first();
-        return view('apps.pages.user_info.index',['edit'=>$tab]);
+        return view('apps.pages.user_info.index',['edit'=>$tab,'store_id'=>$id]);
     }
 
     /**

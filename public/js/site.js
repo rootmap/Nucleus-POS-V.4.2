@@ -1,6 +1,39 @@
-$(document).ready(function(){
+
+$(document).ready(function(e){
     $.getScript("https://cdn.jsdelivr.net/npm/sweetalert2@9");
 });
+
+
+var searchClick=0;
+
+function searchInNuc()
+{
+    console.log('Got Search');
+    if(searchClick==0)
+    {
+        //$.getScript(siteConfig_fullscreenSearch);
+        var searchClickConfig = (function () {
+            var searchClickConfig = null;
+                $.ajax({
+                    'async': false,
+                    'global': false,
+                    'url': siteConfig_fullscreenSearch,
+                    'dataType': "script",
+                    'success': function (data) {
+                        searchClickConfig = data;
+                    }
+                });
+                return searchClickConfig;
+        })();
+
+        $("#fullscreen-search-btn").click();
+    }
+    
+    console.log('searchClick =',searchClick);
+    searchClick++;
+    //$('.fullscreen-search-btn').trigger('click');
+
+}
 
 var csrftLarVe = $('meta[name="csrf-token"]').attr("content");
 
@@ -434,5 +467,138 @@ function findnCOnvertParam(){
        $("input[name=search_param]").val(encode_param);
 }
     
-    //$(".fullscreen-search-close").trigger('click');
-//});
+function logoutFRM(){ $("#logoutME").submit(); }
+function copyToClipboard(element) { 
+    var $temp = $("<input>");
+    $("body").append($temp);
+    $temp.val($(element).text()).select();
+    document.execCommand("copy");
+    $temp.remove();
+    alert("Counter display link copied successfully.");
+}
+
+if(siteConfig_dataslideCheck==2)
+{
+    $("body").removeClass("page-sidebar-minimize menu-collapsed");
+}else{
+    $("body").addClass("page-sidebar-minimize menu-collapsed");
+}
+
+
+
+function checkIdleUser()
+{
+    //------------------------Ajax POS Start-------------------------//
+    $.ajax({
+        'async': false,
+        'type': "POST",
+        'global': false,
+        'dataType': 'json',
+        'url': siteConfig_check_idle_user,
+        'data': {'_token':csrftLarVe},
+        'success': function (data) {
+            console.log("User Idle Check : "+data);
+        },
+        error: function(xhr, status, error) {
+            window.location.href="{{url('home')}}";
+        }
+    });
+    //------------------------Ajax POS End---------------------------//
+}
+
+
+
+$(document).ready(function(){
+    $("#fullscreen").click(function(){
+        $(document).toggleFullScreen()
+        $(this).children("i").toggleClass("danger");
+    });
+
+    $(".copyButton").click(function(){
+        copyToClipboard('#cdlDt');
+    });
+
+    $(".cash_register_collapse").click(function(){
+        //---------------------Ajax New Product Start---------------------//
+        $.ajax({
+            'async': false,
+            'type': "POST",
+            'global': false,
+            'dataType': 'json',
+            'url': siteConfig_slide_menu_slide_status,
+            'data': {'slide':1,'_token':csrftLarVe},
+            'success': function (data) { 
+                console.log(data);
+            }
+        });
+        //-----------------Ajax New Product End------------------//
+    });
+});
+
+$(document).ready(function () {
+    var idleState = false;
+    var idleTimer = null;
+    $('*').bind('mousemove click mouseup mousedown keydown keypress keyup submit change mouseenter scroll resize dblclick', function () {
+        clearTimeout(idleTimer);
+        if (idleState == true) { 
+            console.log('User Still Logged In.');          
+        }
+        idleState = false;
+        idleTimer = setTimeout(function () { 
+            //$("body").css('background-color','#000');
+            checkIdleUser();
+            idleState = true; }, 603000); //600000
+    });
+    $("body").trigger("mousemove");
+});
+
+if(siteConfig_userguideInit ==  1)
+{
+    $.getScript(siteConfig_introjs_intro_js_file);
+    $(document).ready(function(){
+        $("#initiateUserGuideTour").modal('show');
+        $("#strSystemTour").click(function(){
+            $("#initiateUserGuideTour").modal('hide');
+            introJs().start();
+            //---------------------Ajax New Product Start---------------------//
+            $.ajax({
+                'async': true,
+                'type': "POST",
+                'global': true,
+                'dataType': 'json',
+                'url': siteConfig_systemtour_ajax_status,
+                'data': {'systour':1,'page_name':siteConfig_Request_path,'_token':csrftLarVe},
+                'success': function (data) 
+                { 
+                    console.log(data);
+                }
+            });
+            //-----------------Ajax New Product End------------------//
+        });
+
+        $("#skpSystemTour").click(function(){
+            $("#initiateUserGuideTour").modal('hide');
+        });
+
+        $("#stpSystemTour").click(function(){
+            $("#initiateUserGuideTour").modal('hide');
+            //---------------------Ajax New Product Start---------------------//
+            $.ajax({
+                'async': true,
+                'type': "POST",
+                'global': true,
+                'dataType': 'json',
+                'url': siteConfig_systemtour_ajax_status,
+                'data': {'systour':2,'page_name':siteConfig_Request_path,'_token':csrftLarVe},
+                'success': function (data) 
+                { 
+                    console.log(data);
+                }
+            });
+            //-----------------Ajax New Product End------------------//
+        });
+    });
+}
+
+
+

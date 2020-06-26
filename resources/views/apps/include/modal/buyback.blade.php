@@ -26,7 +26,7 @@
                     <div class="col-md-6">
                       <div class="form-group">
                         <label for="projectinput1">Model</label>
-                        <input type="text" id="projectinput1" class="form-control" placeholder="Model" name="buyback_model">
+                        <input type="text"  class="form-control" placeholder="Model" name="buyback_model">
                       </div>
                     </div>
                     
@@ -38,13 +38,13 @@
                     <div class="col-md-6">
                       <div class="form-group">
                         <label for="projectinput2">Carrier</label>
-                        <input type="text" id="projectinput2" class="form-control" placeholder="Carrier" name="buyback_carrier">
+                        <input type="text"  class="form-control" placeholder="Carrier" name="buyback_carrier">
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
                         <label for="projectinput1">IMEI</label>
-                        <input type="text" id="projectinput1" class="form-control" placeholder="IMEI" name="buyback_imei">
+                        <input type="text"  class="form-control" placeholder="IMEI" name="buyback_imei">
                       </div>
                     </div>
                     
@@ -56,13 +56,13 @@
                     <div class="col-md-6">
                       <div class="form-group">
                         <label for="projectinput2">Type and Color</label>
-                        <input type="text" id="projectinput2" class="form-control" placeholder="Type and Color" name="buyback_type_and_color">
+                        <input type="text"  class="form-control" placeholder="Type and Color" name="buyback_type_and_color">
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
                         <label for="projectinput1">Memory</label>
-                        <input type="text" id="projectinput1" class="form-control" placeholder="Memory" name="buyback_memory">
+                        <input type="text"  class="form-control" placeholder="Memory" name="buyback_memory">
                       </div>
                     </div>
                     
@@ -84,7 +84,7 @@
                     <div class="col-md-6">
                       <div class="form-group">
                         <label for="projectinput1">Condition</label>
-                        <input type="text" id="projectinput1" class="form-control" placeholder="Condition" name="buyback_condition">
+                        <input type="text"  class="form-control" placeholder="Condition" name="buyback_condition">
                       </div>
                     </div>
                     
@@ -95,7 +95,7 @@
                     <div class="col-md-6">
                       <div class="form-group">
                         <label for="projectinput2">Price  </label>
-                        <input type="text" id="projectinput2" class="form-control" placeholder="Price" name="buyback_price">
+                        <input type="text"  class="form-control" placeholder="Price" name="buyback_price">
                       </div>
                     </div>
                     <div class="col-md-6">

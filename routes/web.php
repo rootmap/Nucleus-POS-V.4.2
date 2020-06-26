@@ -68,6 +68,12 @@ Route::group(['middleware' => ['auth', 'ssl']], function () {
 
 	//====================== Json Record Parse =======================//
 	Route::get('/product-config/json', 'InvoiceController@productConfigjson');
+	Route::get('/analytical/repair/json', 'RetailPosSummaryController@analyticsRepairInventory');
+	Route::get('/analytical/salesvsbuyback/json', 'RetailPosSummaryController@analyticsSalesNBuyback');
+	Route::get('/analytical/salesvsprofit/json', 'RetailPosSummaryController@analyticsSalesvsProfit');
+	Route::get('/analytical/top/cashier/products/json', 'RetailPosSummaryController@analyticsTopCashierProducts');
+	Route::get('/analytical/topproducts/json', 'RetailPosSummaryController@analyticsTopProducts');
+	Route::get('/analytical/salesninventory/json', 'RetailPosSummaryController@analyticsTodaySalesnTotalInventory');
 
 	//======================== Search In Nucleus Start =================//
 	Route::get('/search-nucleus', 'SearchSiteController@search');
@@ -98,6 +104,7 @@ Route::group(['middleware' => ['auth', 'ssl']], function () {
 	Route::get('/developer/console', 'InvoiceController@developer');
 	Route::post('/developer/console/save', 'InvoiceController@developerStore');
 	Route::get('/dashboard', 'RetailPosSummaryController@index');
+	Route::get('/analytical/dashboard', 'RetailPosSummaryController@analytical_dashboard');
     Route::get('/home', 'RetailPosSummaryController@index');
 	Route::get('/dashboard_demo', 'HomeController@dashboard_demo')->name('dashboard_demo');
 

@@ -3,6 +3,7 @@ var csrftLarVe = $('meta[name="csrf-token"]').attr("content");
 
 
 
+
 $('.dropableCartZone').droppable({
     drop: handleDropEvent
 });
@@ -137,13 +138,13 @@ function paginationPerfect() {
         if ($.trim($(row).children("a").html()).length > 0) {
             if ($.trim($(row).children("a").html()) == "«") {
                 var getPageNumber = $.trim($(row).children("a").append(" Prev"));
-                console.log(getPageNumber);
+                //console.log(getPageNumber);
                 //$(row).html('<a class="page-link" href="#" aria-label="Prev"><span aria-hidden="true">« Prev</span><span class="sr-only">Prev</span></a>');
             }
 
             if ($.trim($(row).children("a").html()) == "»") {
                 var getPageNumber = $.trim($(row).children("a").html("Next »"));
-                console.log(getPageNumber);
+                //console.log(getPageNumber);
                 //$(row).html('<a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">Next »</span><span class="sr-only">Next</span></a>');
             }
 
@@ -245,7 +246,7 @@ function loadCartProBar() {
     var productFound = 0;
     $.each(productJson, function(rindex, row) {
         if (row.barcode == barcode) {
-            console.log(row);
+            //console.log(row);
             $("#qty").val(1);
             $("#stoke").val(row.quantity);
             $("#price").val(row.price);
@@ -286,8 +287,8 @@ function cc_format(value) {
 function defineCardNumPurify(num) {
     var resultnum = num.split('^');
     var resultNumLength = resultnum.length;
-    console.log(resultnum);
-    console.log(resultNumLength);
+    //console.log(resultnum);
+    //console.log(resultNumLength);
     if (resultNumLength > 1) {
         var totalNumchar = resultnum[0];
         var perNumchar = totalNumchar.replace(/\D/g, '');
@@ -320,7 +321,7 @@ function defineCardNumPurify(num) {
 
 function readCardInfo() {
     var cardProtype = $("#card-number-prototype").val();
-    console.log('Card Info - ', cardProtype);
+    //console.log('Card Info - ', cardProtype);
     defineCardNumPurify(cardProtype);
     var changeEvent = new Event('keyup')
     document.getElementById('card-number').dispatchEvent(changeEvent);
@@ -426,7 +427,7 @@ function genarateSalesTotalCart() {
         $("#cartTotalAmount").html(newPriceTotal);
 
         $("input[name=amount_to_pay]").val(newdues);
-        console.log($("input[name=amount_to_pay]").val());
+        //console.log($("input[name=amount_to_pay]").val());
         $("#prmDue").html(newdues);
         $("#totalCartDueToPay").html(newdues);
 
@@ -503,7 +504,7 @@ function editRowLive(id) {
         'data': { '_token': csrftLarVe },
         'success': function(data) {
             //tmp = data;
-            console.log("Live Edit Processing : " + data);
+            //console.log("Live Edit Processing : " + data);
         }
     });
     //------------------------Ajax POS End---------------------------//
@@ -602,7 +603,7 @@ function loadCatProduct(cid) {
         $("#product_place").html("<hr>" + proHtml);
 
         $.each(moveavleArray, function(i, r) {
-            console.log(r);
+           // console.log(r);
             $("#" + r).draggable({ revert: true });
             $("#" + r).css('z-index', '100')
         });
@@ -638,10 +639,10 @@ function add_pos_cart(ProductID, ProductPrice, ProductName, repairJson = null, d
 
             var ExQuantity = $("#dataCart tr[id=" + ProductID + "]").find("td:eq(1)").children('div').children('input').val();
 
-            console.log('WOrking', ExQuantity);
+            //console.log('WOrking', ExQuantity);
 
             if (ExQuantity == 1) {
-                console.log('WOrking did', ExQuantity);
+                //console.log('WOrking did', ExQuantity);
                 $("#dataCart tr[id=" + ProductID + "]").children('td:eq(1)').children('div').children('span:eq(0)').children('i').attr('class', 'icon-minus');
             }
 
@@ -788,7 +789,7 @@ function add_pos_quantity_cart(ProductID, ProductPrice, quantity) {
         'url': AddPOSUrl,
         'data': { '_token': csrftLarVe },
         'success': function(data) {
-            console.log("Live Edit Processing : " + data);
+            //console.log("Live Edit Processing : " + data);
             $("#cartMessageProShow").html(successMessage("Cart is updated successfully"));
         }
     });
@@ -827,10 +828,10 @@ $(document).ready(function() {
         if ($('.directquantitypos').val) {
             typingTimer = setTimeout(function() {
 
-                console.log(product_id);
-                console.log(product_quantity);
-                console.log(product_name);
-                console.log(product_price);
+                //console.log(product_id);
+               // console.log(product_quantity);
+                //console.log(product_name);
+                //console.log(product_price);
 
                 add_pos_quantity_cart(product_id, product_price, product_quantity);
 
@@ -861,10 +862,10 @@ $(document).ready(function() {
         if ($('.directquantitypos').val) {
             typingTimer = setTimeout(function() {
 
-                console.log(product_id);
-                console.log(product_quantity);
-                console.log(product_name);
-                console.log(product_price);
+               // console.log(product_id);
+               // console.log(product_quantity);
+               // console.log(product_name);
+               // console.log(product_price);
 
                 add_pos_quantity_cart(product_id, product_price, product_quantity);
 
@@ -885,10 +886,10 @@ $(document).ready(function() {
         if ($(this).val) {
             typingTimer = setTimeout(function() {
 
-                console.log(product_id);
-                console.log(product_quantity);
-                console.log(product_name);
-                console.log(product_price);
+               // console.log(product_id);
+               // console.log(product_quantity);
+               // console.log(product_name);
+               // console.log(product_price);
 
                 add_pos_quantity_cart(product_id, product_price, product_quantity);
 
@@ -909,11 +910,11 @@ $(document).ready(function() {
 
         $("#ma_product_id").val(product_id);
 
-        console.log('Product ID=', product_id);
-        console.log('product_name=', product_name);
-        console.log('product_price=', product_price);
-        console.log('product_quantity=', product_quantity);
-        console.log('dblclick working');
+        //console.log('Product ID=', product_id);
+        //console.log('product_name=', product_name);
+        //console.log('product_price=', product_price);
+        //console.log('product_quantity=', product_quantity);
+        //console.log('dblclick working');
     });
 
 
@@ -939,8 +940,8 @@ $(document).ready(function() {
             return false;
         }
 
-        console.log('ma_email_address ID=', ma_email_address);
-        console.log('ma_password=', ma_password);
+        //console.log('ma_email_address ID=', ma_email_address);
+        //console.log('ma_password=', ma_password);
 
         $(this).html('<i class="icon-spinner12 spinner"></i> Verify Credentials');
 
@@ -977,7 +978,7 @@ $(document).ready(function() {
                 } else {
                     $(".ma_verify_msg").html(warningMessage("Wrong credential, Verification Failed."));
                 }
-                console.log("Info : " + data);
+                //console.log("Info : " + data);
 
             }
         });
@@ -1089,7 +1090,7 @@ $(document).ready(function() {
     });*/
 
     $("#card-number-prototype").keyup(function() {
-        console.log($(this).val());
+        //console.log($(this).val());
         var num = $(this).val();
         $("#card-number").val(num);
         var changeEvent = new Event('keyup')
@@ -1106,7 +1107,7 @@ $(document).ready(function() {
     $("#counterPay").click(function() {
         var counterPays = $("#counterPay").html();
         var counterPay = counterPays.trim();
-        console.log(counterPay);
+        //console.log(counterPay);
         var counterPayStatus = 0
         if (counterPay == '<i class="icon-close-circled green"></i> Allow pay from counter display') {
             counterPayStatus = 1;
@@ -1125,7 +1126,7 @@ $(document).ready(function() {
             'url': AddProductUrl,
             'data': { 'counterPayStatus': counterPayStatus, '_token': csrftLarVe },
             'success': function(data) {
-                console.log(data);
+                //console.log(data);
             }
         });
         //-----------------Ajax New Product End------------------//
@@ -1159,7 +1160,7 @@ $(document).ready(function() {
             'url': AddProductUrl,
             'data': { 'payout_amount': newAMP, 'payout_reason': payout_reason, '_token': csrftLarVe },
             'success': function(data) {
-                console.log("Saving Payout : " + data);
+                //console.log("Saving Payout : " + data);
                 if (data == 1) {
                     $("#payoutMSG").html(successMessage("Payout Saved Successfully."));
                     $("#payout_amount").val("0.00");
@@ -1194,7 +1195,7 @@ $(document).ready(function() {
             'url': AddHowMowKhaoUrl,
             'data': { 'openStoreBalance': openStoreBalance, '_token': csrftLarVe },
             'success': function(data) {
-                console.log("Store Opening ID : " + data)
+               // console.log("Store Opening ID : " + data)
                 if (data) {
                     $("#openStoreMsg").html(successMessage("Store is open successfully."));
                     $("#open-drawer").modal('hide');
@@ -1258,7 +1259,7 @@ $(document).ready(function() {
             'url': AddHowMowKhaoUrl,
             'data': { '_token': csrftLarVe },
             'success': function(data) {
-                console.log("Store Close ID : " + data)
+               // console.log("Store Close ID : " + data)
                 if (data) {
                     $("#closeStoreMsg").html(successMessage("Drawer close successfully."));
                     $("#close-drawer").modal('hide');
@@ -1432,11 +1433,11 @@ $(document).ready(function() {
                 '_token': csrftLarVe
             },
             'success': function(data) {
-                console.log("Authrizenet Print Sales ID : " + data);
+                //console.log("Authrizenet Print Sales ID : " + data);
                 if (data == null) {
                     $(".message-place-authorizenet").html(warningMessage("Failed to authorize payment. Please try again."));
                 } else {
-                    console.log(data.status);
+                    //console.log(data.status);
                     if (data.status == 1) {
                         var amount_to_pay = $("input[name=amount_to_pay]").val();
 
@@ -1533,7 +1534,7 @@ $(document).ready(function() {
                 'url': pingDevice,
                 'success': function(data) {
 
-                    console.log(data);
+                    //console.log(data);
                     //return false;
                     if (data.connected == false) {
                         $(".payModal-message-area").html("<div class='col-md-12'>" + warningMessage("Please connect your Bolt device with internet.") + "<div>");
@@ -1553,7 +1554,7 @@ $(document).ready(function() {
                                 '_token': csrftLarVe
                             },
                             'success': function(data) {
-                                console.log(data);
+                                //console.log(data);
 
                                 if (data.connected == false) {
                                     $(".payModal-message-area").html("<div class='col-md-12'>" + warningMessage("Please connect your Bolt device with internet.") + "<div>");
@@ -1576,11 +1577,11 @@ $(document).ready(function() {
                                         'success': function(data) {
 
 
-                                            console.log("cardPointe Bolt Print Sales ID : " + data);
+                                            //console.log("cardPointe Bolt Print Sales ID : " + data);
                                             if (data == null) {
                                                 $(".payModal-message-area").html(warningMessage("Failed to authorize payment. Please try again."));
                                             } else {
-                                                console.log(data.status);
+                                               // console.log(data.status);
                                                 if (data.status == 1) {
                                                     var amount_to_pay = $("input[name=amount_to_pay]").val();
 
@@ -1796,13 +1797,13 @@ $(document).ready(function() {
                 '_token': csrftLarVe
             },
             'success': function(data) {
-                console.log("cardPointe Print Sales ID : " + data);
+               // console.log("cardPointe Print Sales ID : " + data);
                 if (data == null) {
                     $(".cardpointeButton").show();
                     $(".hidestripemsg").show();
                     $(".hidestripemsg").html(warningMessage("Failed to authorize payment. Please try again."));
                 } else {
-                    console.log(data.status);
+                   // console.log(data.status);
                     if (data.status == 1) {
                         var amount_to_pay = $("input[name=amount_to_pay]").val();
 
@@ -1970,11 +1971,11 @@ $(document).ready(function() {
                 '_token': csrftLarVe
             },
             'success': function(data) {
-                console.log("Authrizenet Print Sales ID : " + data);
+                //console.log("Authrizenet Print Sales ID : " + data);
                 if (data == null) {
                     $(".message-place-authorizenet").html(warningMessage("Failed to authorize payment. Please try again."));
                 } else {
-                    console.log(data.status);
+                    //console.log(data.status);
                     if (data.status == 1) {
                         var amount_to_pay = $("input[name=amount_to_pay]").val();
 
@@ -2063,7 +2064,7 @@ $(document).ready(function() {
             return false;
         }
 
-        console.log("Printing Type - ", printDataType);
+        //console.log("Printing Type - ", printDataType);
 
         //return false;
 
@@ -2077,7 +2078,7 @@ $(document).ready(function() {
             'url': AddHowMowKhaoUrl,
             'data': { 'printData': 1, 'print_type': printDataType, '_token': csrftLarVe },
             'success': function(data) {
-                console.log("Completing Print Sales ID : " + data);
+                //console.log("Completing Print Sales ID : " + data);
                 if (data) {
                     var PrintLocation = AddHowMowKhaoUrlCartPOSvfourPrintPDFSalesRec + "/" + printDataType + "/" + data;
                     //window.location.href=PrintLocation;
@@ -2146,7 +2147,7 @@ $(document).ready(function() {
             'data': { '_token': csrftLarVe },
             'success': function(data) {
                 Swal.hideLoading();
-                console.log("Completing Sales : " + data);
+                //console.log("Completing Sales : " + data);
 
                 if (data == 1) {
                     swalSuccessMsg("Sales Invoice Generated Successfully.");
@@ -2172,7 +2173,7 @@ $(document).ready(function() {
 
     $("select[name=customer_id]").change(function() {
         var customerID = $.trim($(this).val());
-        console.log(customerID);
+        //console.log(customerID);
         if (customerID.length == 0) {
             alert("Please select a customer.");
             return false;
@@ -2192,7 +2193,7 @@ $(document).ready(function() {
             'url': AddCustomerUrl,
             'data': { '_token': csrftLarVe },
             'success': function(data) {
-                console.log("Assigning custome to cart : " + data)
+                //console.log("Assigning custome to cart : " + data)
             }
         });
         //------------------------Ajax Customer End---------------------------//
@@ -2227,7 +2228,7 @@ $(document).ready(function() {
                 $("select[name=customer_id]").append('<option value="' + data + '">' + name + '</option>');
                 $("select[name=customer_id] option[value='" + data + "']").prop("selected", true);
 
-                console.log("Saved New Customer : " + data);
+                //console.log("Saved New Customer : " + data);
                 $("#NewCustomerDash").modal('hide');
 
                 //------------------------Ajax Customer Start-------------------------//
@@ -2240,7 +2241,7 @@ $(document).ready(function() {
                     'url': AddCustomerPOSUrl,
                     'data': { '_token': csrftLarVe },
                     'success': function(datas) {
-                        console.log("Assigning custome to cart : " + datas)
+                        //console.log("Assigning custome to cart : " + datas)
                     }
                 });
                 //------------------------Ajax Customer End---------------------------//
@@ -2264,7 +2265,7 @@ $(document).ready(function() {
         var c = confirm("Are you sure to proced with " + $.trim(payment_text) + " ?.");
         if (c) {
             var amount_to_pay = $("input[name=amount_to_pay]").val();
-            console.log(amount_to_pay, payment_id, $.trim(payment_text));
+            //console.log(amount_to_pay, payment_id, $.trim(payment_text));
             var expaid = $("#posCartSummary tr:eq(4)").find("td:eq(2)").children("span").html();
             if ($.trim(expaid) == 0) {
                 var parseNewPayment = parseFloat(amount_to_pay).toFixed(2);
@@ -2279,7 +2280,7 @@ $(document).ready(function() {
             //------------------------Ajax POS Start-------------------------//
             var AddPOSUrl = makePaymentInitialDefaultAddPOSUrl;
             $.post(AddPOSUrl, { 'paymentID': payment_id, 'paidAmount': parseNewPayment, '_token': csrftLarVe }, function(response) {
-                console.log(response);
+                //console.log(response);
             });
             //------------------------Ajax POS End---------------------------//
         }
@@ -2333,7 +2334,7 @@ $(document).ready(function() {
             'url': AddProductUrl,
             'data': { 'discount_type': discount_type, 'discount_amount': newAMP, '_token': csrftLarVe },
             'success': function(data) {
-                console.log("Assigning Discount : " + data);
+                //console.log("Assigning Discount : " + data);
             }
         });
         //------------------------Ajax New Product End---------------------------//
@@ -2342,7 +2343,7 @@ $(document).ready(function() {
     });
 
     $(".edit_pos_item").click(function() {
-        console.log("WW");
+        //console.log("WW");
     });
 
 
@@ -2376,7 +2377,7 @@ $(document).ready(function() {
         }
 
 
-        console.log(ProductName, ProductPrice, ProductDesc);
+        //console.log(ProductName, ProductPrice, ProductDesc);
         $("#General_Sale").modal("hide");
         //------------------------Ajax New Product Start-------------------------//
         var ProductID;
@@ -2502,8 +2503,8 @@ $(document).ready(function() {
                 $("#dataCart tr[id=" + ProductID + "]").find("td:eq(3)").children("span").html(NewPrice);
                 $("#dataCart tr[id=" + ProductID + "]").find("td:eq(2)").attr("data-tax", taxAmount);
 
-                console.log(NewQuantity);
-                console.log(NewPrice);
+                //console.log(NewQuantity);
+                //console.log(NewPrice);
 
             } else {
                 var taxAmount = parseFloat(((ProductPrice * 1) * taxRate) / 100).toFixed(2);
@@ -2531,7 +2532,7 @@ $(document).ready(function() {
             'data': { 'product_id': ProductID, 'price': ProductPrice, '_token': csrftLarVe },
             'success': function(data) {
                 //tmp = data;
-                console.log("Processing : " + data)
+                //console.log("Processing : " + data)
             }
         });
         //------------------------Ajax POS End---------------------------//
@@ -2544,7 +2545,7 @@ $(document).ready(function() {
             alert("Please select a customer to make payment.");
             return false;
         }
-        console.log($(this).val());
+        //console.log($(this).val());
         var dues = $("#totalCartDueToPay").html();
         var amp = $(this).val();
         if ($.isNumeric($.trim(amp))) {

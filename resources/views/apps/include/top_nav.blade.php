@@ -128,7 +128,7 @@ $totalUnsavedInvoice=StaticDataController::checkUnsavedInvoice();
 
           
             <ul class="nav navbar-nav float-xs-left"> 
-              <li class="nav-item nav-search"><a href="#" class="nav-link nav-link-search fullscreen-search-btn"><i class="ficon icon-search7"></i></a></li>
+              <li class="nav-item nav-search"><a href="javascript:searchInNuc();" class="nav-link nav-link-search fullscreen-search-btn" id="fullscreen-search-btn"><i class="ficon icon-search7"></i></a></li>
               <li class="nav-item"><a href="#" class="nav-link"  id="fullscreen" data-title="Fullscreen" data-original-title="Fullscreen View"><i style="  color:#fff;" class="ficon icon-desktop"></i></a></li>
             </ul>
             <ul class="nav navbar-nav float-xs-right"> 

@@ -47,7 +47,7 @@
     });
 
     // keyboard navigation events
-    document.addEventListener('keydown', function(e) {
+    /*document.addEventListener('keydown', function(e) {
         //Do not auto open search for input and textarea
         if ($(e.target).is('input') || $(e.target).is('textarea') || $(e.target).hasClass('ql-editor') || $(e.target).hasClass('note-editable') || $(e.target).hasClass('cke_editable_inline')) {
             if(e.target.className != 'fullscreen-search-input')
@@ -66,7 +66,7 @@
         	toggleSearch(e);
         	$('.fullscreen-search-input').focus();
         }
-    });
+    });*/
 
 
     /***** for demo purposes only: don't allow to submit the form *****/

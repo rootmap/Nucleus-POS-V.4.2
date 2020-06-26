@@ -19,7 +19,7 @@
                     <div class="col-md-6">
                       <div class="form-group">
                         <label for="projectinput2">Device Type / Subject <span style="color: #f00;">*</span></label>
-                        <input type="text" id="projectinput2" class="form-control" placeholder="Device Type" name="ticket_device_type">
+                        <input type="text" class="form-control" placeholder="Device Type" name="ticket_device_type">
                       </div>
                     </div>
 
@@ -37,7 +37,7 @@
                             @endforeach
                           @endif
                         </select>
-                        <input type="text" id="projectinput2" style="display: none;" class="form-control" placeholder="Type Problem Name" name="ticket_problem_name">
+                        <input type="text" style="display: none;" class="form-control" placeholder="Type Problem Name" name="ticket_problem_name">
                       </div>
                     </div>
 
@@ -52,21 +52,21 @@
                     <div class="col-md-4">
                       <div class="form-group">
                         <label for="projectinput2">Our Cost <span style="color: #f00;">*</span></label>
-                        <input type="text" id="projectinput2" class="form-control" placeholder="Our Cost" name="ticket_our_cost">
+                        <input type="text" class="form-control" placeholder="Our Cost" name="ticket_our_cost">
                       </div>
                     </div>
 
                     <div class="col-md-4">
                       <div class="form-group">
                         <label for="projectinput2">Retail Price for customer <span style="color: #f00;">*</span></label>
-                        <input type="text" id="projectinput2" class="form-control" placeholder="Retail Price" name="ticket_retail_price">
+                        <input type="text" class="form-control" placeholder="Retail Price" name="ticket_retail_price">
                       </div>
                     </div>
 
                     <div class="col-md-4">
                       <div class="form-group">
                           <label for="projectinput2">Password </label>
-                          <input type="text" id="projectinput2" class="form-control" placeholder="Password" name="ticket_password">
+                          <input type="text" class="form-control" placeholder="Password" name="ticket_password">
                         </div>
                       </div>
 
@@ -79,14 +79,14 @@
                     <div class="col-md-6">
                       <div class="form-group">
                         <label for="projectinput2">Type and Color</label>
-                        <input type="text" id="projectinput2" class="form-control" placeholder="Type and Color" name="ticket_type_n_color">
+                        <input type="text" class="form-control" placeholder="Type and Color" name="ticket_type_n_color">
                       </div>
                     </div>
                     
                     <div class="col-md-6">
                       <div class="form-group">
                         <label for="projectinput2">Carrier</label>
-                        <input type="text" id="projectinput2" class="form-control" placeholder="Carrier" name="ticket_carrier">
+                        <input type="text" class="form-control" placeholder="Carrier" name="ticket_carrier">
                       </div>
                     </div>
                     
@@ -101,14 +101,14 @@
                     <div class="col-md-6">
                       <div class="form-group">
                         <label for="projectinput2">IMEI</label>
-                        <input type="text" id="projectinput2" class="form-control" placeholder="IMEI" name="ticket_imei">
+                        <input type="text" class="form-control" placeholder="IMEI" name="ticket_imei">
                       </div>
                     </div>
 
                     <div class="col-md-6">
                       <div class="form-group">
                         <label for="projectinput2">How did you hear about us ?</label>
-                        <input type="text" id="projectinput2" class="form-control" placeholder="How did you hear about us" name="ticket_how_did_you_hear_about_us">
+                        <input type="text" class="form-control" placeholder="How did you hear about us" name="ticket_how_did_you_hear_about_us">
                       </div>
                     </div>
 
@@ -136,7 +136,7 @@
                     <div class="col-md-6">
                       <div class="form-group">
                         <label for="projectinput2">Tested Before By :</label>
-                        <input type="text" id="projectinput2" class="form-control" placeholder="Tested Before By" name="ticket_tested_before_by">
+                        <input type="text" class="form-control" placeholder="Tested Before By" name="ticket_tested_before_by">
                       </div>
                     </div>
 
@@ -148,14 +148,14 @@
                     <div class="col-md-6">
                       <div class="form-group">
                         <label for="projectinput2">Tested After By</label>
-                        <input type="text" id="projectinput2" class="form-control" placeholder="Tested After By" name="ticket_tested_after_by">
+                        <input type="text" class="form-control" placeholder="Tested After By" name="ticket_tested_after_by">
                       </div>
                     </div>
 
                     <div class="col-md-6">
                       <div class="form-group">
                         <label for="projectinput2">Tech Notes :</label>
-                        <input type="text" id="projectinput2" class="form-control" placeholder="Tech Notes" name="ticket_tech_notes">
+                        <input type="text" class="form-control" placeholder="Tech Notes" name="ticket_tech_notes">
                       </div>
                     </div>
                   </div>
@@ -170,7 +170,7 @@
                             @if(isset($ticketAsset))
                               @foreach($ticketAsset as $rep)
                                 <div class="col-md-12">
-                                  <input type="checkbox" id="projectinput2" name="ticket_{{strtolower(preg_replace('/[^a-zA-Z0-9]/', "",$rep->name))}}"> {{$rep->name}}
+                                  <input type="checkbox" name="ticket_{{strtolower(preg_replace('/[^a-zA-Z0-9]/', "",$rep->name))}}"> {{$rep->name}}
                                   <div class="clearfix"></div>
                                 </div>
                               @endforeach

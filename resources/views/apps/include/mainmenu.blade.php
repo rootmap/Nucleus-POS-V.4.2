@@ -68,11 +68,26 @@
             </li>
             <!-- Start navigation - dashboard -->
             @if(in_array('dashboard', $dataMenuAssigned))
-            <li class="">
+            {{-- <li class="">
                 <a href="{{url('dashboard')}}">
                     <span class="icon"><i class="fa fa-dashboard"></i></span>
                     <span class="text">Dashboard</span>
                 </a>
+            </li> --}}
+            <li class="submenu">
+                <a href="javascript:void(0);">
+                    <span class="icon"><i class="fa fa-dashboard"></i></span>
+                    <span class="text">Dashboard</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul>
+                    @if(in_array('dashboard', $dataMenuAssigned))
+                    <li class="{{ Request::path() == 'dashboard' ? 'active' : '' }}  border-bottom-purple"><a href="{{url('dashboard')}}" class="menu-item">Dashboard</a></li>
+                    @endif
+                    @if(in_array('analytical/dashboard', $dataMenuAssigned))
+                    <li class="{{ Request::path() == 'analytical/dashboard' ? 'active' : '' }}  border-bottom-purple"><a href="{{url('analytical/dashboard')}}" class="menu-item">Analytical Dashboard</a></li>
+                    @endif
+                </ul>
             </li>
             @endif
             @if(in_array('pos', $dataMenuAssigned))

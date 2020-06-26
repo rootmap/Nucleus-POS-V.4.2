@@ -97,13 +97,13 @@
                     <div class="col-md-6">
                       <div class="form-group">
                         <label for="projectinput1">Password</label>
-                        <input type="text" id="projectinput1" class="form-control" placeholder="Password" name="repair_password">
+                        <input type="text" class="form-control" placeholder="Password" name="repair_password">
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
                         <label for="projectinput2">IMEI</label>
-                        <input type="text" id="projectinput2" class="form-control" placeholder="IMEI Number" name="repair_imei">
+                        <input type="text"  class="form-control" placeholder="IMEI Number" name="repair_imei">
                       </div>
                     </div>
                   </div>
@@ -114,13 +114,13 @@
                     <div class="col-md-6">
                       <div class="form-group">
                         <label for="projectinput1">Tested Before By</label>
-                        <input type="text" id="projectinput1" class="form-control" placeholder="Tested Before By Name" name="repair_tested_before_by">
+                        <input type="text" class="form-control" placeholder="Tested Before By Name" name="repair_tested_before_by">
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
                         <label for="projectinput2">Tested After By </label>
-                        <input type="text" id="projectinput2" class="form-control" placeholder="Tested After By Name" name="repair_tested_after_by">
+                        <input type="text"  class="form-control" placeholder="Tested After By Name" name="repair_tested_after_by">
                       </div>
                     </div>
                   </div>
@@ -131,13 +131,13 @@
                     <div class="col-md-6">
                       <div class="form-group">
                         <label for="projectinput1">Tech Notes</label>
-                        <input type="text" id="projectinput1" class="form-control" placeholder="Tech Notes" name="repair_tech_notes">
+                        <input type="text" class="form-control" placeholder="Tech Notes" name="repair_tech_notes">
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
                         <label for="projectinput2">How did you hear about us ? </label>
-                        <input type="text" id="projectinput2" class="form-control" placeholder="How did you hear about us" name="repair_how_did_you_hear_about_us">
+                        <input type="text"  class="form-control" placeholder="How did you hear about us" name="repair_how_did_you_hear_about_us">
                       </div>
                     </div>
                   </div>
@@ -148,13 +148,13 @@
                     <div class="col-md-6">
                       <div class="form-group">
                         <label for="projectinput1">Start Time</label>
-                        <input type="text" id="projectinput1" class="form-control" placeholder="Start Time" name="repair_start_time">
+                        <input type="text" class="form-control" placeholder="Start Time" name="repair_start_time">
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
                         <label for="projectinput2">End Time </label>
-                        <input type="text" id="projectinput2" class="form-control" placeholder="End Time" name="repair_end_time">
+                        <input type="text"  class="form-control" placeholder="End Time" name="repair_end_time">
                       </div>
                     </div>
                   </div>
@@ -165,7 +165,7 @@
                     
                     <div class="col-md-6">
                       <div class="form-group">
-                        <label for="projectinput1"><input type="checkbox" id="projectinput1" name="repair_salvage_part"  /> Salvage Part </label>
+                        <label for="projectinput1"><input type="checkbox" name="repair_salvage_part"  /> Salvage Part </label>
                       </div>
                     </div>
                   </div>
@@ -181,7 +181,7 @@
                             @if(isset($repairAsset))
                               @foreach($repairAsset as $rep)
                                 <div class="col-md-12">
-                                  <input type="checkbox" id="projectinput2" class="repair_checkbox" name="repair_{{strtolower(preg_replace('/[^a-zA-Z0-9]/', "",$rep->name))}}" /> {{$rep->name}} 
+                                  <input type="checkbox"  class="repair_checkbox" name="repair_{{strtolower(preg_replace('/[^a-zA-Z0-9]/', "",$rep->name))}}" /> {{$rep->name}} 
                                   <div class="clearfix"></div>
                                 </div>
                               @endforeach

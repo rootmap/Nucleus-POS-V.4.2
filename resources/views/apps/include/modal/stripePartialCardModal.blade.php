@@ -12,7 +12,7 @@
 
 
     {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" /> --}}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> --}}
     <style type="text/css">
        .hidestripemsg
        {
@@ -28,7 +28,7 @@
                 <div class="panel-heading display-table" >
                     <div class="row display-tr" >
                         <div class="display-td" >                            
-                            <img class="img-responsive pull-right" src="http://i76.imgup.net/accepted_c22e0.png">
+                            <img class="img-responsive pull-right" src="{{secure_url('intregation/accepted_c22e0.png')}}">
                         </div>
                     </div>                    
                 </div>
