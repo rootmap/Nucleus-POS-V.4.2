@@ -106,16 +106,16 @@
                 
                 <div class="col-md-6" @if($userguideInit==1)  data-step="1" data-intro="Barcode Sales, Product could be sold by barcode." @endif>
                     <form method="post" action="javascript:loadCartProBar();" style="margin-top: -15px;">
-                    <label class="col-md-12 text-xs-center"><b>Enter Barcode</b></label>
-                    <input type="text"  autocomplete="off" class="form-control col-md-6" name="barcode" placeholder="Enter Your Barcode & Press Enter.">
-            </form>
-        </div>
+                        <label class="col-md-12 text-xs-center"><b>Enter Barcode</b></label>
+                        <input type="text"  autocomplete="off" class="form-control col-md-6" name="barcode" placeholder="Enter Your Barcode & Press Enter.">
+                    </form>
+                </div>
                 <div class="col-md-6">
                     <h4 class="page-header"> 
                         <i class="icon-layout"></i> 
                         Categories <hr> 
                 </h4>
-            </div>
+                </div>
             </div>
             
             <div class="col-md-3">
@@ -128,10 +128,10 @@
                                     <i class="icon-database"></i> General Sale
                 </a>
                             </p>         
+                        </div>
+                    </div>
+                </div>
             </div>
-    </div>
-        </div>
-    </div>
                 <?php 
                 $repandticket=[];
                 ?>
@@ -143,6 +143,10 @@
                         $repandticket[]=$cat->name;
                     ?>
                     @elseif(trim($cat->name)=="Non-Inventory Repair")
+                    <?php 
+                        $repandticket[]=$cat->name;
+                    ?>
+                    @elseif(trim($cat->name)=="Parts")
                     <?php 
                         $repandticket[]=$cat->name;
                     ?>
@@ -171,23 +175,7 @@
                     ?>
                     @endforeach 
 
-                    @if(count($repandticket))
-                        <div class="col-md-3">
-                            <div class="card mb-1">
-                                <div class="card-body collapse in">
-                                    <div class="bg-green bg-lighten-2 height-10"></div>
-                                    <div class="p-1">
-                                        <p class="text-xs-left mb-0">
-                                            <a href="javascript:void(0);"  data-toggle="modal" data-target="#ChooseRepairButton" style="text-decoration: none;">
-                                                <i class="icon-cogs"></i> Repair
-                                            </a>
-                                        </p>         
-                                    </div>
-                                </div>    
-                            </div>
-                        </div>
-                    @endif
-
+                    
                 @else
                     <div class="col-md-12">
                         <h2  class="text-xs-center">No categories found. <br>  <br> 
@@ -200,10 +188,154 @@
 
             
                             </div>
-        <div class="row" id="defaultProductView">
-        <span id="product_place"></span>
+                        <div class="row" id="defaultProductView">
+                            <span id="product_place"></span>
+                        </div>   
+                        
+                        <div class="row" id="defaultPartsView">
+                            <form method="post"  
+						@if(isset($editData))
+							action="{{url('repair-update/'.$editData->id)}}" 
+						@else 
+							action="{{url('repair-save')}}" 
+						@endif
+						class="form form-horizontal striped-labels" id="repair_new_form">
+							{{csrf_field()}}
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="card-block">
+                                            
+                                            <div class="col-md-12">
+                                                <div class="input-group border-green" style="width: 100%;">
+                                                    <span class="input-group-addon" style="background: none;" id="basic-addon4"><i class="icon-cogs"></i> Choose Repair Options</span>
+                                                    <select style="width: 100%; font-size: 16px !important; font-weight: bolder;" class="select2 form-control" name="repair_option" id="repair_option">
+                                                        <option value="">Select Option</option>
+                                                        <option value="repair_parts">Repair with and without inventory parts</option>
+                                                        <option value="repair">Repair without inventory parts</option>
+                                                        <option value="parts">Repair with inventory parts</option>
+                                                    </select>
+                                                </div>
+                                            </div>
 
-                        </div>    
+                                            <div class="col-md-12 pt-2 rep_parts" style="display: none;">
+                                                <div class="input-group border-green" style="width: 100%;">
+                                                    <span class="input-group-addon" style="background: none;" id="basic-addon4"><i class="icon-database"></i> Choose Parts</span>
+                                                    <select style="width: 100%; font-size: 16px !important; font-weight: bolder;" class="select2 form-control" name="parts_id" id="parts_id">
+                                                        <option value="">Select Parts</option>
+                                                    </select>
+                                                    <span style="background:none; border:0px !important;" class="input-group-addon green" id="basic-addon4">
+                                                        <button class="btn btn-green add_pos_parts" type="button"><i class="icon-plus"></i> Add Parts</button>
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-12 pt-2" style="display: none;">
+                                                <table class="table table-border">
+                                                    <thead>
+                                                        <tr>
+                                                            <th colspan="4">
+                                                                Repair Parts Required
+                                                            </th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>SL</th>
+                                                            <th>Parts</th>
+                                                            <th>Price</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="parts_table">
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                            <div class="col-md-12 pt-2 rep_repairs" style="display: none;">
+                                                <h3 class="text-xs-left">Repair Info</h3>
+                                            </div>
+
+                                            <div class="col-md-6 rep_repairs" style="display: none;">
+                                                <div class="form-group">
+                                                    <label class="label-control" for="projectinput1">
+                                                        Device
+                                                    </label>
+                                                    <input type="text"  class="form-control" placeholder="Device" name="device">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 rep_repairs" style="display: none;">
+                                                <div class="form-group">
+                                                    <label class="label-control"  for="projectinput1">
+                                                        Problem Type
+                                                    </label>
+                                                    <input type="text"  class="form-control" placeholder="Problem Type" name="problem_type">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 rep_repairs" style="display: none;">
+                                                <div class="form-group">
+                                                    <label class="label-control" for="projectinput1">
+                                                        Cost
+                                                    </label>
+                                                    <input type="text"  class="form-control" placeholder="Cost" name="cost">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 rep_repairs" style="display: none;">
+                                                <div class="form-group">
+                                                    <label class="label-control"  for="projectinput1">
+                                                        Price
+                                                    </label>
+                                                    <input type="text"  class="form-control" placeholder="Price" name="price">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 rep_parts rep_repairs" style="display: none;">
+                                                <div class="form-group">
+                                                    <label class="label-control" for="projectinput1">
+                                                        Password
+                                                    </label>
+                                                    <input type="text"  class="form-control" placeholder="Password" name="password">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 rep_parts rep_repairs" style="display: none;">
+                                                <div class="form-group">
+                                                    <label class="label-control" for="projectinput1">
+                                                        Imei
+                                                    </label>
+                                                    <input type="text"  class="form-control" placeholder="Imei" name="imei">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12  pt-2 rep_parts rep_repairs" style="display: none;">
+                                                <div class="form-group">
+                                                    <label for="projectinput2">Notes</label>
+                                                    <textarea name="notes" id="notes" cols="30" rows="4" class="form-control"></textarea>
+                                                </div>
+                                                <input type="hidden" name="directcart" id="directcart" value="0" />
+                                            </div>
+
+                                            <div class="col-md-12  pt-2 rep_parts rep_repairs" style="display: none;">
+                                                <div class="form-actions center">
+                                                    <button type="button" class="btn btn-warning"  id="saveRepairnaddtoCartpos" style="margin-right: 10px;">
+                                                        <i class="icon-cart"></i> Save & Add To Cart
+                                                    </button>
+                                                    <button type="button" class="btn btn-green" id="finishRepairAndListAdd">
+                                                        <i class="icon-forward"></i> Finish &amp; Add Repair List
+                                                    </button>
+                                                    <button type="reset" class="btn btn-danger" id="reset_repair">
+                                                        <i class="icon-trash"></i> Reset
+                                                    </button>
+                  
+                                                </div>
+                                            </div>
+                                            
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            </form>
+
+                            
+                            
+                        </div>   
     <hr>
 
         </div>
@@ -494,30 +626,30 @@
 <!-- Modal for Cash Out-->
 
            @include('apps.include.modal.new-customer')
-           @include('apps.include.modal.generalsaleModal')
-           @include('apps.include.modal.payout')
-           @include('apps.include.modal.cash-out')
-           @include('apps.include.modal.cashoutModal')
-           @include('apps.include.modal.discountModal')
-           @include('apps.include.modal.taxModal',compact('ps'))
-           @include('apps.include.modal.CustomerCardModal')
-           @include('apps.include.modal.stripeCardModal',compact('stripe'))
-           @include('apps.include.modal.cardPointeCardModal')
-           @include('apps.include.modal.cardPointepartialCardModal')
-           @include('apps.include.modal.squareup')
-           @include('apps.include.modal.squareupPartial')
-           @include('apps.include.modal.manager-approval')
-           @include('apps.include.modal.product-edit')
-           @include('apps.include.modal.paymodal',compact('stripe'))
-           @include('apps.include.modal.open-drawer')
-           @include('apps.include.modal.close-drawer')
-           @include('apps.include.modal.time_clock')
-           @include('apps.include.modal.repairButtonModal',compact('repandticket'))
-           @include('apps.include.modal.instorerepair',compact('ticketAsset'))
-           @include('apps.include.modal.instoreticket',compact('ticketAsset','problem'))
-           @include('apps.include.modal.salesReturn')
-           @include('apps.include.modal.warranty')
-           @include('apps.include.modal.buyback')
+            @include('apps.include.modal.generalsaleModal')
+            @include('apps.include.modal.payout')
+            @include('apps.include.modal.cash-out')
+            @include('apps.include.modal.cashoutModal')
+            @include('apps.include.modal.discountModal')
+            @include('apps.include.modal.taxModal',compact('ps'))
+            @include('apps.include.modal.CustomerCardModal')
+            @include('apps.include.modal.stripeCardModal',compact('stripe'))
+            @include('apps.include.modal.cardPointeCardModal')
+            @include('apps.include.modal.cardPointepartialCardModal')
+            @include('apps.include.modal.squareup')
+            @include('apps.include.modal.squareupPartial')
+            @include('apps.include.modal.manager-approval')
+            @include('apps.include.modal.product-edit')
+            @include('apps.include.modal.paymodal',compact('stripe'))
+            @include('apps.include.modal.open-drawer')
+            @include('apps.include.modal.close-drawer')
+            @include('apps.include.modal.time_clock')
+            {{-- @include('apps.include.modal.repairButtonModal',compact('repandticket'))
+            @include('apps.include.modal.instorerepair',compact('ticketAsset'))
+            @include('apps.include.modal.instoreticket',compact('ticketAsset','problem')) --}}
+            @include('apps.include.modal.salesReturn')
+            @include('apps.include.modal.warranty')
+            @include('apps.include.modal.buyback')
            @include('apps.include.modal.pospaymentpartial')
            
 
@@ -531,40 +663,40 @@
 
 
 @section('counter-display-css')
-<link rel="stylesheet" type="text/css" href="{{asset('theme/app-assets/css/plugins/forms/extended/form-extended.min.css')}}">
-<link rel="stylesheet" type="text/css" href="{{asset('theme/app-assets/vendors/css/forms/toggle/bootstrap-switch.min.css')}}">
-<link rel="stylesheet" type="text/css" href="{{asset('theme/app-assets/vendors/css/forms/toggle/switchery.min.css')}}">
-<link rel="stylesheet" type="text/css" href="{{asset('theme/app-assets/css/plugins/forms/switch.min.css')}}">
-<link rel="stylesheet" type="text/css" href="{{asset('theme/app-assets/css/core/colors/palette-switch.min.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('theme/app-assets/css/plugins/forms/extended/form-extended.min.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('theme/app-assets/vendors/css/forms/toggle/bootstrap-switch.min.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('theme/app-assets/vendors/css/forms/toggle/switchery.min.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('theme/app-assets/css/plugins/forms/switch.min.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('theme/app-assets/css/core/colors/palette-switch.min.css')}}">
 @endsection
 
 @section('counter-display-js')
-<script src="{{asset('theme/app-assets/vendors/js/forms/toggle/bootstrap-switch.min.js')}}" type="text/javascript"></script>
-<script src="{{asset('theme/app-assets/vendors/js/forms/toggle/bootstrap-checkbox.min.js')}}" type="text/javascript"></script>
-<script src="{{asset('theme/app-assets/vendors/js/forms/toggle/switchery.min.js')}}" type="text/javascript"></script>
-<script src="{{asset('theme/app-assets/js/scripts/forms/switch.min.js')}}" type="text/javascript"></script>
+    <script src="{{asset('theme/app-assets/vendors/js/forms/toggle/bootstrap-switch.min.js')}}" type="text/javascript"></script>
+    <script src="{{asset('theme/app-assets/vendors/js/forms/toggle/bootstrap-checkbox.min.js')}}" type="text/javascript"></script>
+    <script src="{{asset('theme/app-assets/vendors/js/forms/toggle/switchery.min.js')}}" type="text/javascript"></script>
+    <script src="{{asset('theme/app-assets/js/scripts/forms/switch.min.js')}}" type="text/javascript"></script>
 
 @endsection
 
 @section('css')
-<link rel="stylesheet" type="text/css" href="{{secure_url('theme/app-assets/vendors/css/extensions/pace.css')}}">
-<link rel="stylesheet" type="text/css" href="{{secure_url('theme/app-assets/vendors/css/extensions/datedropper.min.css')}}">
-<link rel="stylesheet" type="text/css" href="{{secure_url('assets/css/pos.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{secure_url('theme/app-assets/vendors/css/extensions/pace.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{secure_url('theme/app-assets/vendors/css/extensions/datedropper.min.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{secure_url('assets/css/pos.css')}}">
 <style type="text/css">
-.one-make-full
-{
-    line-height:3.8rem !important;
-}
+    .one-make-full
+    {
+        line-height:3.8rem !important;
+    }
 
-.two-make-full
-{
-    line-height:1.8rem !important;
-}
+    .two-make-full
+    {
+        line-height:1.8rem !important;
+    }
 
-.third-make-full
-{
-    line-height:1.3rem !important;
-}
+    .third-make-full
+    {
+        line-height:1.3rem !important;
+    }
 </style>
 <link rel="stylesheet" type="text/css" href="{{asset('theme/app-assets/vendors/css/forms/selects/select2.min.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('theme/app-assets/css/pages/invoice.min.css')}}">
@@ -584,6 +716,15 @@ var squareupPaymentFormload="{{secure_url('intregation/squareup/form')}}";
 <!-- END PAGE VENDOR JS-->
 <!-- BEGIN PAGE LEVEL JS-->
 <script type="text/javascript">    
+    
+
+
+    
+
+    
+
+		
+
     $(document).ready(function() {
         $(".DropDateWithformat").dateDropper({
             dropWidth: 200,
@@ -600,29 +741,32 @@ var squareupPaymentFormload="{{secure_url('intregation/squareup/form')}}";
 </script>
 <!-- END PAGE LEVEL JS-->
 <!-- Stripe Start ---------------------->
-<script type="text/javascript" src="https://js.stripe.com/v2/" crossorigin="anonymous" SameSite="none Secure"></script>
-<script type="text/javascript" src="{{secure_url('js/stripe.js')}}"></script>
-<!-- Stripe End ---------------------->
+    <script type="text/javascript" src="https://js.stripe.com/v2/" crossorigin="anonymous" SameSite="none Secure"></script>
+    <script type="text/javascript" src="{{secure_url('js/stripe.js')}}"></script>
+    <!-- Stripe End ---------------------->
 
-<script src="{{asset('theme/app-assets/vendors/js/forms/extended/card/jquery.card.js')}}" type="text/javascript"></script>
-<script src="{{asset('theme/app-assets/js/scripts/forms/extended/form-typeahead.min.js')}}" type="text/javascript"></script>
-{{-- <script src="{{asset('theme/app-assets/js/scripts/forms/extended/form-inputmask.min.js')}}" type="text/javascript"></script>
-<script src="{{asset('theme/app-assets/js/scripts/forms/extended/form-formatter.min.js')}}" type="text/javascript"></script>
-<script src="{{asset('theme/app-assets/js/scripts/forms/extended/form-maxlength.min.js')}}" type="text/javascript"></script> --}}
-<script src="{{asset('theme/app-assets/js/scripts/forms/extended/form-card.min.js')}}" type="text/javascript"></script>
-
-
-
-<script src="{{asset('theme/app-assets/vendors/js/forms/select/select2.full.min.js')}}" type="text/javascript"></script>
-<script src="{{asset('theme/app-assets/js/scripts/forms/select/form-select2.min.js')}}" type="text/javascript"></script>
+    <script src="{{asset('theme/app-assets/vendors/js/forms/extended/card/jquery.card.js')}}" type="text/javascript"></script>
+    <script src="{{asset('theme/app-assets/js/scripts/forms/extended/form-typeahead.min.js')}}" type="text/javascript"></script>
+    {{-- <script src="{{asset('theme/app-assets/js/scripts/forms/extended/form-inputmask.min.js')}}" type="text/javascript"></script>
+    <script src="{{asset('theme/app-assets/js/scripts/forms/extended/form-formatter.min.js')}}" type="text/javascript"></script>
+    <script src="{{asset('theme/app-assets/js/scripts/forms/extended/form-maxlength.min.js')}}" type="text/javascript"></script> --}}
+    <script src="{{asset('theme/app-assets/js/scripts/forms/extended/form-card.min.js')}}" type="text/javascript"></script>
 
 
-<script src="{{asset('theme/app-assets/vendors/js/extensions/dragula.min.js')}}" type="text/javascript"></script>
-<script src="{{asset('js/jquery-ui.js')}}" ></script>
+
+    <script src="{{asset('theme/app-assets/vendors/js/forms/select/select2.full.min.js')}}" type="text/javascript"></script>
+    <script src="{{asset('theme/app-assets/js/scripts/forms/select/form-select2.min.js')}}" type="text/javascript"></script>
+
+
+    <script src="{{asset('theme/app-assets/vendors/js/extensions/dragula.min.js')}}" type="text/javascript"></script>
+    <script src="{{asset('js/jquery-ui.js')}}" ></script>
 
 <script>
 //editRowLive
+    var product_pos_parts_repair_save_url = "{{secure_url('repair-save')}}";
+    var product_pos_parts_repair_to_send_pos_url = "{{secure_url('pos-repair')}}";
     var product_pos_settings_product_url = "{{secure_url('product-config/json')}}";
+    var product_pos_settings_parts_url = "{{secure_url('parts-config/json')}}";
 </script>
 <script src="{{secure_url('js/product-config.js')}}"></script>
 <script>
@@ -630,6 +774,43 @@ var squareupPaymentFormload="{{secure_url('intregation/squareup/form')}}";
     //var problemJson=<?php //echo json_encode($problem); ?>;
     //var estPriceJson=<?php //echo json_encode($estPrice); ?>;
     //var cusObjData=<?php //echo json_encode($customerData); ?>;
+
+        // $(".rep_parts").hide();
+    	// $(".rep_repairs").hide();
+
+		$(document).ready(function(){
+			// $("#repair_option").change(function(){
+			// 	var repair_options_id=$(this).val();
+			// 	if(repair_options_id.length==0)
+			// 	{
+			// 		$(".rep_parts").hide();
+    		// 		$(".rep_repairs").hide();
+			// 		alert("Please choose repair options."); return false;
+			// 	}
+
+			// 	$(".rep_parts").hide();
+    		// 	$(".rep_repairs").hide();
+
+			// 	if(repair_options_id=="repair_parts")
+			// 	{
+			// 		$(".rep_parts").show();
+    		// 		$(".rep_repairs").show();
+			// 	}
+			// 	else if(repair_options_id=="repair")
+			// 	{
+    		// 		$(".rep_repairs").show();
+			// 	}
+			// 	else if(repair_options_id=="parts")
+			// 	{
+			// 		$(".rep_parts").show();
+			// 	}
+			// });
+	
+
+        $('body').on('click','.repair_parts',function(){
+            $("#defaultPartsView").toggle();
+        });
+    });
 
     var selectedDefCusPOSSCRvFour="";
     var defCusIDCusPOSSCRvFour=0;
@@ -689,6 +870,7 @@ var squareupPaymentFormload="{{secure_url('intregation/squareup/form')}}";
         var makePaymentInitialDefaultAddPOSUrl="{{secure_url('sales/cart/payment')}}";
         var ApplyDiscountInCartAddProductUrl="{{secure_url('sales/cart/assign/discount')}}";
         var GAddProductToCartAddProductUrl="{{secure_url('product/ajax/save')}}";
+        var non_inventory_repair_pos="{{secure_url('non-inventory/repair/pos')}}";
         var GAddProductToCartAddPOSUrl="{{secure_url('sales/cart/add')}}";
         var editRowLiveAddPOSUrl="{{secure_url('sales/cart/custom/add')}}";
         var delposSinleRowAddPOSUrl="{{secure_url('sales/cart/row/delete')}}";
@@ -703,38 +885,38 @@ var squareupPaymentFormload="{{secure_url('intregation/squareup/form')}}";
 </script>
 
 <script src="{{secure_url('js/pos.js')}}" type="text/javascript"></script>
-<script src="{{secure_url('js/intregation.js')}}" type="text/javascript"></script>
-<script type="text/javascript">
-    var sales_return_invoice_detail = "{{secure_url('sales/return/invoice/detail')}}";
-    var sales_return_item = "{{secure_url('sales/return/item')}}";
-    var sales_return_invoice_ajax="{{secure_url('sales/return/invoice/ajax')}}";
-    var sales_return_save_ajax="{{secure_url('sales/return/save/ajax')}}";
-    var posinstorerepair_repair_info_pos_ajax = "{{secure_url('repair/info/pos/ajax')}}";
-    var posinstorerepair_repair_list = "{{secure_url('repair/list')}}";
-    var posinstorerepair_ticket_list = "{{secure_url('ticket/list')}}";
-    var posinstorerepair_ticket_info_pos_ajax = "{{secure_url('ticket/info/pos/ajax')}}";
-    var posinstorerepair_repair_product_ajax = "{{secure_url('repair/product/ajax')}}";
-    var posinstorerepair_product_ajax_ticket_save = "{{secure_url('product/ajax/ticket/save')}}";
-    var punch_attendance_punch_save="{{secure_url('attendance/punch/save')}}";
-    var tax_settings_tax_settype="{{secure_url('settings/tax/settype')}}";
-    var warranty_warranty_invoice_ajax = "{{secure_url('warranty/invoice/ajax')}}";
-    var warranty_warranty_invoice_product_ajax = "{{secure_url('warranty/invoice/product/ajax')}}";
-    var warranty_warranty_cart_add_invoice_id = "{{secure_url('warranty/cart/add')}}";
-    var buyback_buyback_pos_ajax="{{secure_url('buyback/pos/ajax')}}";
-    var partialpayment_partialpay_invoice_ajax = "{{secure_url('partialpay/invoice/ajax')}}";
-    var partialpayment_partial_pay_paypal = "{{secure_url('partial/pay/paypal')}}";
-    var partialpayment_cardpointe_partial_payment="{{secure_url('cardpointe/partial/payment')}}";
-    var partialpayment_bolt_pingDevice = "{{secure_url('bolt/ping')}}";
-    var partialpayment_bolt_token="{{secure_url('bolt/token')}}";
-    var partialpayment_bolt_partial_capture="{{secure_url('bolt/partial/capture')}}";
-    var partialpayment_stripepartialURL="{{secure_url('stripepartial')}}";
-    var partialpayment_authorize_net_capture_pos_partial_payment = "{{secure_url('authorize/net/capture/pos/partial/payment')}}";
-    var partialpayment_addPartialPayment_env = "{{$addPartialPayment}}";
-    var partialpayment_partial_invoice_invoiceID = "{{$partial_invoice}}";
-</script>
-<script src="{{secure_url('js/sales-return.js')}}"></script>
-<script src="{{secure_url('js/posinstorerepair.js')}}"></script>
-<script src="{{secure_url('js/warranty.js')}}"></script>
+    <script src="{{secure_url('js/intregation.js')}}" type="text/javascript"></script>
+    <script type="text/javascript">
+        var sales_return_invoice_detail = "{{secure_url('sales/return/invoice/detail')}}";
+        var sales_return_item = "{{secure_url('sales/return/item')}}";
+        var sales_return_invoice_ajax="{{secure_url('sales/return/invoice/ajax')}}";
+        var sales_return_save_ajax="{{secure_url('sales/return/save/ajax')}}";
+        var posinstorerepair_repair_info_pos_ajax = "{{secure_url('repair/info/pos/ajax')}}";
+        var posinstorerepair_repair_list = "{{secure_url('repair/list')}}";
+        var posinstorerepair_ticket_list = "{{secure_url('ticket/list')}}";
+        var posinstorerepair_ticket_info_pos_ajax = "{{secure_url('ticket/info/pos/ajax')}}";
+        var posinstorerepair_repair_product_ajax = "{{secure_url('repair/product/ajax')}}";
+        var posinstorerepair_product_ajax_ticket_save = "{{secure_url('product/ajax/ticket/save')}}";
+        var punch_attendance_punch_save="{{secure_url('attendance/punch/save')}}";
+        var tax_settings_tax_settype="{{secure_url('settings/tax/settype')}}";
+        var warranty_warranty_invoice_ajax = "{{secure_url('warranty/invoice/ajax')}}";
+        var warranty_warranty_invoice_product_ajax = "{{secure_url('warranty/invoice/product/ajax')}}";
+        var warranty_warranty_cart_add_invoice_id = "{{secure_url('warranty/cart/add')}}";
+        var buyback_buyback_pos_ajax="{{secure_url('buyback/pos/ajax')}}";
+        var partialpayment_partialpay_invoice_ajax = "{{secure_url('partialpay/invoice/ajax')}}";
+        var partialpayment_partial_pay_paypal = "{{secure_url('partial/pay/paypal')}}";
+        var partialpayment_cardpointe_partial_payment="{{secure_url('cardpointe/partial/payment')}}";
+        var partialpayment_bolt_pingDevice = "{{secure_url('bolt/ping')}}";
+        var partialpayment_bolt_token="{{secure_url('bolt/token')}}";
+        var partialpayment_bolt_partial_capture="{{secure_url('bolt/partial/capture')}}";
+        var partialpayment_stripepartialURL="{{secure_url('stripepartial')}}";
+        var partialpayment_authorize_net_capture_pos_partial_payment = "{{secure_url('authorize/net/capture/pos/partial/payment')}}";
+        var partialpayment_addPartialPayment_env = "{{$addPartialPayment}}";
+        var partialpayment_partial_invoice_invoiceID = "{{$partial_invoice}}";
+    </script>
+    <script src="{{secure_url('js/sales-return.js')}}"></script>
+    <script src="{{secure_url('js/posinstorerepair.js')}}"></script>
+    <script src="{{secure_url('js/warranty.js')}}"></script>
 <script src="{{secure_url('js/partial-payment.js')}}"></script>
 @endsection
 

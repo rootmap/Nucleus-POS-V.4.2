@@ -13,6 +13,7 @@ use DB;
 use App\Pos;
 use App\SessionInvoice;
 use App\PartialPayment;
+use App\InventoryRepair;
 use Illuminate\Http\Request;
 use Dewbud\CardConnect\CardPointe;
 class CardPointeeController extends Controller
@@ -30,6 +31,7 @@ class CardPointeeController extends Controller
     }
 
     public function testM(){
+
         $merchant_id = '496160873888';
         $user        = 'testing';
         $pass        = 'testing123';
@@ -496,6 +498,20 @@ class CardPointeeController extends Controller
                                         $invoice->tender_id=$tender_id;
                                         $invoice->tender_name=$tender_name;
                                         $invoice->save();
+
+                                        $count_invr=InventoryRepair::where('invoice_id',$invoice_id)
+                                                                    ->where('store_id',$this->sdc->storeID())
+                                                                    ->count();
+                                        if($count_invr > 0)
+                                        {
+                                            $invr=InventoryRepair::where('invoice_id',$invoice_id)
+                                                            ->where('store_id',$this->sdc->storeID())
+                                                            ->first();
+                                            $invr->tender_id=$tender->id;
+                                            $invr->tender_name=$tender->name;   
+                                            $invr->payment_status=$load_invoice_status;   
+                                            $invr->save();  
+                                        }
                                         
 
                                         $chkTicketInvoice=\DB::table('in_store_tickets')->where('store_id',$this->sdc->storeID())->where('invoice_id',$invoice_id)->count();
@@ -629,8 +645,7 @@ class CardPointeeController extends Controller
             return response()->json(['status'=>0,'message'=>'Pay amount should not be empty.']);
         }
 
-	    $gCAT=$this->makePayment($cardNumber,$request->amountToPay,$expireDate,$cart->invoiceID,$request);
-	    //dd($gCAT); die();
+	     $gCAT=$this->makePayment($cardNumber,$request->amountToPay,$expireDate,$cart->invoiceID,$request);
 
         if(isset($gCAT->datares))
         {
@@ -640,7 +655,6 @@ class CardPointeeController extends Controller
         if(isset($gCAT['respstat']))
         {
             if($gCAT['resptext']=="Approval" && $gCAT['respstat']=="A"){
-             //dd($gCAT);
 
                 $tab=new CardPointee;
                 $tab->invoice_id=$refId;
@@ -665,23 +679,16 @@ class CardPointeeController extends Controller
                 $tab->save();
 
                 return response()->json(['status'=>1,'message'=>$gCAT['resptext'],'datares'=>$gCAT]);
-
-                //dd($gCAT);
             }
             else
             {
                  return response()->json(['status'=>0,'message'=>$gCAT['resptext'],'datares'=>$gCAT]);
-               // dd($gCAT->resptext);
             }
         }
         else
         {
             return response()->json(['status'=>0,'message'=>$gCAT['resptext'],'datares'=>$gCAT]);
-               // dd($gCAT->resptext);
         }
-
-        
-
     }
 
     public function cardpointePartialPayment(Request $request){
@@ -808,6 +815,20 @@ class CardPointeeController extends Controller
                 $invoice->tender_id=$tender_id;
                 $invoice->tender_name=$tender_name;
                 $invoice->save();
+
+                $count_invr=InventoryRepair::where('invoice_id',$invoice_id)
+                                            ->where('store_id',$this->sdc->storeID())
+                                            ->count();
+                if($count_invr > 0)
+                {
+                    $invr=InventoryRepair::where('invoice_id',$invoice_id)
+                                    ->where('store_id',$this->sdc->storeID())
+                                    ->first();
+                    $invr->tender_id=$tender->id;
+                    $invr->tender_name=$tender->name;   
+                    $invr->payment_status=$load_invoice_status;   
+                    $invr->save();  
+                }
                 
 
                 $chkTicketInvoice=\DB::table('in_store_tickets')->where('store_id',$this->sdc->storeID())->where('invoice_id',$invoice_id)->count();

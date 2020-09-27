@@ -20,7 +20,7 @@
                         <div class="form-group row">
                             <label class="col-md-4 label-control" for="projectinput1">Address</label>
                             <div class="col-md-8">
-                                <input type="text" class="form-control" value=""  name="new_customer_address" placeholder="new_customer_address">
+                                <input type="text" class="form-control" value=""  name="new_customer_address" placeholder="Enter Address">
                             </div>
                         </div>
                         <div class="form-group row">

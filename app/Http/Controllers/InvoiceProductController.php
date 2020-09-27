@@ -11,6 +11,7 @@ use App\Tender;
 use App\InStoreTicket;
 use App\InStoreRepair;
 use App\SessionInvoice;
+use App\InventoryRepair;
 use App\Customer;
 use App\PosSetting;
 use Illuminate\Http\Request;
@@ -99,9 +100,110 @@ class InvoiceProductController extends Controller
         //echo $repair_id; die();
     }
 
-    public function RepairPOS(Request $request, $repair_id=0)
+    public function RepairPOSR(Request $request, $repair_id=0)
     {
         //echo 1; die();
+
+        $tab_invoice=InventoryRepair::where('id',$repair_id)
+                                    ->where('store_id',$this->sdc->storeID())
+                                    ->first();
+
+        if(empty($tab_invoice->invoice_id) || $tab_invoice->invoice_id==0)
+        {
+            $product = \DB::table('products')->where('id',$tab_invoice->product_id)->first();
+            $oldCart = $request->session()->has('Pos') ?  $request->session()->get('Pos') : null;
+
+            $cart = new Pos($oldCart);
+            if(empty($oldCart->invoiceID))
+            {
+                $cart->genarateInvoiceID();
+            }
+            $cart->addCustomerID($tab_invoice->customer_id);
+
+            if($tab_invoice->repair_type=="Parts")
+            {
+                if($tab_invoice->total_parts > 0)
+                {
+                    $repairJson=json_decode($tab_invoice->parts_json);
+                    foreach ($repairJson as $key => $row) {
+                        if($key==0)
+                        {
+                            $pro=Product::find($row->id);
+                            $cart->addCustomRepairPrice($pro, $pro->id,$pro->price,$repair_id);
+                        }
+                        else
+                        {
+                            $pro=Product::find($row->id);
+                            $cart->add($pro, $pro->id);
+                        }
+                        
+                    }
+
+                }
+            }
+            else
+            {
+                $cart->addCustomRepairPrice($product, $product->id,$tab_invoice->price,$repair_id);
+
+                if($tab_invoice->total_parts > 0)
+                {
+                    $repairJson=json_decode($tab_invoice->parts_json);
+                    foreach ($repairJson as $key => $row) {
+                        $pro=Product::find($row->id);
+                        $cart->add($pro, $pro->id);
+                    }
+
+                }
+            }
+
+            
+
+            if($cart->store_id==0)
+            {
+                $cart->addStoreID($this->sdc->storeID());
+            }
+
+            $request->session()->put('Pos', $cart);
+
+            //dd($cart);
+
+
+            $posData=serialize(json_encode($cart));
+
+            $checkEx=SessionInvoice::where('store_id',$this->sdc->storeID())->where('invoice_id',$cart->invoiceID)->count();
+
+            if($checkEx==0)
+            {
+                $sessionInvoice=new SessionInvoice();
+                $sessionInvoice->invoice_id=$cart->invoiceID;
+                $sessionInvoice->session_pos_data=$posData;
+                $sessionInvoice->store_id=$this->sdc->storeID();
+                $sessionInvoice->created_by=$this->sdc->UserID();
+                $sessionInvoice->save();
+            }
+            else
+            {
+                $sessionInvoice=SessionInvoice::where('store_id',$this->sdc->storeID())->where('invoice_id',$cart->invoiceID)->first();
+                $sessionInvoice->session_pos_data=$posData;
+                $sessionInvoice->updated_by=$this->sdc->UserID();
+                $sessionInvoice->save();
+            }
+
+            return redirect('pos')->with('success','Repair Product Added In Cart Successfully.');
+        }
+        else
+        {
+            Session::put('addPartialPayment',1);
+            Session::put('partial_invoice',$tab_invoice->invoice_id);
+            return redirect('pos')->with('status','Due invoice repair payment initiating.');
+        }
+
+        
+    }
+
+    public function RepairPOS(Request $request, $repair_id=0)
+    {
+        //echo 2; die();
 
         $tab_invoice=InStoreRepair::where('id',$repair_id)
                                   ->where('store_id',$this->sdc->storeID())

@@ -8,6 +8,7 @@ use App\RetailPosSummaryDateWise;
 use App\ProductStockin;
 use App\ProductSettings;
 use App\TicketProblem;
+use App\NonInventoryRepair;
 use Illuminate\Http\Request;
 use Excel;
 class ProductController extends Controller
@@ -317,6 +318,57 @@ class ProductController extends Controller
         return response()->json($pid);
     }
 
+    public function non_inventory_repair_pos(Request $request)
+    {
+
+        $catInfoCount=Category::where('store_id',$this->sdc->storeID())->where('name','Non-Inventory Repair')->count();
+        if($catInfoCount>0)
+        {
+            $catInfo=Category::where('store_id',$this->sdc->storeID())->where('name','Non-Inventory Repair')->first();
+            $catID=$catInfo->id;
+            $catName=$catInfo->name;
+        }
+        else
+        {
+            $catInfo=new Category();
+            $catInfo->store_id=$this->sdc->storeID();
+            $catInfo->name="Non-Inventory Repair";
+            $catInfo->created_by=$this->sdc->UserID();
+            $catInfo->save();
+        }
+
+        $product_name=$request->device;
+        if(!empty($request->problem_type))
+        {
+            $product_name.=" - ".$request->problem_type;
+        }
+
+        $product_detail=$request->device;
+        if(!empty($request->problem_type)){ $product_detail.=", Problem Type :".$request->problem_type; }
+        if(!empty($request->password)){ $product_detail.=", Password :".$request->password; }
+        if(!empty($request->imei)){ $product_detail.=", IMEI :".$request->imei; }
+        if(!empty($request->notes)){ $product_detail.=", Notes :".$request->notes; }
+
+        $tab=new Product;
+        $tab->category_id=$catInfo->id;
+        $tab->category_name=$catInfo->name;
+        $tab->barcode=time();
+        $tab->name=$product_name;
+        $tab->detail=$product_detail;
+        $tab->quantity=1;
+        $tab->price=$request->price;
+        $tab->cost=$request->cost;
+        $tab->general_sale=1;
+        $tab->store_id=$this->sdc->storeID();
+        $tab->created_by=$this->sdc->UserID();
+        $tab->save();
+        $pid=$tab->id; 
+
+        $this->sdc->log("Non-Invenotry Reapir","Non-Inventory created from POS.");
+        return response()->json(['status'=>1,'pid'=>$pid]);
+
+    }
+
     public function storeTicketAjax(Request $request)
     {
         $catID=0;
@@ -553,14 +605,15 @@ class ProductController extends Controller
                           ->where('general_sale',0)
                           ->orderBy('id','DESC')
                           ->when($search, function ($query) use ($search) {
-                            $query->where('id','LIKE','%'.$search.'%');
-                            $query->orWhere('category_name','LIKE','%'.$search.'%');
-                            $query->orWhere('barcode','LIKE','%'.$search.'%');
-                            $query->orWhere('name','LIKE','%'.$search.'%');
-                            $query->orWhere('quantity','LIKE','%'.$search.'%');
-                            $query->orWhere('price','LIKE','%'.$search.'%');
-                            $query->orWhere('cost','LIKE','%'.$search.'%');
-                            $query->orWhere('created_at','LIKE','%'.$search.'%');
+                              
+                            $query->whereRaw("(id LIKE '%".$search."%' OR 
+                            category_name LIKE '%".$search."%' OR 
+                            barcode LIKE '%".$search."%' OR 
+                            name LIKE '%".$search."%' OR 
+                            quantity LIKE '%".$search."%' OR 
+                            price LIKE '%".$search."%' OR 
+                            cost LIKE '%".$search."%' OR 
+                            created_at LIKE '%".$search."%')");
 
                             return $query;
                           })
@@ -575,14 +628,14 @@ class ProductController extends Controller
                           ->where('general_sale',0)
                           ->orderBy('id','DESC')
                           ->when($search, function ($query) use ($search) {
-                            $query->where('id','LIKE','%'.$search.'%');
-                            $query->orWhere('category_name','LIKE','%'.$search.'%');
-                            $query->orWhere('barcode','LIKE','%'.$search.'%');
-                            $query->orWhere('name','LIKE','%'.$search.'%');
-                            $query->orWhere('quantity','LIKE','%'.$search.'%');
-                            $query->orWhere('price','LIKE','%'.$search.'%');
-                            $query->orWhere('cost','LIKE','%'.$search.'%');
-                            $query->orWhere('created_at','LIKE','%'.$search.'%');
+                            $query->whereRaw("(id LIKE '%".$search."%' OR 
+                            category_name LIKE '%".$search."%' OR 
+                            barcode LIKE '%".$search."%' OR 
+                            name LIKE '%".$search."%' OR 
+                            quantity LIKE '%".$search."%' OR 
+                            price LIKE '%".$search."%' OR 
+                            cost LIKE '%".$search."%' OR 
+                            created_at LIKE '%".$search."%')");
 
                             return $query;
                           })

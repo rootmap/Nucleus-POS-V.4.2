@@ -15,7 +15,10 @@ class CategoryController extends Controller
 
     private $moduleName="Category Info ";
     private $sdc;
-    public function __construct(){ $this->sdc = new StaticDataController(); }
+    public function __construct(){ 
+        $this->sdc = new StaticDataController(); 
+        
+    }
 
     public function oauthredirect(Request $request)
     {
@@ -29,6 +32,7 @@ class CategoryController extends Controller
 
     public function index()
     {
+        \DB::statement("call defaultPartsCreate('".$this->sdc->UserID()."','".$this->sdc->storeID()."')");
         if(Auth::user()->user_type==1)
         {
             $tab=Category::all();
@@ -37,7 +41,7 @@ class CategoryController extends Controller
         {
             $tab=Category::where('store_id',$this->sdc->storeID())->get();
         }
-        
+        //dd($this->sdc->storeID());
         return view('apps.pages.settings.category',['dataTable'=>$tab]);
     }
 

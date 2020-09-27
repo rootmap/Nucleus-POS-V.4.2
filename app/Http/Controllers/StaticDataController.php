@@ -203,7 +203,8 @@ class StaticDataController extends Facade {
         }
 
         
-        return $stReturn;
+        //return $stReturn;
+        return 0;
         
     }
 
@@ -468,7 +469,7 @@ class StaticDataController extends Facade {
                 $sheet->setBorder('A1', 'thin');
                 $sheet->cell('A1', function ($cell) use ($excelArray) {
                     $cell->setValue(self::StoreInfo()->name);
-                    $cell->setBackground('#27A2CF');
+                    $cell->setBackground('#4CAF50');
                     $cell->setFontColor('#FFF');
                     $cell->setFontSize(20);
                     $cell->setFontWeight('bold');
@@ -479,7 +480,7 @@ class StaticDataController extends Facade {
                 $sheet->mergeCells('A2:' . $colSPB);
                 $sheet->cells('A2', function ($cells) use ($excelArray) {
                     $cells->setFontSize(16);
-                    $cells->setBackground('#27A2CF');
+                    $cells->setBackground('#4CAF50');
                     $cells->setFontColor('#FFF');
                     $cells->setFontWeight('bold');
                     $cells->setAlignment('center');
@@ -488,7 +489,7 @@ class StaticDataController extends Facade {
                 $sheet->mergeCells('A3:' . $colSPBC);
                 $sheet->cells('A3', function ($cells) use ($excelArray) {
                     $cells->setFontSize(10);
-                    $cells->setBackground('#27A2CF');
+                    $cells->setBackground('#4CAF50');
                     $cells->setFontColor('#FFF');
                     $cells->setFontWeight('bold');
                     $cells->setAlignment('center');
@@ -522,7 +523,11 @@ class StaticDataController extends Facade {
     public static function PDFLayout($report_name,$table='')
     {
         //dd(self::StoreInfo()->name);
-        $mpdf = new Mpdf;
+        $mpdf = new Mpdf(['mode' => '+aCJK', 
+        // "allowCJKoverflow" => true, 
+        "autoScriptToLang" => true,
+        // "allow_charset_conversion" => false,
+        "autoLangToFont" => true]);
         $mpdf->SetTitle($report_name);
         $mpdf->SetWatermarkText('NucleusPOS.com');
         $mpdf->watermarkTextAlpha = 0.1;
@@ -531,7 +536,7 @@ class StaticDataController extends Facade {
         //$mpdf->list_indent_first_level=0; // 1 or 0 - whether to indent the first level of a list
         // LOAD a stylesheet
         $stylesheet = file_get_contents(public_path('assets/css/bootstrap.min.css'));
-        $stylesheet2 = file_get_contents(public_path('assets/css/style.css'));
+        // $stylesheet2 = file_get_contents(public_path('assets/css/style.css'));
         $html = '<table  class="col-md-12" cellpadding="10" style="width:100%;" width="100%;">
                         <tr>
                         
@@ -545,7 +550,7 @@ class StaticDataController extends Facade {
 
         $html .= $table;
         $mpdf->WriteHTML($stylesheet, 1);
-        $mpdf->WriteHTML($stylesheet2, 1); // The parameter 1 tells that this is css/style only and no body/html/text
+        // $mpdf->WriteHTML($stylesheet2, 1); // The parameter 1 tells that this is css/style only and no body/html/text
         $mpdf->WriteHTML($html, 2);
         $mpdf->Output('invoice_' . time() . '.pdf', 'I');
         exit();

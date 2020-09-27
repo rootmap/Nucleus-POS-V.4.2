@@ -43,14 +43,14 @@
                         <div class="my-1 text-xs-center" style="margin-bottom: 0px !important;" @if($userguideInit==1) data-step="3" data-intro="You can see today total Ticket." @endif>
                             
                             <div class="card-body">
-                                <input type="text" value="{{$tod->ticket}}" class="knob hide-value responsive angle-offset" data-angleOffset="0" data-thickness=".10" data-linecap="round" data-width="130" data-height="130" data-inputColor="#43A047" data-readOnly="true" data-fgColor="#43A047">
+                                <input type="text" value="{{$total_parts_found}}" class="knob hide-value responsive angle-offset" data-angleOffset="0" data-thickness=".10" data-linecap="round" data-width="130" data-height="130" data-inputColor="#43A047" data-readOnly="true" data-fgColor="#43A047">
                                 <div class="card-header pt-1" style="border-bottom: 0px; background:transparent; position: absolute; top: 49px; width: 100%; text-align: center; left: 0px;">
-                                    <span class="green darken-1" style="font-weight: bolder; font-size: 22px;">{{$tod->ticket}}</span>
+                                    <span class="green darken-1" style="font-weight: bolder; font-size: 22px;">{{$total_parts_found}}</span>
                                 </div>
                             </div>
                             
                             <div class="card-header pt-1" style="border-bottom: 0px;">
-                                <span class="green darken-1 text-bold-800">Ticket</span>
+                                <span class="green darken-1 text-bold-800">Parts</span>
                             </div>
                         </div>
                     </div>
@@ -58,14 +58,14 @@
                         <div class="my-1 text-xs-center" style="margin-bottom: 0px !important;">
                             
                             <div class="card-body">
-                                <input type="text" value="{{$tod->in_store_reapir}}" class="knob hide-value responsive angle-offset" data-angleOffset="0" data-thickness=".10" data-linecap="round" data-width="130" data-height="130" data-inputColor="#69F0AE" data-readOnly="true" data-fgColor="#69F0AE">
+                                <input type="text" value="{{$total_repair_found}}" class="knob hide-value responsive angle-offset" data-angleOffset="0" data-thickness=".10" data-linecap="round" data-width="130" data-height="130" data-inputColor="#69F0AE" data-readOnly="true" data-fgColor="#69F0AE">
                                 <div class="card-header pt-1" style="border-bottom: 0px; background:transparent; position: absolute; top: 49px; width: 100%; text-align: center; left: 0px;">
-                                    <span class="green accent-2" style="font-weight: bolder; font-size: 22px;">{{$tod->in_store_reapir}}</span>
+                                    <span class="green accent-2" style="font-weight: bolder; font-size: 22px;">{{$total_repair_found}}</span>
                                 </div>
                             </div>
                             
                             <div class="card-header pt-1" style="border-bottom: 0px;">
-                                <span class="green accent-2 text-bold-800">In-Store Reapir</span>
+                                <span class="green accent-2 text-bold-800">Repair</span>
                             </div>
                         </div>
                     </div>

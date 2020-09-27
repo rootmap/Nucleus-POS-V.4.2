@@ -272,22 +272,13 @@
 	            	found=1;
 	            	$("input[name=systemquantity]").val(row.quantity);
 	            	$("input[name=barcode]").val(row.barcode);
-	                var getOldSelected=$("select[name=pid]").val();
-	                if(getOldSelected==row.id)
-	                {
-	                   var exQuantity=$("input[name=quantity]").val();
-	                   var NewQuantity=(exQuantity-0)+(1-0);
-	                   $("input[name=quantity]").val(NewQuantity);
-	                   $("#addingMessageArea").html(successMessage("Product added in list with "+NewQuantity+" quantity successfully."));
-	                }
-	                else
-	                {
+	                
 	                    $("#addingMessageArea").html(successMessage("Product added in list with 1 quantity successfully."));
 	                    $("input[name=quantity]").val(1);
     	                $("input[name=purchase_price]").val(row.cost);
     	                $("input[name=sell_price]").val(row.price);
     	                $("select[name=pid] option[value="+row.id+"]").attr('selected',true).trigger('change');
-	                }
+	                
 	            }
 	        });
 
@@ -308,6 +299,33 @@
 	    
 	    $("input[name=barcode]").focus();
 	    
+	    $('select[name=pid]').change(function(){
+			var pid=$(this).val();
+			if(pid.length==0){
+				alert("Please Select a product"); return false;
+			}
+
+			var found=0;
+	        $.each(productJson,function(key,row){
+	            if(row.id==pid)
+	            {
+	            	found=1;
+	            		$("input[name=systemquantity]").val(row.quantity);
+	            		$("input[name=barcode]").val(row.barcode);
+	                
+						console.log('New');
+	                    $("#addingMessageArea").html(successMessage("Product added in list with 1 quantity successfully."));
+	                    $("input[name=quantity]").val(1);
+    	                $("input[name=purchase_price]").val(row.cost);
+    	                $("input[name=sell_price]").val(row.price);
+    	                //$("select[name=pid] option[value="+row.id+"]").attr('selected',true).trigger('change');
+						//$("select[name=cid] option[value="+row.category_id+"]").attr('selected',true).trigger('change');
+	                
+
+	            }
+	        });
+
+		});
 	    
 	    
 		var productQ=[];

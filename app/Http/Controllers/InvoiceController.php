@@ -58,6 +58,8 @@ use App\Buyback;
 use App\StripeTransactionHistory;
 use App\ProductSettings;
 use App\PartialPayment;
+use App\NonInventoryRepair;
+use App\InventoryRepair;
 
 class InvoiceController extends Controller
 {
@@ -1195,6 +1197,20 @@ class InvoiceController extends Controller
                 $tender=Tender::find($tender_id);
                 $tender_name=$tender->name;
                 $invoice->save();
+            }
+
+            $count_invr=InventoryRepair::where('invoice_id',$invoice_id)
+                                        ->where('store_id',$this->sdc->storeID())
+                                        ->count();
+            if($count_invr > 0)
+            {
+                $invr=InventoryRepair::where('invoice_id',$invoice_id)
+                                 ->where('store_id',$this->sdc->storeID())
+                                 ->first();
+                $invr->tender_id=$tender->id;
+                $invr->tender_name=$tender->name;   
+                $invr->payment_status=$load_invoice_status;   
+                $invr->save();  
             }
 
             $chkTicketInvoice=\DB::table('in_store_tickets')->where('store_id',$this->sdc->storeID())->where('invoice_id',$invoice_id)->count();
@@ -3268,6 +3284,20 @@ class InvoiceController extends Controller
                 $invoice->tender_id=$tender_id;
                 $invoice->tender_name=$tender_name;
                 $invoice->save();
+
+                $count_invr=InventoryRepair::where('invoice_id',$invoice_id)
+                                        ->where('store_id',$this->sdc->storeID())
+                                        ->count();
+                if($count_invr > 0)
+                {
+                    $invr=InventoryRepair::where('invoice_id',$invoice_id)
+                                    ->where('store_id',$this->sdc->storeID())
+                                    ->first();
+                    $invr->tender_id=$tender->id;
+                    $invr->tender_name=$tender->name;   
+                    $invr->payment_status=$load_invoice_status;   
+                    $invr->save();  
+                }
                 
 
                 $chkTicketInvoice=\DB::table('in_store_tickets')->where('store_id',$this->sdc->storeID())->where('invoice_id',$invoice_id)->count();
@@ -3539,6 +3569,20 @@ class InvoiceController extends Controller
                 $invoice->save();
             }
 
+            $count_invr=InventoryRepair::where('invoice_id',$invoice_id)
+                                        ->where('store_id',$this->sdc->storeID())
+                                        ->count();
+            if($count_invr > 0)
+            {
+                $invr=InventoryRepair::where('invoice_id',$invoice_id)
+                                ->where('store_id',$this->sdc->storeID())
+                                ->first();
+                $invr->tender_id=$tender->id;
+                $invr->tender_name=$tender->name;   
+                $invr->payment_status=$load_invoice_status;   
+                $invr->save();  
+            }
+
             $chkTicketInvoice=\DB::table('in_store_tickets')->where('store_id',$this->sdc->storeID())->where('invoice_id',$invoice_id)->count();
             if($chkTicketInvoice>0)
             {
@@ -3688,6 +3732,7 @@ class InvoiceController extends Controller
     public function pos(Request $request)
     {
 
+        \DB::statement("call defaultPartsCreate('".$this->sdc->UserID()."','".$this->sdc->storeID()."')");
         \DB::statement("call defaultTicketNRepairCreate('".$this->sdc->UserID()."','".$this->sdc->storeID()."')");
 
         $defualtCustomer=$this->genarateDefaultCustomer();
@@ -3767,14 +3812,14 @@ class InvoiceController extends Controller
 
         $catInfo=Category::where('store_id',$this->sdc->storeID())->get(); 
 
-        $device=InStoreRepairDevice::select('id','name')->where('store_id',$this->sdc->storeID())->get();
+        // $device=InStoreRepairDevice::select('id','name')->where('store_id',$this->sdc->storeID())->get();
         //$model=InStoreRepairModel::select('id','name','device_id')->where('store_id',$this->sdc->storeID())->get();
         //$problem=InStoreRepairProblem::select('id','name','model_id')->where('store_id',$this->sdc->storeID())->get();
         //$estPrice=InStoreRepairPrice::select('id','price','device_id','model_id','problem_id','device_name','model_name','problem_name')->where('store_id',$this->sdc->storeID())->get();
-        $ticketAsset=\DB::table('repair_ticket_assets')->where('asset_type','ticket')->where('store_id',$this->sdc->storeID())->get();
-        $repairAsset=\DB::table('repair_ticket_assets')->where('asset_type','repair')->where('store_id',$this->sdc->storeID())->get();
+        // $ticketAsset=\DB::table('repair_ticket_assets')->where('asset_type','ticket')->where('store_id',$this->sdc->storeID())->get();
+        // $repairAsset=\DB::table('repair_ticket_assets')->where('asset_type','repair')->where('store_id',$this->sdc->storeID())->get();
 
-        $ticketProblem=TicketProblem::select('id','name')->where('store_id',$this->sdc->storeID())->get();
+        // $ticketProblem=TicketProblem::select('id','name')->where('store_id',$this->sdc->storeID())->get();
 
         $addPartialPayment=0;
         if(Session::has('addPartialPayment'))
@@ -3817,6 +3862,8 @@ class InvoiceController extends Controller
             $square = SquareAccount::where('store_id', $this->sdc->storeID())->first();
         }
 
+        $parts_pro=Product::where('store_id',$this->sdc->storeID())->where('general_sale',0)->where('category_name','Parts')->get();
+
         $systemArray=[
                 //'product'=>$pro,
                 'product'=>[],
@@ -3829,22 +3876,23 @@ class InvoiceController extends Controller
                 'customerData'=>[],
                 "last_invoice_id"=>$last_invoice_id,
                 'CounterDisplay'=>$CounterDisplay,
-                'device'=>$device,
+                // 'device'=>$device,
                 //'model'=>$model,
                 'model'=>[],
                 //'problem'=>$problem,
                 'problem'=>[],
                 'addPartialPayment'=>$addPartialPayment,
                 'partial_invoice'=>$partial_invoice,
-                'ticketProblem'=>$ticketProblem,
+                // 'ticketProblem'=>$ticketProblem,
                 //'estPrice'=>$estPrice,
                 'estPrice'=>[],
-                'repairAsset'=>$repairAsset,
-                'ticketAsset'=>$ticketAsset,
+                // 'repairAsset'=>$repairAsset,
+                // 'ticketAsset'=>$ticketAsset,
                 'ticket_id'=>time(),
                 'stripe'=>$stripe,
                 'cardpointe'=>$cardPointe,
                 'square'=>$square,
+                'parts_pro'=>$parts_pro,
             ];
 
 
@@ -3899,6 +3947,11 @@ class InvoiceController extends Controller
             'estPrice'=>$estPrice,
             'customer'=>$tab_customer
             ]);
+    }
+
+    public function partsConfigjson(Request $request){
+        $pro=Product::where('store_id',$this->sdc->storeID())->where('general_sale',0)->where('category_name','Parts')->get();
+        return response()->json($pro);
     }
 
     public function GenaratePDF()
@@ -5914,7 +5967,7 @@ class InvoiceController extends Controller
 
         //print_r("PPPP".$ivP); die();
 
-
+        $no_repair_mod=0;
        if($countItems>0)
        {
             $invoice_id=$cart->invoiceID;
@@ -5923,206 +5976,23 @@ class InvoiceController extends Controller
                 $invoice_id=time();
             }
 
+            $repair_invoice=0;
+
+            $tender_name='';
+            $sqlTender=[];
+            $paymentMethodID=$cart->paymentMethodID?$cart->paymentMethodID:0;
+            if($paymentMethodID > 0)
+            {
+                $sqlTender=Tender::find($paymentMethodID);
+                $tender_name=$sqlTender->name?$sqlTender->name:'';
+            }
+
             foreach($cart->items as $row):
 
-                
-                if(isset($row['repair']))
+                if(isset($row['repairArray']))
                 {
-                    \DB::table('in_store_repairs')->where('id',$row['repair'])
-                                                  ->update(['invoice_id'=>$invoice_id,'payment_status'=>$ivP]);
+                    $no_repair_mod=1;
                 }
-                elseif(isset($row['ticket']))
-                {
-                    \DB::table('in_store_tickets')->where('id',$row['ticket'])
-                                                  ->update(['invoice_id'=>$invoice_id,'payment_status'=>$ivP]);
-                }
-                elseif(isset($row['repairArray']))
-                {
-
-                    $repairArray=$row['repairArray'];
-                    $device_id=$repairArray['device_id'];
-                    $model_id=$repairArray['model_id'];
-                    $problem_id=$repairArray['problem_id'];
-
-                    $device_info=\DB::table('in_store_repair_devices')->where('id',$device_id)->first();
-                    $device_name=$device_info->name;
-
-                    $model_info=\DB::table('in_store_repair_models')->where('id',$model_id)->first();
-                    $model_name=$model_info->name;
-
-                    $problem_info=\DB::table('in_store_repair_problems')->where('id',$problem_id)->first();
-                    $problem_name=$problem_info->name;
-
-                    $price=0;
-                    if(!empty($repairArray['override_repair_price']))
-                    {
-                        $price=$repairArray['override_repair_price'];
-                    }
-                    else
-                    {
-                        $price=$repairArray['repair_price'];
-                    }
-
-
-
-                    $tab=new InStoreRepair();
-                    $tab->customer_id=$customer_id;
-                    $tab->customer_name=$customerName;
-                    $tab->device_id=$repairArray['device_id'];
-                    $tab->device_name=$device_name;
-                    $tab->model_id=$repairArray['model_id'];
-                    $tab->model_name=$model_name;
-                    $tab->problem_id=$repairArray['problem_id'];
-                    $tab->problem_name=$problem_name;
-                    $tab->price=$price;
-                    $tab->repair_price=$repairArray['repair_price'];
-                    $tab->override_repair_price=$repairArray['override_repair_price'];
-                    $tab->password=$repairArray['repair_password'];
-                    $tab->imei=$repairArray['repair_imei'];
-                    $tab->tested_before_by=$repairArray['repair_tested_before_by'];
-                    $tab->tested_after_by=$repairArray['repair_tested_after_by'];
-                    $tab->tech_notes=$repairArray['repair_tech_notes'];
-                    $tab->how_did_you_hear_about_us=$repairArray['repair_how_did_you_hear_about_us'];
-                    $tab->start_time=$repairArray['repair_start_time'];
-                    $tab->end_time=$repairArray['repair_end_time'];
-                    if(isset($repairArray['repair_salvage_part']))
-                    {
-                        $tab->salvage_part=$repairArray['repair_salvage_part'];
-                    }
-                    
-
-                    unset($repairArray['device_id']);
-                    unset($repairArray['model_id']);
-                    unset($repairArray['problem_id']);
-                    unset($repairArray['repair_price']);
-                    unset($repairArray['override_repair_price']);
-                    unset($repairArray['repair_password']);
-                    unset($repairArray['repair_imei']);
-                    unset($repairArray['repair_tested_before_by']);
-                    unset($repairArray['repair_tested_after_by']);
-                    unset($repairArray['repair_tech_notes']);
-                    unset($repairArray['repair_how_did_you_hear_about_us']);
-                    unset($repairArray['repair_start_time']);
-                    unset($repairArray['repair_end_time']);
-                    if(isset($repairArray['repair_salvage_part']))
-                    {
-                        unset($repairArray['repair_salvage_part']);
-                    }
-                    $repair_json=json_encode($repairArray);
-
-                    $productInfo=Product::find($row['item_id']);
-                    $our_cost=$productInfo->cost;
-
-
-                    
-                    $tab->repair_json=$repair_json;
-                    $tab->invoice_id=$invoice_id;
-                    $tab->product_id=$row['item_id'];
-                    $tab->product_name=$row['item'];
-                    $tab->our_cost=$our_cost;
-                    $tab->payment_status=$ivP;
-                    $tab->store_id=$this->sdc->storeID();
-                    $tab->created_by=$this->sdc->UserID();
-                    $tab->save();
-
-                    \DB::statement("call updateDailyRepair('".$this->sdc->UserID()."','".$this->sdc->storeID()."')");
-                    
-
-
-                }
-                elseif(isset($row['ticketArray']))
-                {
-                    
-
-                    $ticketArray=$row['ticketArray'];
-
-                    $problem_id=$ticketArray['ticket_problem_id'];
-                    if($problem_id=="TP0001")
-                    {
-
-                        $checkExProb=TicketProblem::where('store_id',$this->sdc->storeID())
-                                                            ->where('name',$ticketArray['ticket_problem_name'])
-                                                            ->count();
-                        if($checkExProb==0)
-                        {
-                            $tab=new TicketProblem();
-                            $tab->name=$ticketArray['ticket_problem_name'];
-                            $tab->store_id=$this->sdc->storeID();
-                            $tab->created_by=$this->sdc->UserID();
-                            $tab->save();
-                        }
-                        else
-                        {
-                            $tab=TicketProblem::where('store_id',$this->sdc->storeID())
-                                                            ->where('name',$ticketArray['ticket_problem_name'])
-                                                            ->first();
-                        }
-                        
-
-                        $problem_id=$tab->id;
-                    }
-
-                    $problem_info=TicketProblem::where('id',$problem_id)->first();
-                    $problem_name=$problem_info->name;
-
-                    //InStoreTicket
-
-
-
-                    $tic=new InStoreTicket();
-                    $tic->customer_id=$customer_id;
-                    $tic->customer_name=$customerName;
-                    $tic->ticket_id=$ticketArray['ticket_id'];
-                    $tic->device_type=$ticketArray['ticket_device_type'];
-                    $tic->problem_id=$problem_id;
-                    $tic->problem_name=$problem_name;
-                    $tic->our_cost=$ticketArray['ticket_our_cost'];
-                    $tic->retail_price=$ticketArray['ticket_retail_price'];
-                    $tic->password=$ticketArray['ticket_password'];
-                    $tic->type_n_color=$ticketArray['ticket_type_n_color'];
-                    $tic->carrier=$ticketArray['ticket_carrier'];
-                    $tic->imei=$ticketArray['ticket_imei'];
-                    $tic->how_did_you_hear_about_us=$ticketArray['ticket_how_did_you_hear_about_us'];
-                    $tic->isdropoff=$ticketArray['isdropoff'];
-                    $tic->tested_before_by=$ticketArray['ticket_tested_before_by'];
-                    $tic->tested_after_by=$ticketArray['ticket_tested_after_by'];
-                    $tic->tech_notes=$ticketArray['ticket_tech_notes'];
-
-                    unset($ticketArray['ticket_id']);
-                    unset($ticketArray['ticket_device_type']);
-                    unset($ticketArray['ticket_problem_name']);
-                    unset($ticketArray['ticket_problem_id']);
-                    unset($ticketArray['ticket_our_cost']);
-                    unset($ticketArray['ticket_retail_price']);
-                    unset($ticketArray['ticket_password']);
-                    unset($ticketArray['ticket_type_n_color']);
-                    unset($ticketArray['ticket_carrier']);
-                    unset($ticketArray['ticket_imei']);
-                    unset($ticketArray['ticket_how_did_you_hear_about_us']);
-                    unset($ticketArray['isdropoff']);
-                    unset($ticketArray['ticket_tested_before_by']);
-                    unset($ticketArray['ticket_tested_after_by']);
-                    unset($ticketArray['ticket_tech_notes']);
-
-                    $ticket_json=json_encode($ticketArray);
-
-                    $tic->ticket_json=$ticket_json;
-                    $tic->invoice_id=$invoice_id;
-                    $tic->product_id=$row['item_id'];
-                    $tic->product_name=$row['item'];
-                    $tic->ticket_status="Pending";
-                    $tic->payment_status=$ivP;
-                    $tic->store_id=$this->sdc->storeID();
-                    $tic->created_by=$this->sdc->UserID();
-                    $tic->save();
-
-                    \DB::statement("call updateDailyTicket('".$this->sdc->UserID()."','".$this->sdc->storeID()."')");
-
-                   // dd($row['ticketArray']); die();
-
-                }
-
-                
 
                 $pid=$row['item_id'];
                 $quantity=$row['qty'];
@@ -6142,6 +6012,23 @@ class InvoiceController extends Controller
                 $tab_stock->created_by=$this->sdc->UserID();
                 $tab_stock->save();
 
+                if(isset($row['repair']))
+                {
+                    $repair_id=$row['repair'];
+                    $tab_invoice=InventoryRepair::where('id',$repair_id)
+                                    ->where('store_id',$this->sdc->storeID())
+                                    ->first();
+                    if($tab_invoice->repair_type!="Parts")
+                    {
+                        $repair_invoice+=$unitprice;
+                    }
+                    
+                }
+
+                if($pro->category_name=="Parts"){
+                    $repair_invoice+=($row['unitprice'] * $row['qty']);
+                }
+
                 Product::where('id',$pid)
                 ->update([
                    'quantity' => \DB::raw('quantity - '.$quantity),
@@ -6159,8 +6046,83 @@ class InvoiceController extends Controller
 
 
             endforeach;
-
             
+            
+            //echo floatval($cart->paid) .">=". floatval($repair_invoice); die();
+           
+            //if($data > 0)
+            
+            foreach($cart->items as $row):
+                $pid=$row['item_id'];
+                $pro=Product::find($pid);
+                if(isset($row['repair']))
+                {
+                    if((floatval($cart->paid) >= floatval($repair_invoice)) && $paymentMethodID > 0)
+                    {
+                        $repair_id=$row['repair'];
+                        //echo $repair_id; die();
+                        try {
+
+                            $tabR=InventoryRepair::find($repair_id);
+                            $tabR->invoice_id=$invoice_id;
+                            $tabR->tender_id=$paymentMethodID;
+                            $tabR->tender_name=$tender_name;
+                            $tabR->payment_status="Paid";
+                            $tabR->save();
+
+
+                            // $tab=\DB::table('inventory_repairs')->where('id',$repair_id)->update([
+                            //     'invoice_id'=>$invoice_id,
+                            //     'tender_id'=>$paymentMethodID,
+                            //     'tender_name'=>$tender_name,
+                            //     'payment_status'=>"Paid"
+                            //     ]);
+                        } catch (Exception $e) {
+                            echo 'Caught exception: ',  $e->getMessage(), "\n";
+                        }
+                    }
+                    elseif((floatval($repair_invoice) > floatval($cart->paid)) && $paymentMethodID > 0)
+                    {
+                        $repair_id=$row['repair'];
+                        //echo $repair_id; die();
+                        try {
+
+                            $tabR=InventoryRepair::find($repair_id);
+                            $tabR->invoice_id=$invoice_id;
+                            $tabR->tender_id=$paymentMethodID;
+                            $tabR->tender_name=$tender_name;
+                            $tabR->payment_status="Partial";
+                            $tabR->save();
+
+
+                            // $tab=\DB::table('inventory_repairs')->where('id',$repair_id)->update([
+                            //     'invoice_id'=>$invoice_id,
+                            //     'tender_id'=>$paymentMethodID,
+                            //     'tender_name'=>$tender_name,
+                            //     'payment_status'=>"Paid"
+                            //     ]);
+                        } catch (Exception $e) {
+                            echo 'Caught exception: ',  $e->getMessage(), "\n";
+                        }
+                    }
+                }
+            endforeach;
+
+           //echo floatval($cart->paid)." = ".floatval($repair_invoice);
+
+           //dd($request);
+
+            $parts_rep_json=[];
+            $parts_rep_total=0;
+            foreach($cart->items as $row):
+                $pid=$row['item_id'];
+                $pro=Product::find($pid);
+                if($pro->category_name=="Parts"){
+                    $parts_rep_json[]=['id'=>$pro->id,'name'=>$pro->name,'price'=>$pro->price];
+                    $parts_rep_total+=$pro->price;
+                }
+            endforeach;
+            //dd($repair_invoice);
             $discount_type=$cart->discount_type;
             $discount_amount=$cart->sales_discount;
             if(!empty($discount_type))
@@ -6186,12 +6148,11 @@ class InvoiceController extends Controller
 
             //dd($totalPrice_cart);
 
-            $sqlTender=Tender::find($cart->paymentMethodID);
-            $tender_name="";
+            
+
             $invoiceStatus="Due";
             if(isset($sqlTender))
             {
-                $tender_name=$sqlTender->name?$sqlTender->name:'';
                 if(isset($cart->paid))
                 {
                     if(!empty($cart->paid))
@@ -6246,35 +6207,39 @@ class InvoiceController extends Controller
             }
             
 
+            if($cart->paid > 0)
+            {
+                $tabInPay=new InvoicePayment;
+                $tabInPay->invoice_id=$invoice_id;
+                $tabInPay->customer_id=$cart->customerID;
+                $tabInPay->customer_name=$customer_name;
+                $tabInPay->tender_id=$cart->paymentMethodID;
+                $tabInPay->tender_name=$tender_name;
+                $tabInPay->total_amount=$total_amount_invoice;
+                $tabInPay->paid_amount=$cart->paid;
+                $tabInPay->store_id=$this->sdc->storeID();
+                $tabInPay->created_by=$this->sdc->UserID();
+                $tabInPay->save();
+
+                $this->sdc->log("sales","Invoice Created, Invoice ID : ".$invoice_id);
+
+                RetailPosSummary::where('id',1)
+                ->update([
+                'sales_invoice_quantity' => \DB::raw('sales_invoice_quantity + 1'),
+                'sales_quantity' => \DB::raw('sales_quantity + '.$total_sold_quantity),
+                'sales_amount' => \DB::raw('sales_amount + '.$total_amount_invoice),
+                'sales_cost' => \DB::raw('sales_cost + '.$total_cost_invoice),
+                'sales_profit' => \DB::raw('sales_profit + '.$total_profit_invoice),
+                'product_quantity' => \DB::raw('product_quantity - '.$total_sold_quantity)
+                ]);
+
+                //updateCheckTodaySummary
+                \DB::statement("call updateCheckTodaySummary('".$this->sdc->UserID()."','".$this->sdc->storeID()."','1','".$total_sold_quantity."','".$total_amount_invoice."','".$total_cost_invoice."','".$total_profit_invoice."','".$total_sold_quantity."')");
+
+            }
             
 
-            $tabInPay=new InvoicePayment;
-            $tabInPay->invoice_id=$invoice_id;
-            $tabInPay->customer_id=$cart->customerID;
-            $tabInPay->customer_name=$customer_name;
-            $tabInPay->tender_id=$cart->paymentMethodID;
-            $tabInPay->tender_name=$tender_name;
-            $tabInPay->total_amount=$total_amount_invoice;
-            $tabInPay->paid_amount=$cart->paid;
-            $tabInPay->store_id=$this->sdc->storeID();
-            $tabInPay->created_by=$this->sdc->UserID();
-            $tabInPay->save();
-
-            $this->sdc->log("sales","Invoice Created, Invoice ID : ".$invoice_id);
-
-            RetailPosSummary::where('id',1)
-            ->update([
-               'sales_invoice_quantity' => \DB::raw('sales_invoice_quantity + 1'),
-               'sales_quantity' => \DB::raw('sales_quantity + '.$total_sold_quantity),
-               'sales_amount' => \DB::raw('sales_amount + '.$total_amount_invoice),
-               'sales_cost' => \DB::raw('sales_cost + '.$total_cost_invoice),
-               'sales_profit' => \DB::raw('sales_profit + '.$total_profit_invoice),
-               'product_quantity' => \DB::raw('product_quantity - '.$total_sold_quantity)
-            ]);
-
-            //updateCheckTodaySummary
-            \DB::statement("call updateCheckTodaySummary('".$this->sdc->UserID()."','".$this->sdc->storeID()."','1','".$total_sold_quantity."','".$total_amount_invoice."','".$total_cost_invoice."','".$total_profit_invoice."','".$total_sold_quantity."')");
-
+            
             $edQr=$this->sdc->invoiceEmailTemplate();
             $emaillayoutData=$edQr['editData'];
             $bcc=$emaillayoutData->bcc?$emaillayoutData->bcc:'';
@@ -6366,6 +6331,8 @@ class InvoiceController extends Controller
 
             
 
+                                                   
+
             if(empty($invoice->tender_id))
             {
                 $tender=Tender::find($request->payment_method_id);
@@ -6375,6 +6342,7 @@ class InvoiceController extends Controller
                 $invoice->tender_id=$tender_id;
                 $invoice->tender_name=$tender_name;
                 $invoice->save();
+                
             }
             else
             {
@@ -6384,7 +6352,23 @@ class InvoiceController extends Controller
                 $invoice->save();
             }
 
-            //dd($tender);
+            $invr="";
+            $count_invr=InventoryRepair::where('invoice_id',$request->invoice_id)
+                                        ->where('store_id',$this->sdc->storeID())
+                                        ->count();
+            if($count_invr > 0)
+            {
+                $invr=InventoryRepair::where('invoice_id',$request->invoice_id)
+                                 ->where('store_id',$this->sdc->storeID())
+                                 ->first();
+                $invr->tender_id=$tender->id;
+                $invr->tender_name=$tender->name;   
+                $invr->payment_status=$load_invoice_status;   
+                $invr->save();  
+            }
+             
+
+            //dd($invr);
 
             $total_amount_invoice=$invoice->total_amount;
 

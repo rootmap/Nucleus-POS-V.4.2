@@ -81,6 +81,241 @@
 	<script src="{{url('js/product.js')}}" type="text/javascript"></script>
 	@endif
 
+	@if(isset($parts_js))
+	<script>
+		$(".rep_parts").hide();
+    	$(".rep_repairs").hide();
+
+		$(document).ready(function(){
+			$("#repair_option").change(function(){
+				var repair_options_id=$(this).val();
+				if(repair_options_id.length==0)
+				{
+					$(".rep_parts").hide();
+    				$(".rep_repairs").hide();
+					alert("Please choose repair options."); return false;
+				}
+
+				$(".rep_parts").hide();
+    			$(".rep_repairs").hide();
+				$("#parts_table").html("");
+				$("#parts_table").parent().parent().hide();
+				if(repair_options_id=="repair_parts")
+				{
+					$(".rep_repairs").show();
+					$(".rep_parts").show();
+				}
+				else if(repair_options_id=="repair")
+				{
+    				$(".rep_repairs").show();
+				}
+				else if(repair_options_id=="parts")
+				{
+					
+					$(".rep_parts").show();
+				}
+			});
+		});
+
+		$("#savenaddtoCart").click(function(){
+			$("#directcart").val("1");
+			$("#repair_new_form").submit();
+
+		});
+
+		$('.addNewCustomerPOS').click(function() {
+			$("#NewCustomerDash").modal('show');
+			return false;
+		});
+
+		$("select[name=customer_id]").change(function() {
+			var customerID = $.trim($(this).val());
+			//console.log(customerID);
+			if (customerID.length == 0) {
+				alert("Please select a customer.");
+				return false;
+			} else if (customerID == 0) {
+				$("#NewCustomerDash").modal('show');
+				return false;
+			}
+
+
+			//------------------------Ajax Customer Start-------------------------//
+			var AddCustomerUrl = savenewcustomerAddCustomerPOSUrl + "/" + customerID;
+			$.ajax({
+				'async': false,
+				'type': "POST",
+				'global': false,
+				'dataType': 'json',
+				'url': AddCustomerUrl,
+				'data': { '_token': csrftLarVe },
+				'success': function(data) {
+					//console.log("Assigning custome to cart : " + data)
+				}
+			});
+			//------------------------Ajax Customer End---------------------------//
+		});
+
+		$(".save-new-customer").click(function() {
+
+			var name = $.trim($("input[name=new_customer_name]").val());
+			var phone = $.trim($("input[name=new_customer_phone]").val());
+			var email = $.trim($("input[name=new_customer_email]").val());
+			var address = $.trim($("input[name=new_customer_address]").val());
+			//console.log(name,phone,email,address);
+			if (name.length == 0) {
+				alert("Please select a customer Name.");
+				return false;
+			} else if (phone.length == 0) {
+				alert("Please select a customer Phone Number.");
+				return false;
+			}
+
+			$(".save-new-customer-parent").html(" Processing please wait.....");
+			//------------------------Ajax Customer Start-------------------------//
+			var AddNewCustomerUrl = savenewcustomerAddNewCustomerUrl;
+			$.ajax({
+				'async': false,
+				'type': "POST",
+				'global': false,
+				'dataType': 'json',
+				'url': AddNewCustomerUrl,
+				'data': { 'name': name, 'phone': phone, 'email': email, 'address': address, '_token': csrftLarVe },
+				'success': function(data) {
+					$("select[name=customer_id]").append('<option value="' + data + '">' + name + '</option>');
+					$("select[name=customer_id] option[value='" + data + "']").prop("selected", true);
+
+					//console.log("Saved New Customer : " + data);
+					$("#NewCustomerDash").modal('hide');
+
+					//------------------------Ajax Customer Start-------------------------//
+					var AddCustomerPOSUrl = savenewcustomerAddCustomerPOSUrl + "/" + data;
+					$.ajax({
+						'async': false,
+						'type': "POST",
+						'global': false,
+						'dataType': 'json',
+						'url': AddCustomerPOSUrl,
+						'data': { '_token': csrftLarVe },
+						'success': function(datas) {
+							//console.log("Assigning custome to cart : " + datas)
+						}
+					});
+					//------------------------Ajax Customer End---------------------------//
+				}
+			});
+			//------------------------Ajax Customer End---------------------------//
+		});
+
+
+		function defineRowSR(tag){
+			var sl=1;
+			var total=0;
+			$(tag).each(function(k,r){
+				$(r).children('td:eq(0)').html(sl);
+				sl++;
+				total++;
+			});
+
+			if(total==0)
+			{
+				$("#parts_table").parent().parent().hide();
+			}
+			else
+			{
+				$("#parts_table").parent().parent().show();
+			}
+		}
+
+		function removeParts(id){
+			$("#"+id).remove();
+		}
+
+		$("#parts_table").parent().parent().hide();
+		$(document).ready(function(){
+
+			$('body').on('click','.removeParts',function(){
+				var dataRem=$(this).attr('data-id');
+				$("#"+dataRem).remove();
+				defineRowSR("#parts_table tr");
+			});
+
+			var CustomerConfig = (function () {
+				var CustomerConfig = null;
+					$.ajax({
+						'async': false,
+						'global': false,
+						'url': customer_short_json_url,
+						'dataType': "json",
+						'success': function (data) {
+							CustomerConfig = data;
+						}
+					});
+					return CustomerConfig;
+			})();
+
+			var optCustomerHtml='<option value="">Select Customer</option>';
+			optCustomerHtml+='<option value="'+CustomerConfig.def_id+'">'+CustomerConfig.def_name+'</option>';
+			$.each(CustomerConfig.data,function(key,row){
+				optCustomerHtml+='<option value="'+row.id+'">'+row.name+'</option>';
+			});
+			
+			$("#customer_id").html(optCustomerHtml);
+			$("#customer_id").select2();
+
+			var productPartsConfig = (function () {
+				var productPartsConfig = null;
+					$.ajax({
+						'async': false,
+						'global': false,
+						'url': product_pos_settings_parts_url,
+						'dataType': "json",
+						'success': function (data) {
+							productPartsConfig = data;
+						}
+					});
+					return productPartsConfig;
+			})(); 
+
+			var optHtml='<option value="">Select Repair Parts</option>';
+			$.each(productPartsConfig,function(key,row){
+				optHtml+='<option data-price="'+row.price+'" value="'+row.id+'">'+row.barcode+' - '+row.name+'</option>';
+			});
+			
+			$("#parts_id").html(optHtml);
+			$("#parts_id").select2();
+			console.log('productPartsConfig=',productPartsConfig);
+
+			//parts_table
+			$(".add_pos_parts").click(function(){
+				var parts_id=$("#parts_id").val();
+				console.log(parts_id);
+				var optHtml='';
+				$.each(productPartsConfig,function(key,row){
+					if(row.id==parts_id)
+					{
+						var idgne=Math.floor(Math.random() * 100) + 1;
+						var puslableID="rep_parts_"+row.id+""+idgne;
+						optHtml+='<tr id="'+puslableID+'">';
+							optHtml+='<td>1</td>';
+							optHtml+='<td>'+row.name+'<input type="hidden" name="repair_parts_id[]" value="'+row.id+'" /></td>';
+							optHtml+='<td>'+row.price+'</td>';
+							optHtml+='<td><button data-id="'+puslableID+'" class="btn btn-danger removeParts" type="button"><i class="icon-trash"></i></button></td>';
+						optHtml+='</tr>';
+					}
+					
+				});
+				$("#parts_table").append(optHtml);
+				defineRowSR("#parts_table tr");
+
+
+			});
+
+		});
+
+	</script>
+	@endif
+
 	@if(isset($buyback_customer))
 	<script type="text/javascript">
 	

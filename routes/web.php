@@ -68,6 +68,7 @@ Route::group(['middleware' => ['auth', 'ssl']], function () {
 
 	//====================== Json Record Parse =======================//
 	Route::get('/product-config/json', 'InvoiceController@productConfigjson');
+	Route::get('/parts-config/json', 'InvoiceController@partsConfigjson');
 	Route::get('/analytical/repair/json', 'RetailPosSummaryController@analyticsRepairInventory');
 	Route::get('/analytical/salesvsbuyback/json', 'RetailPosSummaryController@analyticsSalesNBuyback');
 	Route::get('/analytical/salesvsprofit/json', 'RetailPosSummaryController@analyticsSalesvsProfit');
@@ -398,6 +399,7 @@ Route::group(['middleware' => ['auth', 'ssl']], function () {
 	Route::get('/sales', 'InvoiceController@index');
 	Route::post('/slide-menu/slide/status', 'InvoiceController@slide');
 	Route::get('/pos', 'InvoiceController@pos');
+	Route::post('/non-inventory/repair/pos', 'ProductController@non_inventory_repair_pos');
 	Route::get('/pos/clear', 'InvoiceController@posclear');
 	Route::post('/open/store', 'InvoiceController@openStore');
 	Route::post('/cart/pos/payout', 'InvoiceController@savePayout');
@@ -557,12 +559,34 @@ Route::group(['middleware' => ['auth', 'ssl']], function () {
 	Route::get('/repair/delete/{id}', 'InStoreRepairController@destroy');
 	Route::post('/repair/ajax/{id}', 'InStoreRepairController@repairAjaxUpdate');
 	Route::post('/repair/product/ajax', 'ProductController@storeRepairAjax');
-	Route::get('/repair/create', 'InStoreRepairController@createR');
+	// Route::get('/repair/create', function(){
+	// 	return redirect(url('pos'));
+	// });
+	// Route::get('/repair/create', 'InStoreRepairController@createR');
+	Route::get('/repair/create', 'InStoreRepairController@createRepairs');
 	Route::get('/repair/view/{repair_id}', 'InStoreRepairController@show');
-	Route::post('/repair/save', 'InStoreRepairController@storeR');
+	//Route::post('/repair/save', 'InStoreRepairController@storeR');
+	Route::post('/repair-save', 'InStoreRepairController@storeR');
+	Route::post('/repair-save-cart', 'InStoreRepairController@storeRCrT');
+	Route::get('/repair-list', 'InStoreRepairController@indexR');
+	Route::get('/repair-delete/{id}', 'InStoreRepairController@destroyR');
+	Route::get('/repair-view/{repair_id}', 'InStoreRepairController@showR');
+	Route::post('/repair-data/json', 'InStoreRepairController@RepairInfojson');
+	Route::get('/customer/short/json', 'CustomerController@userJsonList');
+
 	Route::post('/repair/info/pos/ajax', 'InStoreRepairController@posInfostore');
+	
+	Route::get('/non-inventory/repair/report', 'InStoreRepairController@noninventoryrepairreport');
+	Route::post('/non-inventory/repair/report', 'InStoreRepairController@noninventoryrepairreport');
+	Route::post('/non-inventory/repair/report/data/json', 'InStoreRepairController@noninventoryRepairReportPrjson');
+	Route::post('/non-inventory/repair/excel/report', 'InStoreRepairController@noninventoryexportExcel');
+	Route::post('/non-inventory/repair/pdf/report', 'InStoreRepairController@noninventoryexportPDF');
+
+
+
 	Route::get('/repair/list', 'InStoreRepairController@index');
 	Route::post('/repair/data/json', 'InStoreRepairController@datatableInstoreRepairjson');
+	
 	Route::get('/repair/report', 'InStoreRepairController@report');
 	Route::post('/repair/report/data/json', 'InStoreRepairController@InstoreRepairReportPrjson');
 	Route::post('/repair/report', 'InStoreRepairController@report');
@@ -570,7 +594,9 @@ Route::group(['middleware' => ['auth', 'ssl']], function () {
 	Route::post('/repair/pdf/report', 'InStoreRepairController@exportPDF');
 	//Route::get('/sales/invoice/print/pdf/{invoice_id}', 'InvoiceController@invoicePDF');
 	Route::get('/repair/print/{repair_id}', 'InStoreRepairController@showRepairPDF');
+	Route::get('/repair-print/{repair_id}', 'InStoreRepairController@showRepairPDFR');
 	Route::get('/pos/repair/{repair_id}', 'InvoiceProductController@RepairPOS');
+	Route::get('/pos-repair/{repair_id}', 'InvoiceProductController@RepairPOSR');
 	Route::get('/pos/repair/partial/{repair_id}', 'InvoiceProductController@partialRepairPOS');
 	Route::get('/settings/instore/device/list', 'InStoreRepairController@deviceList');
 	Route::get('/settings/instore/device/edit/{id}', 'InStoreRepairDeviceController@edit');
@@ -596,7 +622,10 @@ Route::group(['middleware' => ['auth', 'ssl']], function () {
 	Route::get('/ticket/delete/{id}', 'InStoreTicketController@destroy');
 	Route::post('/ticket/ajax/{id}', 'InStoreTicketController@ticketAjaxUpdate');
 	Route::get('/ticket/view/{ticket_id}', 'InStoreTicketController@show');
-	Route::get('/ticket/create', 'InStoreTicketController@create');
+	Route::get('/ticket/create',  function(){
+		return redirect(url('pos'));
+	});
+	// Route::get('/ticket/create', 'InStoreTicketController@create');
 	Route::post('/ticket/save', 'InStoreTicketController@store');
 	Route::post('/ticket/info/pos/ajax', 'InStoreTicketController@posInfostore');
 	Route::get('/ticket/list', 'InStoreTicketController@index');

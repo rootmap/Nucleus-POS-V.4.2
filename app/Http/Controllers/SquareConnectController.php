@@ -10,6 +10,7 @@ use App\Customer;
 use App\Tender;
 use App\InvoicePayment;
 use App\PartialPayment;
+use App\InventoryRepair;
 use Illuminate\Http\Request;
 use DB;
 
@@ -428,6 +429,20 @@ class SquareConnectController extends Controller
             $invoice->tender_id = $tenderData->id;
             $invoice->tender_name = $tenderData->name;
             $invoice->save();
+
+            $count_invr=InventoryRepair::where('invoice_id',$invoice_id)
+                                        ->where('store_id',$this->sdc->storeID())
+                                        ->count();
+            if($count_invr > 0)
+            {
+                $invr=InventoryRepair::where('invoice_id',$invoice_id)
+                                ->where('store_id',$this->sdc->storeID())
+                                ->first();
+                $invr->tender_id=$tenderData->id;
+                $invr->tender_name=$tenderData->name;   
+                $invr->payment_status=$load_invoice_status;   
+                $invr->save();  
+            }
 
 
             $chkTicketInvoice = \DB::table('in_store_tickets')->where('store_id', $this->sdc->storeID())->where('invoice_id', $invoice_id)->count();

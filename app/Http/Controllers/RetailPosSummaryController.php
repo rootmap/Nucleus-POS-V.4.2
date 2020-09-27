@@ -12,6 +12,7 @@ use App\InStoreTicket;
 use App\InvoiceProduct;
 use App\Invoice;
 use App\Buyback;
+use App\InventoryRepair;
 use Illuminate\Http\Request;
 use Auth;
 class RetailPosSummaryController extends Controller
@@ -42,7 +43,7 @@ class RetailPosSummaryController extends Controller
         $Todaydate=date('Y-m-d');
         \DB::statement("call todaySystemSummaryStatus('".$this->sdc->UserID()."','".$this->sdc->storeID()."')");
 
-        \DB::statement("call defaultTicketNRepairCreate('".$this->sdc->UserID()."','".$this->sdc->storeID()."')");
+        \DB::statement("call defaultPartsCreate('".$this->sdc->UserID()."','".$this->sdc->storeID()."')");
         
         $tabToday=RetailPosSummaryDateWise::whereRaw('report_date=CAST(now() as date)')
                                             ->where('store_id',$this->sdc->storeID())
@@ -68,6 +69,15 @@ class RetailPosSummaryController extends Controller
                                     ->limit(24)
                                     ->get();
 
+        $InventoryRepairGet=InventoryRepair::whereDate('created_at', '=', $Todaydate)->get();
+        $total_repair_found=0;
+        $total_parts_found=0;
+
+        foreach ($InventoryRepairGet as $key => $row) {
+            $total_repair_found+=1;
+            $total_parts_found+=$row->total_parts;
+        }
+
         $product=Product::where('store_id',$this->sdc->storeID())->orderBy('sold_times','DESC')->limit(8)->get();
         return view('apps.pages.dashboard.index',[
             'dash'=>$dash,
@@ -78,6 +88,8 @@ class RetailPosSummaryController extends Controller
             'invTotalSales'=>$invTotalSales,
             'invTotalProfit'=>$invTotalProfit,
             'invTotalcost'=>$invTotalcost,
+            'total_repair_found'=>$total_repair_found,
+            'total_parts_found'=>$total_parts_found,
         ]);
 
         }

@@ -30,6 +30,23 @@ class CustomerController extends Controller
         $this->sdc = new StaticDataController(); 
     }
 
+    public function userJsonList()
+    {
+        if(Auth::user()->user_type==1)
+        {
+            $user = Customer::select('id','name')->where('name','!=','Default Customer')->where('store_id',$this->sdc->storeID())->take(50)->get();
+            $getDef=Customer::select('id','name')->where('name','Default Customer')->where('store_id',$this->sdc->storeID())->orderBy('id','DESC')->first();
+        }
+        else
+        {
+            $user = Customer::select('id','name')->where('name','!=','Default Customer')->where('store_id',$this->sdc->storeID())->orderBy('name','ASC')->get();
+            $getDef=Customer::select('id','name')->where('name','Default Customer')->where('store_id',$this->sdc->storeID())->orderBy('id','DESC')->first();
+        }
+
+        $responseArray=array('data'=>$user,'def_id'=>$getDef->id,'def_name'=>$getDef->name);
+        return response()->json($responseArray);
+    }
+
     public function user()
     {
         if(Auth::user()->user_type==1)

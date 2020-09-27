@@ -168,7 +168,7 @@
             @endif  --}}
 
             @if(in_array('sprepairnticket', $dataMenuAssigned))
-            <!-- Start navigation - frontend themes -->
+
             <li class="submenu">
                 <a href="javascript:void(0);">
                     <span class="icon">
@@ -181,17 +181,12 @@
                 </a>
                 <ul>
                     @if(in_array('repair/create', $dataMenuAssigned))
-                    <li class="{{ Request::path() == 'repair/create' ? 'active' : '' }}  border-bottom-purple"><a href="{{url('repair/create')}}" class="menu-item">New Inventory Repair</a></li>
+                    <li class="{{ Request::path() == 'repair/create' ? 'active' : '' }}  border-bottom-purple"><a href="{{url('repair/create')}}" class="menu-item">New Repair</a></li>
                     @endif
                     @if(in_array('repair/list', $dataMenuAssigned))
-                    <li class="{{ Request::path() == 'repair/list' ? 'active' : '' }}  border-bottom-purple"><a href="{{url('repair/list')}}" class="menu-item">Inventory Repair Data</a></li>
+                    <li class="{{ Request::path() == 'repair-list' ? 'active' : '' }}  border-bottom-purple"><a href="{{url('repair-list')}}" class="menu-item">Repair List Data</a></li>
                     @endif
-                    @if(in_array('ticket/create', $dataMenuAssigned))
-                    <li class="{{ Request::path() == 'ticket/create' ? 'active' : '' }}  border-bottom-purple"><a href="{{url('ticket/create')}}" class="menu-item">New Non-Inventory Repair</a></li>
-                    @endif
-                    @if(in_array('ticket/list', $dataMenuAssigned))
-                    <li class="{{ Request::path() == 'ticket/list' ? 'active' : '' }}  border-bottom-purple"><a href="{{url('ticket/list')}}" class="menu-item">Non-Inventory Repair Data</a></li>
-                    @endif
+           
                 </ul>
             </li>
             @endif 
@@ -384,6 +379,9 @@
                     @endif 
                     @if(in_array('paypal/payment/report', $dataMenuAssigned))
                     <li class="{{ Request::path() == '/repair/report' ? 'active' : '' }} border-bottom-purple"><a href="{{url('/repair/report')}}" class="menu-item">Repair Report</a></li>
+                    @endif 
+                    @if(in_array('non-inventory/repair/report', $dataMenuAssigned))
+                    <li class="{{ Request::path() == '/non-inventory/repair/report' ? 'active' : '' }} border-bottom-purple"><a href="{{url('/non-inventory/repair/report')}}" class="menu-item">Non-In. Repair Report</a></li>
                     @endif 
                     @if(in_array('lcd/status/report', $dataMenuAssigned))
                     <li class="{{ Request::path() == '/lcd/status/report' ? 'active' : '' }} border-bottom-purple"><a href="{{url('/lcd/status/report')}}" class="menu-item">Repair LCD Report</a></li>
@@ -695,6 +693,35 @@
                 </a>
             </li>
             <!--/ End documentation - api documentation -->
+
+            @if(in_array('sprepairnticket', $dataMenuAssigned))
+            <!-- Start navigation - frontend themes -->
+            <li class="submenu">
+                <a href="javascript:void(0);">
+                    <span class="icon">
+                        <i style="font-size: 20px; color: #fff;" class="fa icon-rtmat">
+                <span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span>
+                        </i>
+                    </span>
+                    <span class="text">Old Repair</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul>
+                    {{-- @if(in_array('repair/create', $dataMenuAssigned))
+                    <li class="{{ Request::path() == 'repair/create' ? 'active' : '' }}  border-bottom-purple"><a href="{{url('repair/create')}}" class="menu-item">New Inventory Repair</a></li>
+                    @endif --}}
+                    @if(in_array('repair/list', $dataMenuAssigned))
+                    <li class="{{ Request::path() == 'repair/list' ? 'active' : '' }}  border-bottom-purple"><a href="{{url('repair/list')}}" class="menu-item">Inventory Repair Data</a></li>
+                    @endif
+                    {{-- @if(in_array('ticket/create', $dataMenuAssigned))
+                    <li class="{{ Request::path() == 'ticket/create' ? 'active' : '' }}  border-bottom-purple"><a href="{{url('ticket/create')}}" class="menu-item">New Non-Inventory Repair</a></li>
+                    @endif --}}
+                    @if(in_array('ticket/list', $dataMenuAssigned))
+                    <li class="{{ Request::path() == 'ticket/list' ? 'active' : '' }}  border-bottom-purple"><a href="{{url('ticket/list')}}" class="menu-item">Non-Inventory Repair Data</a></li>
+                    @endif
+                </ul>
+            </li>
+            @endif 
 
         </ul><!-- /.sidebar-menu -->
         <!--/ End left navigation - menu -->

@@ -2409,7 +2409,8 @@ $(document).ready(function() {
 
         var taxRate = taxRatePOSCartInit;
 
-        if ($("#dataCart tr").length > 0) {
+        if ($("#dataCart tr").length > 0) 
+        {
 
 
 
@@ -2564,3 +2565,5 @@ $(document).ready(function() {
     });
 
 });
+
+import('./parts.js');

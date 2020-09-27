@@ -83,8 +83,11 @@
 								<thead>
 									<tr>
 										<th width="100">SL</th>
+										<th>Barcode</th>
 										<th>Product Name</th>
-										<th width="150">Quantity in Stock</th>
+										<th width="150">Quantity For Stock</th>
+										<th>Purchase Cost</th>
+										<th>Sell Price</th>
 										<th width="50">Action</th>
 									</tr>
 								</thead>
@@ -98,7 +101,11 @@
 										@foreach($order_product as $index=>$row)
 											<tr id="row_{{$dataLoop}}">
 												<td width="100" class="sl">{{$dataLoop}}</td>
+												<td>{{$row->product_barcode}}</td>
 												<td>{{$row->product_name}}</td>
+												
+												
+												
 												<td width="150">
 													<input type="hidden" name="sid[]" class="form-control" value="{{$row->id}}">
 													<input type="hidden" name="pid[]" class="form-control" value="{{$row->product_id}}">
@@ -106,8 +113,10 @@
 													<input type="hidden" name="price[]" class="form-control" value="{{$row->price}}">
 													<input type="number" name="quantity[]" class="form-control typed_quantity" id="number" value="{{$row->quantity}}">
 												</td>
+												<td>{{$row->cost}}</td>
+												<td>{{$row->price}}</td>
 												<td width="50">
-													<button type="button" data-id="1" class="btn btn-sm btn-green close-row" onclick="removeRowCart(<?=$dataLoop?>)">
+													<button type="button" data-id="1" class="btn btn-sm btn-info close-row" onclick="removeRowCart(<?=$dataLoop?>)">
 														<i class="icon-cross"></i>
 													</button>
 												</td>
@@ -140,8 +149,8 @@
 		<!-- Invoice Footer -->
 		<div id="invoice-footer">
 			<div class="row">
-				<div class="col-md-12 col-sm-12 text-xs-center">
-					<button type="button" id="invoiceSubmit" class="btn btn-green"  @if($userguideInit==1) data-step="3" data-intro="When click this button then update your stockin order detail." @endif>
+				<div class="col-md-12 col-sm-12 text-xs-center" @if($userguideInit==1) data-step="1" data-intro="When click this button then update your stockin order detail." @endif>
+					<button type="button" id="invoiceSubmit" class="btn btn-info">
 						<i class="icon-download"></i>  Modify Stockin Order Detail 
 					</button>
 				</div>
