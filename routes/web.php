@@ -35,7 +35,6 @@ Route::post('bolt/token', 'CardPointeeController@boltGenarateNewToken');
 Route::get('/cardpointe/test', 'CardPointeeController@testM');
 //-----------------Cardpointe End-------------------||
 
-// Route::get('/form', 'HomeController@form')->name('form');
 Route::get('/form', 'HomeController@form')->name('form');
 Route::get('/paypal', 'InvoiceController@paypal');
 Route::post('/paypal', 'InvoiceController@paywithpaypal');
@@ -43,12 +42,9 @@ Route::get('/paypal/{status}', 'InvoiceController@getPaymentStatus');
 Route::get('invoice/payment/paypal/{invoice_id}/{status}', 'InvoiceController@getPaymentStatusPaypal');
 Route::get('/invoice/paypal/{invoice_id}', 'InvoiceController@paywithpaypalInvoice');
 Route::get('/reset', 'HomeController@reset')->name('reset');
-//Route::get('/register', 'HomeController@register')->name('register');
 Route::get('/product', 'HomeController@product')->name('product');
 Route::get('/productinventory', 'HomeController@productinventory')->name('productinventory');
-//Route::get('/customer', 'HomeController@customer')->name('customer');
 Route::get('/addsales', 'HomeController@addsales')->name('addsales');
-// Route::get('/calculatevariance', 'HomeController@calculatevariance')->name('calculatevariance');
 Route::get('/invoice', 'HomeController@invoice')->name('invoice');
 Route::get('/profitList', 'HomeController@profitList')->name('profitList');
 Route::get('invoice/template', 'HomeController@invoicetemplate')->name('invoicetemplate');
@@ -58,14 +54,9 @@ Route::get('setting', 'HomeController@setting')->name('setting');
 Route::get('DemoDashboard', 'HomeController@DemoDashboard')->name('DemoDashboard');
 Route::get('chart', 'HomeController@chart');
 Route::get('coming-soon', 'HomeController@soon');
-//Route::get('pdf', 'InvoiceProfitController@testPDF');
-
 Route::get('pdf', 'InvoiceController@GenaratePDF');
 Route::post('check/idle/user', 'ActivityController@idleCheck');
-
 Route::group(['middleware' => ['auth', 'ssl']], function () { 
-
-
 	//====================== Json Record Parse =======================//
 	Route::get('/product-config/json', 'InvoiceController@productConfigjson');
 	Route::get('/parts-config/json', 'InvoiceController@partsConfigjson');
@@ -75,7 +66,6 @@ Route::group(['middleware' => ['auth', 'ssl']], function () {
 	Route::get('/analytical/top/cashier/products/json', 'RetailPosSummaryController@analyticsTopCashierProducts');
 	Route::get('/analytical/topproducts/json', 'RetailPosSummaryController@analyticsTopProducts');
 	Route::get('/analytical/salesninventory/json', 'RetailPosSummaryController@analyticsTodaySalesnTotalInventory');
-
 	//======================== Search In Nucleus Start =================//
 	Route::get('/search-nucleus', 'SearchSiteController@search');
 	Route::post('/search-nucleus', 'SearchSiteController@search');
@@ -587,6 +577,14 @@ Route::group(['middleware' => ['auth', 'ssl']], function () {
 	Route::get('/repair/list', 'InStoreRepairController@index');
 	Route::post('/repair/data/json', 'InStoreRepairController@datatableInstoreRepairjson');
 	
+	Route::get('/repair-report', 'InStoreRepairController@rep_report');
+	Route::post('/repair-report', 'InStoreRepairController@rep_report');
+	Route::post('/repair-report/data/json', 'InStoreRepairController@rep_RepairReportjson');
+
+	Route::post('/repair-report/excel/report', 'InStoreRepairController@rep_exportExcel');
+	Route::post('/repair-report/pdf/report', 'InStoreRepairController@rep_exportPDF');
+
+
 	Route::get('/repair/report', 'InStoreRepairController@report');
 	Route::post('/repair/report/data/json', 'InStoreRepairController@InstoreRepairReportPrjson');
 	Route::post('/repair/report', 'InStoreRepairController@report');
@@ -595,6 +593,8 @@ Route::group(['middleware' => ['auth', 'ssl']], function () {
 	//Route::get('/sales/invoice/print/pdf/{invoice_id}', 'InvoiceController@invoicePDF');
 	Route::get('/repair/print/{repair_id}', 'InStoreRepairController@showRepairPDF');
 	Route::get('/repair-print/{repair_id}', 'InStoreRepairController@showRepairPDFR');
+
+
 	Route::get('/pos/repair/{repair_id}', 'InvoiceProductController@RepairPOS');
 	Route::get('/pos-repair/{repair_id}', 'InvoiceProductController@RepairPOSR');
 	Route::get('/pos/repair/partial/{repair_id}', 'InvoiceProductController@partialRepairPOS');

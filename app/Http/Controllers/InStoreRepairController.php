@@ -160,8 +160,7 @@ class InStoreRepairController extends Controller
 
                             return $query;
                           })
-
-                     ->skip($start)->take($length)->get();
+                          ->skip($start)->take($length)->get();
         return $tab;
     }
 
@@ -211,207 +210,6 @@ class InStoreRepairController extends Controller
 
         return view('apps.pages.repair.list',compact('invoice'));
     }
-
-    // public function storeR(Request $request)
-        // {
-        //     $repairArray=$_POST;
-        //     $device_id=$request->device_id;
-        //     $model_id=$request->model_id;
-        //     $problem_id=$request->problem_id;
-
-        //     $device_info=\DB::table('in_store_repair_devices')->where('id',$device_id)->first();
-        //     $device_name=$device_info->name;
-
-        //     $model_info=\DB::table('in_store_repair_models')->where('id',$model_id)->first();
-        //     $model_name=$model_info->name;
-
-        //     $problem_info=\DB::table('in_store_repair_problems')->where('id',$problem_id)->first();
-        //     $problem_name=$problem_info->name;
-
-        //     $price=0;
-        //     if(!empty($repairArray['override_repair_price']))
-        //     {
-        //         $price=$repairArray['override_repair_price'];
-        //     }
-        //     else
-        //     {
-        //         $price=$repairArray['repair_price'];
-        //     }
-
-        //     //defining product
-        //     $product_name=$device_name.", ".$model_name." - ".$problem_name;
-        //     //var productName=new_device+", "+new_model+" - "+new_problem;
-        //     $catID=0;
-        //     $catName="";
-        //     $catInfoCount=Category::where('store_id',$this->sdc->storeID())->where('name','Inventory Repair')->count();
-        //     if($catInfoCount>0)
-        //     {
-        //         $catInfo=Category::where('store_id',$this->sdc->storeID())->where('name','Inventory Repair')->first();
-        //         $catID=$catInfo->id;
-        //         $catName=$catInfo->name;
-        //     }
-
-        //     $checkExProduct=Product::where('name',$product_name)
-        //                            ->where('category_id',$catID)
-        //                            ->where('category_name',$catName)
-        //                            ->where('store_id',$this->sdc->storeID())
-        //                            ->count();
-
-        //     if($checkExProduct==0)
-        //     {
-        //         $checkExProduct_wcid=Product::where('name',$product_name)
-        //                            //->where('category_id',$catID)
-        //                            ->where('category_name',$catName)
-        //                            ->where('store_id',$this->sdc->storeID())
-        //                            ->count();
-
-        //         if($checkExProduct_wcid>0)
-        //         {
-        //             $checkExProduct_wcid_data=Product::where('name',$product_name)
-        //                                        //->where('category_id',$catID)
-        //                                        ->where('category_name',$catName)
-        //                                        ->where('store_id',$this->sdc->storeID())
-        //                                        ->first();
-        //             $checkExProduct_wcid_data->category_id=$catID;
-        //             $checkExProduct_wcid_data->save();
-
-
-        //             $checkExProduct=$checkExProduct_wcid;
-        //         }
-        //     }
-
-        //     //echo $checkExProduct; die();
-
-        //     if($checkExProduct>0)
-        //     {
-        //         $tab=Product::where('name',$product_name)
-        //                     //->where('general_sale',0)
-        //                     //->where('category_id',$catID)
-        //                     ->where('category_name',$catName)
-        //                     ->where('store_id',$this->sdc->storeID())
-        //                     ->first();
-        //     }
-        //     else
-        //     {
-        //         $tab=new Product;
-        //         $tab->name=$product_name;
-        //         $tab->detail=$product_name;
-        //         $tab->quantity=1;
-        //         $tab->category_id=$catID;
-        //         $tab->category_name=$catName;
-        //         $tab->price=$price;
-        //         $tab->cost=$price;
-        //         $tab->general_sale=0;
-        //         $tab->store_id=$this->sdc->storeID();
-        //         $tab->created_by=$this->sdc->UserID();
-        //         $tab->save();
-        //     }
-
-        //     $pid=$tab->id;
-
-        //     $customer_id=$request->customer_id;
-
-        //     //dd($request);
-        //     if($customer_id=="CR000")
-        //     {
-        //         $this->validate($request,[
-        //             'full_name'=>'required',
-        //             //'address'=>'required',
-        //             'phone'=>'required',
-        //             //'email'=>'required'
-        //         ]);
-
-        //         $cusInfo=new Customer;
-        //         $cusInfo->name=$request->full_name;
-        //         $cusInfo->address=$request->address;
-        //         $cusInfo->phone=$request->phone;
-        //         $cusInfo->email=$request->email;
-        //         $cusInfo->store_id=$this->sdc->storeID();
-        //         $cusInfo->created_by=$this->sdc->UserID();
-        //         $cusInfo->save();
-        //         $customer_id=$cusInfo->id;
-        //     }
-        //     else
-        //     {
-        //         $cusInfo=Customer::find($customer_id);
-        //     }
-
-
-            
-        //     $customerName=$cusInfo->name;
-
-        //     //defining product
-
-        //     $tab=new InStoreRepair();
-        //     $tab->customer_id=$customer_id;
-        //     $tab->customer_name=$customerName;
-        //     $tab->device_id=$repairArray['device_id'];
-        //     $tab->device_name=$device_name;
-        //     $tab->model_id=$repairArray['model_id'];
-        //     $tab->model_name=$model_name;
-        //     $tab->problem_id=$repairArray['problem_id'];
-        //     $tab->problem_name=$problem_name;
-        //     $tab->price=$price;
-        //     $tab->repair_price=$repairArray['repair_price'];
-        //     $tab->override_repair_price=$repairArray['override_repair_price'];
-        //     $tab->password=$repairArray['repair_password'];
-        //     $tab->imei=$repairArray['repair_imei'];
-        //     $tab->tested_before_by=$repairArray['repair_tested_before_by'];
-        //     $tab->tested_after_by=$repairArray['repair_tested_after_by'];
-        //     $tab->tech_notes=$repairArray['repair_tech_notes'];
-        //     $tab->how_did_you_hear_about_us=$repairArray['repair_how_did_you_hear_about_us'];
-        //     $tab->start_time=$repairArray['repair_start_time'];
-        //     $tab->end_time=$repairArray['repair_end_time'];
-        //     if(isset($repairArray['repair_salvage_part']))
-        //     {
-        //         $tab->salvage_part=$repairArray['repair_salvage_part'];
-        //     }
-            
-
-        //     unset($repairArray['repairPage']);
-        //     unset($repairArray['_token']);
-        //     unset($repairArray['customer_id']);
-        //     unset($repairArray['full_name']);
-        //     unset($repairArray['address']);
-        //     unset($repairArray['phone']);
-        //     unset($repairArray['email']);
-        //     unset($repairArray['device_id']);
-        //     unset($repairArray['model_id']);
-        //     unset($repairArray['problem_id']);
-        //     unset($repairArray['repair_price']);
-        //     unset($repairArray['override_repair_price']);
-        //     unset($repairArray['repair_password']);
-        //     unset($repairArray['repair_imei']);
-        //     unset($repairArray['repair_tested_before_by']);
-        //     unset($repairArray['repair_tested_after_by']);
-        //     unset($repairArray['repair_tech_notes']);
-        //     unset($repairArray['repair_how_did_you_hear_about_us']);
-        //     unset($repairArray['repair_start_time']);
-        //     unset($repairArray['repair_end_time']);
-        //     if(isset($repairArray['repair_salvage_part']))
-        //     {
-        //         unset($repairArray['repair_salvage_part']);
-        //     }
-        //     $repair_json=json_encode($repairArray);
-
-        //     $productInfo=Product::find($pid);
-        //     $our_cost=$productInfo->cost;
-            
-        //     $tab->repair_json=$repair_json;
-        //     $tab->invoice_id=0;
-        //     $tab->product_id=$pid;
-        //     $tab->product_name=$productInfo->name;
-        //     $tab->our_cost=$our_cost;
-        //     $tab->payment_status="Pending";
-        //     $tab->store_id=$this->sdc->storeID();
-        //     $tab->created_by=$this->sdc->UserID();
-        //     $tab->save();
-        //     $repairIDs=$tab->id;
-
-        //     \DB::statement("call updateDailyRepair('".$this->sdc->UserID()."','".$this->sdc->storeID()."')");
-
-        //     return redirect('repair/view/'.$repairIDs)->with('status', 'Repair Detail Added Successfully !');
-    // }
 
     public function non_inventory_repair_pos($request)
     {
@@ -508,7 +306,7 @@ class InStoreRepairController extends Controller
                 $tab->customer_name=$customer->name;
                 $tab->total_parts=$total_parts;
                 $tab->parts_json=$parts_json;
-                $tab->repair_type="Repair";
+                $tab->repair_type="Repair Parts";
                 $tab->device=$request->device;
                 $tab->problem_type=$request->problem_type;
                 $tab->cost=$request->cost;
@@ -661,7 +459,7 @@ class InStoreRepairController extends Controller
                 $tab->customer_name=$customer->name;
                 $tab->total_parts=$total_parts;
                 $tab->parts_json=$parts_json;
-                $tab->repair_type="Repair";
+                $tab->repair_type="Repair Parts";
                 $tab->device=$request->device;
                 $tab->problem_type=$request->problem_type;
                 $tab->cost=$request->cost;
@@ -1304,6 +1102,7 @@ class InStoreRepairController extends Controller
                      ->when($dateString, function ($query) use ($dateString) {
                             return $query->whereRaw($dateString);
                      })
+                     ->orderBy('inventory_repairs.id','DESC')
                      ->get();
         }
 
@@ -1325,6 +1124,523 @@ class InStoreRepairController extends Controller
                 'end_date'=>$end_date
             ]);
     }
+
+
+
+
+
+    
+    public function rep_report(Request $request)
+    {
+        $invoice_id='';
+        if(isset($request->invoice_id))
+        {
+            $invoice_id=$request->invoice_id;
+        }
+
+        $customer_id='';
+        if(isset($request->customer_id))
+        {
+            $customer_id=$request->customer_id;
+        }
+
+        $repair_option='';
+        if(isset($request->repair_option))
+        {
+            $repair_option=$request->repair_option;
+        }
+
+
+        $start_date='';
+        if(isset($request->start_date))
+        {
+            $start_date=$request->start_date;
+        }
+
+        $end_date='';
+        if(isset($request->end_date))
+        {
+            $end_date=$request->end_date;
+        }
+
+        if(empty($start_date) && !empty($end_date))
+        {
+            $start_date=$end_date;
+        }
+
+        if(!empty($start_date) && empty($end_date))
+        {
+            $end_date=$start_date;
+        }
+
+        $dateString='';
+        if(!empty($start_date) && !empty($end_date))
+        {
+            $dateString="CAST(lsp_inventory_repairs.created_at as date) BETWEEN '".$start_date."' AND '".$end_date."'";
+        }
+
+        if(empty($invoice_id) && empty($customer_id) && empty($start_date) && empty($end_date) && empty($repair_option) && empty($dateString))
+        {
+            $invoice=array();
+        }
+        else
+        {
+            
+            $invoice=InventoryRepair::leftjoin('invoices','inventory_repairs.invoice_id','=','invoices.invoice_id')
+                     ->select('inventory_repairs.id',
+                     'inventory_repairs.product_name',
+                     'inventory_repairs.payment_status',
+                     'inventory_repairs.customer_id',
+                     'inventory_repairs.customer_name',
+                     'inventory_repairs.total_parts',
+                     'inventory_repairs.parts_json',
+                     'inventory_repairs.repair_type',
+                     'inventory_repairs.cost',
+                     'inventory_repairs.price',
+                     'inventory_repairs.device',
+                     'inventory_repairs.problem_type',
+                     'inventory_repairs.imei',
+                     'inventory_repairs.password',
+                     'inventory_repairs.notes',
+                     'inventory_repairs.invoice_id',
+                     'inventory_repairs.created_at',
+                     'invoices.invoice_status')
+                     ->where('inventory_repairs.store_id',$this->sdc->storeID())
+                     ->when($invoice_id, function ($query) use ($invoice_id) {
+                            return $query->where('inventory_repairs.invoice_id','=', $invoice_id);
+                     })
+                     ->when($customer_id, function ($query) use ($customer_id) {
+                            return $query->where('inventory_repairs.customer_id','=', $customer_id);
+                     })
+                     ->when($repair_option, function ($query) use ($repair_option) {
+                            return $query->where('inventory_repairs.repair_type','=', $repair_option);
+                     })
+                     ->when($dateString, function ($query) use ($dateString) {
+                            return $query->whereRaw($dateString);
+                     })
+                     ->get();
+
+        }          
+
+        $tab_customer=Customer::where('store_id',$this->sdc->storeID())->get();
+
+        return view('apps.pages.report.repair-report',
+            [
+                'customer'=>$tab_customer,
+                'repair_option'=>$repair_option,
+                'invoice'=>$invoice,
+                'invoice_id'=>$invoice_id,
+                'customer_id'=>$customer_id,
+                'start_date'=>$start_date,
+                'end_date'=>$end_date
+            ]);
+    }
+
+    private function rep_RepairReportCount($search=''){
+        $paramString="";
+        if(!empty($search))
+        {
+            $paramString="(customer_name like '%".$search."%'";
+            $paramString.=" OR repair_type like '%".$search."%'";
+            $paramString.=" OR device like '%".$search."%'";
+            $paramString.=" OR problem_type like '%".$search."%'";
+            $paramString.=" OR imei like '%".$search."%'";
+            $paramString.=" OR invoice_id like '%".$search."%'";
+            $paramString.=" OR product_name like '%".$search."%')";
+        }
+        
+        $tab=InventoryRepair::leftjoin('invoices','inventory_repairs.invoice_id','=','invoices.invoice_id')
+                                ->select('inventory_repairs.id',
+                                'inventory_repairs.product_name',
+                                'inventory_repairs.payment_status',
+                                'inventory_repairs.customer_id',
+                                'inventory_repairs.customer_name',
+                                'inventory_repairs.total_parts',
+                                'inventory_repairs.parts_json',
+                                'inventory_repairs.repair_type',
+                                'inventory_repairs.cost',
+                                'inventory_repairs.price',
+                                'inventory_repairs.device',
+                                'inventory_repairs.problem_type',
+                                'inventory_repairs.imei',
+                                'inventory_repairs.password',
+                                'inventory_repairs.notes',
+                                'inventory_repairs.invoice_id',
+                                'inventory_repairs.created_at',
+                                'invoices.invoice_status')
+                                ->where('inventory_repairs.store_id',$this->sdc->storeID())
+                                ->when($paramString, function ($query) use ($paramString) {
+                                        return $query->whereRaw($paramString);
+                                })
+                                ->count();
+        return $tab;
+    }
+
+    private function rep_RepairReport($start, $length,$search=''){
+
+        $paramString="";
+        if(!empty($search))
+        {
+            $paramString="(customer_name like '%".$search."%'";
+            $paramString.=" OR repair_type like '%".$search."%'";
+            $paramString.=" OR device like '%".$search."%'";
+            $paramString.=" OR problem_type like '%".$search."%'";
+            $paramString.=" OR imei like '%".$search."%'";
+            $paramString.=" OR invoice_id like '%".$search."%'";
+            $paramString.=" OR product_name like '%".$search."%')";
+        }
+        
+        $tab=InventoryRepair::leftjoin('invoices','inventory_repairs.invoice_id','=','invoices.invoice_id')
+                            ->select('inventory_repairs.id',
+                            'inventory_repairs.product_name',
+                            'inventory_repairs.payment_status',
+                            'inventory_repairs.customer_id',
+                            'inventory_repairs.customer_name',
+                            'inventory_repairs.total_parts',
+                            'inventory_repairs.parts_json',
+                            'inventory_repairs.repair_type',
+                            'inventory_repairs.cost',
+                            'inventory_repairs.price',
+                            'inventory_repairs.device',
+                            'inventory_repairs.problem_type',
+                            'inventory_repairs.imei',
+                            'inventory_repairs.password',
+                            'inventory_repairs.notes',
+                            'inventory_repairs.invoice_id',
+                            'inventory_repairs.created_at',
+                            'invoices.invoice_status')
+                            ->where('inventory_repairs.store_id',$this->sdc->storeID())
+                            ->orderBy('inventory_repairs.id','DESC')
+                            ->when($paramString, function ($query) use ($paramString) {
+                                    return $query->whereRaw($paramString);
+                            })
+                            ->skip($start)->take($length)->get();
+        return $tab;
+    }
+
+    public function rep_RepairReportjson(Request $request){
+
+        $draw = $request->get('draw');
+        $start = $request->get('start');
+        $length = $request->get('length');
+        $search = $request->get('search');
+
+        $search = (isset($search['value']))? $search['value'] : '';
+
+        $total_members = $this->rep_RepairReportCount($search); // get your total no of data;
+        $members = $this->rep_RepairReport($start, $length,$search); //supply start and length of the table data
+
+        $data = array(
+            'draw' => $draw,
+            'recordsTotal' => $total_members,
+            'recordsFiltered' => $total_members,
+            'data' => $members,
+        );
+
+        echo json_encode($data);
+
+    }
+
+    public function rep_profitQuery($request)
+    {
+        $invoice_id='';
+        if(isset($request->invoice_id))
+        {
+            $invoice_id=$request->invoice_id;
+        }
+
+        $customer_id='';
+        if(isset($request->customer_id))
+        {
+            $customer_id=$request->customer_id;
+        }
+
+        $repair_option='';
+        if(isset($request->repair_option))
+        {
+            $repair_option=$request->repair_option;
+        }
+
+
+        $start_date='';
+        if(isset($request->start_date))
+        {
+            $start_date=$request->start_date;
+        }
+
+        $end_date='';
+        if(isset($request->end_date))
+        {
+            $end_date=$request->end_date;
+        }
+
+        if(empty($start_date) && !empty($end_date))
+        {
+            $start_date=$end_date;
+        }
+
+        if(!empty($start_date) && empty($end_date))
+        {
+            $end_date=$start_date;
+        }
+
+        $dateString='';
+        if(!empty($start_date) && !empty($end_date))
+        {
+            $dateString="CAST(lsp_inventory_repairs.created_at as date) BETWEEN '".$start_date."' AND '".$end_date."'";
+        }
+
+        
+
+        $invoice=InventoryRepair::leftjoin('invoices','inventory_repairs.invoice_id','=','invoices.invoice_id')
+                    ->select('inventory_repairs.id',
+                    'inventory_repairs.product_name',
+                    'inventory_repairs.payment_status',
+                    'inventory_repairs.customer_id',
+                    'inventory_repairs.customer_name',
+                    'inventory_repairs.total_parts',
+                    'inventory_repairs.parts_json',
+                    'inventory_repairs.repair_type',
+                    'inventory_repairs.cost',
+                    'inventory_repairs.price',
+                    'inventory_repairs.device',
+                    'inventory_repairs.problem_type',
+                    'inventory_repairs.imei',
+                    'inventory_repairs.password',
+                    'inventory_repairs.notes',
+                    'inventory_repairs.invoice_id',
+                    'inventory_repairs.created_at',
+                    'invoices.invoice_status')
+                    ->where('inventory_repairs.store_id',$this->sdc->storeID())
+                    ->when($invoice_id, function ($query) use ($invoice_id) {
+                        return $query->where('inventory_repairs.invoice_id','=', $invoice_id);
+                    })
+                    ->when($customer_id, function ($query) use ($customer_id) {
+                        return $query->where('inventory_repairs.customer_id','=', $customer_id);
+                    })
+                    ->when($repair_option, function ($query) use ($repair_option) {
+                        return $query->where('inventory_repairs.repair_type','=', $repair_option);
+                    })
+                    ->when($dateString, function ($query) use ($dateString) {
+                        return $query->whereRaw($dateString);
+                    })
+                    ->get();
+        
+        //dd($invoice);
+        return $invoice;
+    }
+
+    public function rep_exportExcel(Request $request) 
+    {
+        //excel 
+        $total_price_amount=0;
+        $total_re_price_amount=0;
+        $total_over_price_amount=0;
+        $data=array();
+        $array_column=array(
+            'Id',
+            'Date',
+            'Customer',
+            'Repair Detail',
+            'Parts Required',
+            'Price',
+            'Status',
+            'Invoice ID'
+        );
+        array_push($data, $array_column);
+        $inv=$this->rep_profitQuery($request);
+
+        foreach($inv as $voi):
+            $parts_text=""; 
+            $total_repair_price=$voi->price;
+            if($voi->total_parts > 0)
+            {
+                $parts_json=json_decode($voi->parts_json);
+                foreach($parts_json as $item)
+                {
+                    if(!empty($parts_text))
+                    {
+                        $parts_text.=", "; 
+                    }
+                        
+                    if(!empty($item->name))
+                    {
+                        $parts_text.=$item->name;
+                    }
+                    
+                    if(!empty($item->price))
+                    {
+                        $total_repair_price+=$item->price;
+                    }   
+                }
+                
+            }
+            else
+            { 
+                $parts_text="Special Ordered Part/No Parts Required";
+            }
+
+            $inv_arry=array(
+                $voi->id,
+                formatDate($voi->created_at),
+                $voi->customer_name,
+                $voi->repair_type=="Parts"?"Inventory Repair":$voi->product_name,
+                $parts_text,
+                $total_repair_price,
+                $voi->payment_status,
+                $voi->invoice_id
+            );
+
+            $total_price_amount+=$total_repair_price;
+            array_push($data, $inv_arry);
+        endforeach;
+
+
+        $array_column=array('','','','','Total = ',$total_price_amount);
+        array_push($data, $array_column);
+
+        $reportName="Repair Report";
+        $report_title="Repair Report";
+        $report_description="Report Genarated : ".formatDateTime(date('d-M-Y H:i:s a'));
+        /*$data = array(
+            array('data1', 'data2'),
+            array('data3', 'data4')
+        );*/
+
+        //array_unshift($data,$array_column);
+
+       // dd($data);
+
+        $excelArray=array(
+            'report_name'=>$reportName,
+            'report_title'=>$report_title,
+            'report_description'=>$report_description,
+            'data'=>$data
+        );
+        // dd($excelArray);
+        $this->sdc->ExcelLayout($excelArray);
+        
+    }
+
+    public function rep_exportPDF(Request $request)
+    {
+
+        $data=array();
+        
+       
+        $reportName="Repair Report";
+        $report_title="Repair Report";
+        $report_description="Report Genarated : ".formatDateTime(date('d-M-Y H:i:s a'));
+
+        $html='<table class="table table-bordered" style="width:100%;">
+                <thead>
+                <tr>
+                    <th class="text-center" style="font-size:12px;" >Id</th>
+                    <th class="text-center" style="font-size:12px;" >Date</th>
+                    <th class="text-center" style="font-size:12px;" >Customer</th>
+                    <th class="text-center" style="font-size:12px;" >Repair Detail</th>
+                    <th class="text-center" style="font-size:12px;" >Parts Required</th>
+                    <th class="text-center" style="font-size:12px;" >Price</th>
+                    <th class="text-center" style="font-size:12px;" >Status</th>
+                    <th class="text-center" style="font-size:12px;" >Invoice ID</th>
+                </tr>
+                </thead>
+                <tbody>';
+
+                $total_price_amount=0;
+                $total_re_price_amount=0;
+                $total_over_price_amount=0;
+
+                    $inv=$this->rep_profitQuery($request);
+                    foreach($inv as $voi):
+
+
+                        $parts_text=""; 
+                        $total_repair_price=$voi->price;
+                        if($voi->total_parts > 0)
+                        {
+                            $parts_json=json_decode($voi->parts_json);
+                            foreach($parts_json as $item)
+                            {
+                                if(!empty($parts_text))
+                                {
+                                    $parts_text.=", "; 
+                                }
+                                    
+                                if(!empty($item->name))
+                                {
+                                    $parts_text.=$item->name;
+                                }
+                                
+                                if(!empty($item->price))
+                                {
+                                    $total_repair_price+=$item->price;
+                                }   
+                            }
+                            
+                        }
+                        else
+                        { 
+                            $parts_text="Special Ordered Part/No Parts Required";
+                        }
+
+                        $ptr=$voi->repair_type=="Parts"?"Inventory Repair":$voi->product_name;
+
+                        $html .='<tr>
+                        <td style="font-size:12px;" class="text-center">'.$voi->id.'</td>
+                        <td style="font-size:12px;" class="text-center">'.formatDate($voi->created_at).'</td>
+                        <td style="font-size:12px;" class="text-center">'.$voi->customer_name.'</td>
+                        <td style="font-size:12px;" class="text-center">'.$ptr.'</td>
+                        <td style="font-size:12px;" class="text-center">'.$parts_text.'</td>
+                        <td style="font-size:12px;" class="text-right">'.$total_repair_price.'</td>
+                        <td style="font-size:12px;" class="text-right">'.$voi->payment_status.'</td>
+                        <td style="font-size:12px;" class="text-right">'.$voi->invoice_id.'</td>
+                        </tr>';
+
+                        $total_price_amount+=$total_repair_price;
+
+                    endforeach;
+
+
+                        
+
+             
+                /*html .='<tr style="border-bottom: 5px #000 solid;">
+                <td style="font-size:12px;">Subtotal </td>
+                <td style="font-size:12px;">Total Item : 4</td>
+                <td></td>
+                <td></td>
+                <td style="font-size:12px;" class="text-right">00</td>
+                </tr>';*/
+
+                $html .='</tbody>';
+
+                $html .='<tfoot>';
+                $html .='<tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>Total =</td>
+                    <td align="center">'.$total_price_amount.'</td>
+                    <td align="center">'.$total_re_price_amount.'</td>
+                    <td align="center">'.$total_over_price_amount.'</td>
+                </tr>';
+                $html .='</tfoot>';
+                $html .='</table>';
+
+
+
+                $this->sdc->PDFLayout($reportName,$html);
+
+
+    }
+
+
+
+
+
+
 
     public function noninventoryprofitQuery($request)
     {

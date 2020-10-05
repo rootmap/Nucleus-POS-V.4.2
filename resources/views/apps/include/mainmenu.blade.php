@@ -377,18 +377,10 @@
                     @if(in_array('report/payout', $dataMenuAssigned))
                     <li class="{{ Request::path() == '/report/payout' ? 'active' : '' }} border-bottom-purple"><a href="{{url('/report/payout')}}" class="menu-item">Payout Report</a></li>
                     @endif 
-                    @if(in_array('paypal/payment/report', $dataMenuAssigned))
-                    <li class="{{ Request::path() == '/repair/report' ? 'active' : '' }} border-bottom-purple"><a href="{{url('/repair/report')}}" class="menu-item">Repair Report</a></li>
+                    @if(in_array('repair-report', $dataMenuAssigned))
+                    <li class="{{ Request::path() == '/repair-report' ? 'active' : '' }} border-bottom-purple"><a href="{{url('/repair-report')}}" class="menu-item">Repair Report</a></li>
                     @endif 
-                    @if(in_array('non-inventory/repair/report', $dataMenuAssigned))
-                    <li class="{{ Request::path() == '/non-inventory/repair/report' ? 'active' : '' }} border-bottom-purple"><a href="{{url('/non-inventory/repair/report')}}" class="menu-item">Non-In. Repair Report</a></li>
-                    @endif 
-                    @if(in_array('lcd/status/report', $dataMenuAssigned))
-                    <li class="{{ Request::path() == '/lcd/status/report' ? 'active' : '' }} border-bottom-purple"><a href="{{url('/lcd/status/report')}}" class="menu-item">Repair LCD Report</a></li>
-                    @endif 
-                    @if(in_array('salvage/report', $dataMenuAssigned))
-                    <li class="{{ Request::path() == '/salvage/report' ? 'active' : '' }} border-bottom-purple"><a href="{{url('/salvage/report')}}" class="menu-item">Salvage Part Report</a></li>
-                    @endif 
+                    
 
                     @if(in_array('sales/return/list', $dataMenuAssigned))
                         <li  class="{{ Request::path() == 'sales/return/list' ? 'active' : '' }} border-bottom-purple">
@@ -719,6 +711,19 @@
                     @if(in_array('ticket/list', $dataMenuAssigned))
                     <li class="{{ Request::path() == 'ticket/list' ? 'active' : '' }}  border-bottom-purple"><a href="{{url('ticket/list')}}" class="menu-item">Non-Inventory Repair Data</a></li>
                     @endif
+                    @if(in_array('paypal/payment/report', $dataMenuAssigned))
+                    <li class="{{ Request::path() == '/repair/report' ? 'active' : '' }} border-bottom-purple"><a href="{{url('/repair/report')}}" class="menu-item">Repair Report</a></li>
+                    @endif 
+                    
+                    @if(in_array('non-inventory/repair/report', $dataMenuAssigned))
+                    <li class="{{ Request::path() == '/non-inventory/repair/report' ? 'active' : '' }} border-bottom-purple"><a href="{{url('/non-inventory/repair/report')}}" class="menu-item">Non-In. Repair Report</a></li>
+                    @endif 
+                    @if(in_array('lcd/status/report', $dataMenuAssigned))
+                    <li class="{{ Request::path() == '/lcd/status/report' ? 'active' : '' }} border-bottom-purple"><a href="{{url('/lcd/status/report')}}" class="menu-item">Repair LCD Report</a></li>
+                    @endif 
+                    @if(in_array('salvage/report', $dataMenuAssigned))
+                    <li class="{{ Request::path() == '/salvage/report' ? 'active' : '' }} border-bottom-purple"><a href="{{url('/salvage/report')}}" class="menu-item">Salvage Part Report</a></li>
+                    @endif 
                 </ul>
             </li>
             @endif 

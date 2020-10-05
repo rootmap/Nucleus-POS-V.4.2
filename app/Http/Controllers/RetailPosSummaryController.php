@@ -64,12 +64,13 @@ class RetailPosSummaryController extends Controller
                                     ->limit(24)
                                     ->get();
 
-        $LoginActivity=LoginActivity::select('name','activity','created_at')->where('store_id',$this->sdc->storeID())
+        $LoginActivity=LoginActivity::select('name','activity','created_at')
+                                    ->where('store_id',$this->sdc->storeID())
                                     ->orderBy('id','DESC')
                                     ->limit(24)
                                     ->get();
 
-        $InventoryRepairGet=InventoryRepair::whereDate('created_at', '=', $Todaydate)->get();
+        $InventoryRepairGet=InventoryRepair::where('store_id',$this->sdc->storeID())->whereDate('created_at', '=', $Todaydate)->get();
         $total_repair_found=0;
         $total_parts_found=0;
 
