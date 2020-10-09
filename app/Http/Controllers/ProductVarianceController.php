@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\ProductVariance;
 use App\Product;
+use App\Category;
 use App\ProductVarianceData;
 use App\RetailPosSummary;
 use Illuminate\Http\Request;
@@ -21,8 +22,14 @@ class ProductVarianceController extends Controller
 
     public function index()
     {
-        $tab=Product::where('store_id',$this->sdc->storeID())->where('general_sale',0)->select('id','name')->get();
-        return view('apps.pages.variance.create',['dataTable'=>$tab]);
+        $tab=Product::select('id','category_id','name')->where('store_id',$this->sdc->storeID())->where('general_sale',0)->get();
+        $category=Category::select('id','name')->where('store_id',$this->sdc->storeID())->get();
+        //dd($category);
+        return view('apps.pages.variance.create',
+        [
+            'product'=>$tab, 
+            'category'=>$category
+        ]);
     }
 
     /**

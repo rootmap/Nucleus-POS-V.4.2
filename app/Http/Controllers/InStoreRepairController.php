@@ -1223,7 +1223,8 @@ class InStoreRepairController extends Controller
         }          
 
         $tab_customer=Customer::where('store_id',$this->sdc->storeID())->get();
-
+        $tab_parts=Product::select('id','name','cost')->where('store_id',$this->sdc->storeID())->where('category_name','Parts')->get();
+        //dd($tab_parts);
         return view('apps.pages.report.repair-report',
             [
                 'customer'=>$tab_customer,
@@ -1232,7 +1233,8 @@ class InStoreRepairController extends Controller
                 'invoice_id'=>$invoice_id,
                 'customer_id'=>$customer_id,
                 'start_date'=>$start_date,
-                'end_date'=>$end_date
+                'end_date'=>$end_date,
+                'tab_parts'=>$tab_parts,
             ]);
     }
 
@@ -1433,9 +1435,7 @@ class InStoreRepairController extends Controller
     public function rep_exportExcel(Request $request) 
     {
         //excel 
-        $total_price_amount=0;
-        $total_re_price_amount=0;
-        $total_over_price_amount=0;
+        
         $data=array();
         $array_column=array(
             'Id',
@@ -1444,15 +1444,22 @@ class InStoreRepairController extends Controller
             'Repair Detail',
             'Parts Required',
             'Price',
+            'Cost',
+            'Profit',
             'Status',
             'Invoice ID'
         );
         array_push($data, $array_column);
         $inv=$this->rep_profitQuery($request);
 
+        $tab_parts=Product::select('id','name','cost')->where('store_id',$this->sdc->storeID())->where('category_name','Parts')->get();
+        $total_price_amount=0;
+        $total_cost_amount=0;
+        $total_profit_amount=0;
         foreach($inv as $voi):
             $parts_text=""; 
             $total_repair_price=$voi->price;
+            $total_repair_cost=$voi->cost;
             if($voi->total_parts > 0)
             {
                 $parts_json=json_decode($voi->parts_json);
@@ -1472,6 +1479,14 @@ class InStoreRepairController extends Controller
                     {
                         $total_repair_price+=$item->price;
                     }   
+
+                    foreach ($tab_parts as $df)
+                    {
+                        if ($df->id==$item->id)
+                        {
+                            $total_repair_cost+=$df->cost;													
+                        }													
+                    }                    
                 }
                 
             }
@@ -1480,6 +1495,8 @@ class InStoreRepairController extends Controller
                 $parts_text="Special Ordered Part/No Parts Required";
             }
 
+            $total_repair_profit=$total_repair_price-$total_repair_cost;		
+
             $inv_arry=array(
                 $voi->id,
                 formatDate($voi->created_at),
@@ -1487,16 +1504,20 @@ class InStoreRepairController extends Controller
                 $voi->repair_type=="Parts"?"Inventory Repair":$voi->product_name,
                 $parts_text,
                 $total_repair_price,
+                $total_repair_cost,
+                $total_repair_profit,
                 $voi->payment_status,
                 $voi->invoice_id
             );
 
             $total_price_amount+=$total_repair_price;
+            $total_cost_amount+=$total_repair_cost;
+            $total_profit_amount+=$total_repair_profit;
             array_push($data, $inv_arry);
         endforeach;
 
 
-        $array_column=array('','','','','Total = ',$total_price_amount);
+        $array_column=array('','','','','Total = ',$total_price_amount,$total_cost_amount,$total_profit_amount);
         array_push($data, $array_column);
 
         $reportName="Repair Report";
@@ -1541,15 +1562,19 @@ class InStoreRepairController extends Controller
                     <th class="text-center" style="font-size:12px;" >Repair Detail</th>
                     <th class="text-center" style="font-size:12px;" >Parts Required</th>
                     <th class="text-center" style="font-size:12px;" >Price</th>
+                    <th class="text-center" style="font-size:12px;" >Cost</th>
+                    <th class="text-center" style="font-size:12px;" >Profit</th>
                     <th class="text-center" style="font-size:12px;" >Status</th>
                     <th class="text-center" style="font-size:12px;" >Invoice ID</th>
                 </tr>
                 </thead>
                 <tbody>';
 
+                
+                $tab_parts=Product::select('id','name','cost')->where('store_id',$this->sdc->storeID())->where('category_name','Parts')->get();
                 $total_price_amount=0;
-                $total_re_price_amount=0;
-                $total_over_price_amount=0;
+                $total_cost_amount=0;
+                $total_profit_amount=0;
 
                     $inv=$this->rep_profitQuery($request);
                     foreach($inv as $voi):
@@ -1557,6 +1582,7 @@ class InStoreRepairController extends Controller
 
                         $parts_text=""; 
                         $total_repair_price=$voi->price;
+                        $total_repair_cost=$voi->cost;
                         if($voi->total_parts > 0)
                         {
                             $parts_json=json_decode($voi->parts_json);
@@ -1575,7 +1601,15 @@ class InStoreRepairController extends Controller
                                 if(!empty($item->price))
                                 {
                                     $total_repair_price+=$item->price;
-                                }   
+                                }  
+                                
+                                foreach ($tab_parts as $df)
+                                {
+                                    if ($df->id==$item->id)
+                                    {
+                                        $total_repair_cost+=$df->cost;													
+                                    }													
+                                }     
                             }
                             
                         }
@@ -1583,6 +1617,10 @@ class InStoreRepairController extends Controller
                         { 
                             $parts_text="Special Ordered Part/No Parts Required";
                         }
+
+                        $total_repair_profit=$total_repair_price-$total_repair_cost;
+
+                        
 
                         $ptr=$voi->repair_type=="Parts"?"Inventory Repair":$voi->product_name;
 
@@ -1593,11 +1631,15 @@ class InStoreRepairController extends Controller
                         <td style="font-size:12px;" class="text-center">'.$ptr.'</td>
                         <td style="font-size:12px;" class="text-center">'.$parts_text.'</td>
                         <td style="font-size:12px;" class="text-right">'.$total_repair_price.'</td>
+                        <td style="font-size:12px;" class="text-right">'.$total_repair_cost.'</td>
+                        <td style="font-size:12px;" class="text-right">'.$total_repair_profit.'</td>
                         <td style="font-size:12px;" class="text-right">'.$voi->payment_status.'</td>
                         <td style="font-size:12px;" class="text-right">'.$voi->invoice_id.'</td>
                         </tr>';
 
-                        $total_price_amount+=$total_repair_price;
+                        $total_price_amount+=number_format($total_repair_price,2);
+                        $total_cost_amount+=number_format($total_repair_cost,2);
+                        $total_profit_amount+=number_format($total_repair_profit,2);
 
                     endforeach;
 
@@ -1621,10 +1663,10 @@ class InStoreRepairController extends Controller
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td>Total =</td>
-                    <td align="center">'.$total_price_amount.'</td>
-                    <td align="center">'.$total_re_price_amount.'</td>
-                    <td align="center">'.$total_over_price_amount.'</td>
+                    <td style="font-size:12px;" align="right">Total =</td>
+                    <td style="font-size:12px;" align="right">'.$total_price_amount.'</td>
+                    <td style="font-size:12px;" align="right">'.$total_cost_amount.'</td>
+                    <td style="font-size:12px;" align="right">'.$total_profit_amount.'</td>
                 </tr>';
                 $html .='</tfoot>';
                 $html .='</table>';

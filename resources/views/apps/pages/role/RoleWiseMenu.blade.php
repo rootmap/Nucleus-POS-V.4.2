@@ -272,7 +272,7 @@ button.btn.unchecked::before {
 
 $(document).on('change', '.tree input[type=checkbox]', function(e) {
   $(this).siblings('ul').find("input[type='checkbox']").prop('checked', this.checked);
-  $(this).parentsUntil('.tree').children("input[type='checkbox']").prop('checked', this.checked);
+  //$(this).parentsUntil('.tree').children("input[type='checkbox']").prop('checked', this.checked);
   e.stopPropagation();
 });
 

@@ -130,7 +130,69 @@
 
 	<!-- Both borders end-->
 <div class="row">
+	<?php 
+	$profit_total=0;
+	$cost_total=0;
+	$paid_amount=0;
+	?>
+	@if(isset($invoice))
+		@foreach($invoice as $inv)
+				<?php $parts_text=""; 
+				$total_repair_price=$inv->price;
+				$total_repair_cost=$inv->cost;
+				?>
+				@if($inv->total_parts > 0)
+					<?php 
+						$parts_json=json_decode($inv->parts_json);
+					?>
+					@foreach($parts_json as $item)
+						@if(!empty($item->price))
+							<?php $total_repair_price+=$item->price; ?>
+						@endif
+
+						@foreach ($tab_parts as $df)
+							@if ($df->id==$item->id)
+								<?php $total_repair_cost+=$df->cost; ?>													
+							@endif													
+						@endforeach
+					@endforeach
+				@endif
+				<?php 
+					$total_repair_profit=$total_repair_price-$total_repair_cost;
+				?>
+		<?php 
+		$paid_amount+=$total_repair_price;
+		$cost_total+=$total_repair_cost;
+		$profit_total+=$total_repair_price-$total_repair_cost;
+		?>
+		@endforeach
+	@endif
+	<div class="col-md-12">
+		<div class="col-lg-4 mb-2 col-sm-4 border-right-green bg-green border-right-lighten-4">
+			<div class="card-block text-xs-center">
+				<h1 class="display-4 white"><i class="icon-money font-large-2"></i> $<span id="totalDataAmount">{{number_format($paid_amount,2)}}</span></h1>
+				<span class="white">Total Paid Amount</span>
+			</div>
+		</div>
+		
+		<div class="col-lg-4 mb-2 col-sm-4 border-right-red bg-red border-right-lighten-4">
+			<div class="card-block text-xs-center">
+				<h1 class="display-4 white"><i class="icon-money font-large-2"></i> $<span id="totalCostAmount">{{number_format($cost_total,2)}}</span></h1>
+				<span class="white">Total Cost Amount</span>
+			</div>
+		</div>
+
+		<div class="col-lg-4 mb-2 col-sm-4 border-right-blue bg-blue border-right-lighten-4">
+			<div class="card-block text-xs-center">
+				<h1 class="display-4 white"><i class="icon-money font-large-2"></i> $<span id="totalProfitAmount">{{number_format($profit_total,2)}}</span></h1>
+				<span class="white">Total Profit Amount</span>
+			</div>
+		</div>
+	</div>
+	
 	<div class="col-xs-12">
+		
+		
 		<div class="card">
 			<div class="card-header">
 				<h4 class="card-title"><i class="icon-clear_all"></i> Repair List</h4>
@@ -153,6 +215,8 @@
 								<th>Repair Detail</th>
 								<th>Parts Required</th>
 								<th>Price</th>
+								<th>Cost</th>
+								<th>Profit</th>
 								<th>Status</th>
 								<th>Invoice ID</th>
 								<th>Action</th>
@@ -175,6 +239,7 @@
 	                                <td>
                                         <?php $parts_text=""; 
                                         $total_repair_price=$inv->price;
+                                        $total_repair_cost=$inv->cost;
                                         ?>
                                         @if($inv->total_parts > 0)
                                             <?php 
@@ -193,14 +258,26 @@
 
                                                 @if(!empty($item->price))
                                                     <?php $total_repair_price+=$item->price; ?>
-                                                @endif
+												@endif
+												
+												@foreach ($tab_parts as $df)
+													@if ($df->id==$item->id)
+														<?php $total_repair_cost+=$df->cost; ?>													
+													@endif													
+												@endforeach
+
                                             @endforeach
                                         @else 
                                             <?php $parts_text="Special Ordered Part/No Parts Required"; ?>
                                         @endif
-                                        {{$parts_text}}
+										{{$parts_text}}
+										<?php 
+											$total_repair_profit=$total_repair_price-$total_repair_cost;
+										?>
                                     </td>
 	                                <td>${{$total_repair_price}}</td>
+	                                <td>${{$total_repair_cost}}</td>
+	                                <td>${{$total_repair_profit}}</td>
 	                                <td>{{$inv->payment_status}}</td>
 	                                <td>{{$inv->invoice_id}}</td>
 	                                <td>
@@ -227,12 +304,7 @@
 
 
 
-						<div class="col-lg-4 col-sm-4 border-right-green bg-green border-right-lighten-4">
-                            <div class="card-block text-xs-center">
-                                <h1 class="display-4 white"><i class="icon-money font-large-2"></i> $<span id="totalDataAmount">{{number_format($paid_amount,2)}}</span></h1>
-                                <span class="white">Total Paid Amount</span>
-                            </div>
-                        </div>
+						
                         
 
 
@@ -253,11 +325,11 @@
 @include('apps.include.datatablecssjs',['selectTwo'=>1,'dateDrop'=>1])
 @section('RoleWiseMenujs')
    <script>
-
+	var tab_parts=<?=json_encode($tab_parts)?>;
     var repairView="{{url('repair-view')}}";
     var repairPrint="{{url('repair-print')}}";
     var repairDelete="{{url('repair-delete')}}";
-
+	
     function actionTemplate(id){
         var actHTml='';
             actHTml+='<span class="dropdown" ';
@@ -317,6 +389,8 @@
 	            	console.log(totalData.data);
 	            	var strHTML='';
 	            	var totalPrice=0;
+	            	var totalCost=0;
+	            	var totalProfit=0;
 	            	$.each(totalData.data,function(key,row){
                         console.log(row);
                         strHTML+='<tr>';
@@ -336,9 +410,11 @@
                         
                         var parts_text='';
                         var total_repair_price=row.price;
+                        var total_repair_cost=row.cost;
                         if(row.total_parts>0)
                         {
                             $.each($.parseJSON(row.parts_json),function(r,k){
+								//console.log('K',k);
                                 if(parts_text.length > 0)
                                 {
                                     parts_text+=', ';
@@ -353,6 +429,16 @@
                                 {
                                     total_repair_price+=(k.price-0);
                                 }
+
+								$.each(tab_parts, function(f,h){
+									//console.log(f,h);
+									if(h.id==k.id)
+									{
+										console.log(h.id,k.id);
+										total_repair_cost+=(h.cost-0);
+									}
+								});
+                                
                                 
                             });
 						}
@@ -361,17 +447,26 @@
 							parts_text="Special Ordered Part/No Parts Required";
 						}
 
+						var item_row_profit=total_repair_price-total_repair_cost;
+
                         
                         totalPrice+=total_repair_price-0;
                         strHTML+='      <td>'+replaceNull(parts_text)+'</td>';
                         strHTML+='      <td class="price_column">$'+number_format(replaceNull(total_repair_price))+'</td>';
+                        strHTML+='      <td class="price_column">$'+number_format(replaceNull(total_repair_cost))+'</td>';
+                        strHTML+='      <td class="price_column">$'+number_format(replaceNull(item_row_profit))+'</td>';
                         strHTML+='      <td>'+replaceNull(row.payment_status)+'</td>';
                         strHTML+='      <td>'+replaceNull(row.invoice_id)+'</td>';
                         strHTML+='      <td>'+actionTemplate(row.id)+'</td>';
                         strHTML+='</tr>';
+
+						totalCost+=total_repair_cost-0;
+	            		totalProfit+=item_row_profit-0;
                     });
 
 	            	$("#totalDataAmount").html(number_format(totalPrice));
+	            	$("#totalCostAmount").html(number_format(totalCost));
+	            	$("#totalProfitAmount").html(number_format(totalProfit));
 
 	            	$("tbody").html(strHTML);
 	            	$('#report_table').DataTable();
