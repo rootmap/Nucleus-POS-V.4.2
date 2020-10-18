@@ -6543,19 +6543,26 @@ GROUP BY d.invoice_id) as product"))
     private function invoiceSalesReportCount($search=''){
 
         $tab=Invoice::Leftjoin('customers','invoices.customer_id','=','customers.id')
-                     ->select('invoices.id')
+                    ->select(
+                        'invoices.id',
+                        \DB::Raw("(SELECT GROUP_CONCAT((SELECT p.name FROM lsp_products AS p WHERE p.id=d.product_id) SEPARATOR ', ')
+FROM lsp_invoice_products AS d WHERE d.invoice_id=lsp_invoices.invoice_id
+GROUP BY d.invoice_id) as product")
+                    )
                      ->where('invoices.store_id',$this->sdc->storeID())
                      ->orderBy('invoices.id','DESC')
                      ->when($search, function ($query) use ($search) {
-                        $query->where('invoices.id','LIKE','%'.$search.'%');
-                        $query->orWhere('invoices.invoice_id','LIKE','%'.$search.'%');
-                        $query->orWhere('invoices.created_at','LIKE','%'.$search.'%');
-                        $query->orWhere('customers.name as customer_name','LIKE','%'.$search.'%');
-                        $query->orWhere('invoices.tender_name','LIKE','%'.$search.'%');
-                        $query->orWhere('invoices.invoice_status','LIKE','%'.$search.'%');
-                        $query->orWhere('invoices.total_amount','LIKE','%'.$search.'%');
-                        $query->orWhere('invoices.paid_amount','LIKE','%'.$search.'%');
-
+                        $query->whereRaw("(lsp_invoices.invoice_id LIKE '%".$search."%' OR 
+                        lsp_invoices.id LIKE '%".$search."%' OR 
+                        lsp_invoices.created_at LIKE '%".$search."%' OR 
+                        lsp_customers.name LIKE '%".$search."%' OR 
+                        lsp_invoices.tender_name LIKE '%".$search."%' OR 
+                        lsp_invoices.invoice_status LIKE '%".$search."%' OR 
+                        lsp_invoices.total_amount LIKE '%".$search."%' OR 
+                        (SELECT GROUP_CONCAT((SELECT p.name FROM lsp_products AS p WHERE p.id=d.product_id) SEPARATOR ', ')
+FROM lsp_invoice_products AS d WHERE d.invoice_id=lsp_invoices.invoice_id
+GROUP BY d.invoice_id) LIKE '%".$search."%' OR 
+                        lsp_invoices.paid_amount LIKE '%".$search."%')");
                         return $query;
                      })
                      ->count();
@@ -6581,15 +6588,17 @@ GROUP BY d.invoice_id) as product")
                      ->where('invoices.store_id',$this->sdc->storeID())
                      ->orderBy('invoices.id','DESC')
                      ->when($search, function ($query) use ($search) {
-                        $query->where('invoices.id','LIKE','%'.$search.'%');
-                        $query->orWhere('invoices.invoice_id','LIKE','%'.$search.'%');
-                        $query->orWhere('invoices.created_at','LIKE','%'.$search.'%');
-                        $query->orWhere('customers.name as customer_name','LIKE','%'.$search.'%');
-                        $query->orWhere('invoices.tender_name','LIKE','%'.$search.'%');
-                        $query->orWhere('invoices.invoice_status','LIKE','%'.$search.'%');
-                        $query->orWhere('invoices.total_amount','LIKE','%'.$search.'%');
-                        $query->orWhere('invoices.paid_amount','LIKE','%'.$search.'%');
-
+                        $query->whereRaw("(lsp_invoices.invoice_id LIKE '%".$search."%' OR 
+                        lsp_invoices.id LIKE '%".$search."%' OR 
+                        lsp_invoices.created_at LIKE '%".$search."%' OR 
+                        lsp_customers.name LIKE '%".$search."%' OR 
+                        lsp_invoices.tender_name LIKE '%".$search."%' OR 
+                        lsp_invoices.invoice_status LIKE '%".$search."%' OR 
+                        lsp_invoices.total_amount LIKE '%".$search."%' OR 
+                        (SELECT GROUP_CONCAT((SELECT p.name FROM lsp_products AS p WHERE p.id=d.product_id) SEPARATOR ', ')
+FROM lsp_invoice_products AS d WHERE d.invoice_id=lsp_invoices.invoice_id
+GROUP BY d.invoice_id) LIKE '%".$search."%' OR 
+                        lsp_invoices.paid_amount LIKE '%".$search."%')");
                         return $query;
                      })
                      ->skip($start)->take($length)->get();

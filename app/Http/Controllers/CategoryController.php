@@ -35,11 +35,11 @@ class CategoryController extends Controller
         \DB::statement("call defaultPartsCreate('".$this->sdc->UserID()."','".$this->sdc->storeID()."')");
         if(Auth::user()->user_type==1)
         {
-            $tab=Category::all();
+            $tab=Category::where('store_id',$this->sdc->storeID())->whereNotIn('name', ['Non-Inventory Repair','Inventory Repair'])->get();
         }
         else
         {
-            $tab=Category::where('store_id',$this->sdc->storeID())->get();
+            $tab=Category::where('store_id',$this->sdc->storeID())->whereNotIn('name', ['Non-Inventory Repair','Inventory Repair'])->get();
         }
         //dd($this->sdc->storeID());
         return view('apps.pages.settings.category',['dataTable'=>$tab]);
@@ -98,7 +98,7 @@ class CategoryController extends Controller
     public function edit(Category $category,$id=0)
     {
         $tab=$category::find($id);
-        $tabData=$category::where('store_id',$this->sdc->storeID())->get();
+        $tabData=$category::where('store_id',$this->sdc->storeID())->whereNotIn('name', ['Non-Inventory Repair','Inventory Repair'])->get();
         return view('apps.pages.settings.category',['dataRow'=>$tab,'dataTable'=>$tabData,'edit'=>true]);
     }
 

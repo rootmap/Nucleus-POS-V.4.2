@@ -24,7 +24,10 @@ class ProductStockinController extends Controller
 
     public function index()
     {
-        $tab_product=Product::where('store_id',$this->sdc->storeID())->where('general_sale',0)->get();
+        $tab_product=Product::where('store_id',$this->sdc->storeID())
+                            ->where('general_sale',0)
+                            ->whereNotIn('category_name', ['Non-Inventory Repair','Inventory Repair'])
+                            ->get();
         $tab=ProductStockin::join('products as p','product_stockins.product_id','=','p.id')
                             ->where('product_stockins.store_id',$this->sdc->storeID())
                             ->select('product_stockins.*','p.name as product_name')

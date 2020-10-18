@@ -603,6 +603,7 @@ class ProductController extends Controller
         $tab=Product::select('id','category_name','barcode','name','quantity','price','cost','created_at')
                           ->where('store_id',$this->sdc->storeID())
                           ->where('general_sale',0)
+                          ->where('category_name','!=','Inventory Repair')
                           ->orderBy('id','DESC')
                           ->when($search, function ($query) use ($search) {
                               
@@ -626,6 +627,7 @@ class ProductController extends Controller
         $tab=Product::select('id','category_name','barcode','name','quantity','price','cost','created_at')
                           ->where('store_id',$this->sdc->storeID())
                           ->where('general_sale',0)
+                          ->where('category_name','!=','Inventory Repair')
                           ->orderBy('id','DESC')
                           ->when($search, function ($query) use ($search) {
                             $query->whereRaw("(id LIKE '%".$search."%' OR 
@@ -706,7 +708,8 @@ class ProductController extends Controller
             $dateString="CAST(lsp_products.created_at as date) BETWEEN '".$start_date."' AND '".$end_date."'";
         }
 
-        $cattab=Category::where('store_id',$this->sdc->storeID())->whereNotIn('name', ['Non-Inventory Repair'])->get();
+        $cattab=Category::where('store_id',$this->sdc->storeID())
+                        ->whereNotIn('name', ['Non-Inventory Repair','Inventory Repair'])->get();
 
         if(empty($category_id) && empty($start_date) && empty($end_date) && empty($dateString))
         {
@@ -733,6 +736,7 @@ class ProductController extends Controller
                             return $query->where('category_id',$category_id);
                      })
                      ->where('general_sale',0)
+                     ->where('category_name','!=','Inventory Repair')
                      ->get();
 
             //dd($tab);

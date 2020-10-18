@@ -2276,11 +2276,15 @@ $(document).ready(function() {
                 $("#posCartSummary tr:eq(4)").find("td:eq(2)").children("span").html(parseNewPayment);
             }
             genarateSalesTotalCart();
-            $("#payModal").modal("hide");
+            //$("#payModal").modal("hide");
             //------------------------Ajax POS Start-------------------------//
             var AddPOSUrl = makePaymentInitialDefaultAddPOSUrl;
             $.post(AddPOSUrl, { 'paymentID': payment_id, 'paidAmount': parseNewPayment, '_token': csrftLarVe }, function(response) {
-                //console.log(response);
+                console.log(response);
+                if(response==1)
+                {
+                    alert("Payment Complete")
+                }
             });
             //------------------------Ajax POS End---------------------------//
         }
