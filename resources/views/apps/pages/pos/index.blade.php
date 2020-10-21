@@ -641,6 +641,7 @@
             @include('apps.include.modal.manager-approval')
             @include('apps.include.modal.product-edit')
             @include('apps.include.modal.paymodal',compact('stripe'))
+            @include('apps.include.modal.complete-sales')
             @include('apps.include.modal.open-drawer')
             @include('apps.include.modal.close-drawer')
             @include('apps.include.modal.time_clock')
@@ -697,7 +698,9 @@
     {
         line-height:1.3rem !important;
     }
+
 </style>
+
 <link rel="stylesheet" type="text/css" href="{{asset('theme/app-assets/vendors/css/forms/selects/select2.min.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('theme/app-assets/css/pages/invoice.min.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('theme/app-assets/vendors/css/ui/dragula.min.css')}}">

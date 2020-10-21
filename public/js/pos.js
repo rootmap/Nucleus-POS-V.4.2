@@ -11,6 +11,13 @@ $('.dropableCartZone').droppable({
 
 $('select[name=customer_id]').parent('div').children('span:eq(1)').children('span').children('span').attr('style', 'border-radius:0px !important;');
 
+function showCompleteSaleModal()
+{
+    $("#completeSalesModal").modal({backdrop: 'static', keyboard: false, show: true});
+    $(".comprint > .dropdown-menu").css("left","unset");
+    $(".comprint > .dropdown-menu").css("right","0");
+}
+
 function handleDropEvent(event, ui) {
     $("#cartMessageProShow").html(loadingOrProcessing("Processing, Please Wait....!!!!"));
     var item_id = ui.draggable.attr("id");
@@ -1610,6 +1617,8 @@ $(document).ready(function() {
                                                     $("#cartMessageProShow").show();
                                                     $("#cartMessageProShow").html(successMessage("Payment completed, Please click on print/complete sale."));
 
+                                                    showCompleteSaleModal();
+
                                                 } else {
                                                     $(".payModal-message-area").html(warningMessage(data.message));
                                                 }
@@ -1820,6 +1829,7 @@ $(document).ready(function() {
                         //------------------------Ajax POS Start-------------------------//
                         var AddPOSUrl = makePaymentInitialDefaultAddPOSUrl;
                         $.post(AddPOSUrl, { 'paymentID': 25, 'paidAmount': parseNewPayment, '_token': csrftLarVe }, function(response) {
+                            showCompleteSaleModal();
                             // setTimeout(function(){ $("#CustomerCard").modal('show'); }, 3000);
                         });
                         //------------------------Ajax POS End---------------------------//
@@ -1992,6 +2002,7 @@ $(document).ready(function() {
                         //------------------------Ajax POS Start-------------------------//
                         var AddPOSUrl = makePaymentInitialDefaultAddPOSUrl;
                         $.post(AddPOSUrl, { 'paymentID': 8, 'paidAmount': parseNewPayment, '_token': csrftLarVe }, function(response) {
+                            showCompleteSaleModal();
                             // setTimeout(function(){ $("#CustomerCard").modal('show'); }, 3000);
                         });
                         //------------------------Ajax POS End---------------------------//
@@ -2044,6 +2055,8 @@ $(document).ready(function() {
     });
 
     $(".printncompleteSale").click(function() {
+        $("#completeSalesModal").modal({backdrop: 'static', keyboard: true, show: false});
+        $("#completeSalesModal").modal('hide');
         var printDataType = $.trim($(this).attr("data-id"));
         var customerID = $.trim($("select[name=customer_id]").val());
         if (customerID.length == 0) {
@@ -2070,6 +2083,7 @@ $(document).ready(function() {
 
         //------------------------Ajax Customer Start-------------------------//
         var AddHowMowKhaoUrl = AddHowMowKhaoUrlCartPOSvfour;
+        Swal.showLoading();
         $.ajax({
             'async': false,
             'type': "POST",
@@ -2276,19 +2290,26 @@ $(document).ready(function() {
                 $("#posCartSummary tr:eq(4)").find("td:eq(2)").children("span").html(parseNewPayment);
             }
             genarateSalesTotalCart();
-            //$("#payModal").modal("hide");
+            $("#payModal").modal("hide");
             //------------------------Ajax POS Start-------------------------//
             var AddPOSUrl = makePaymentInitialDefaultAddPOSUrl;
             $.post(AddPOSUrl, { 'paymentID': payment_id, 'paidAmount': parseNewPayment, '_token': csrftLarVe }, function(response) {
                 console.log(response);
                 if(response==1)
                 {
-                    alert("Payment Complete")
+                    showCompleteSaleModal();
                 }
             });
             //------------------------Ajax POS End---------------------------//
         }
 
+    });
+
+    $('.completesaleoverlay').click(function(){
+        Swal.showLoading();
+        $("#completeSalesModal").modal({backdrop: 'static', keyboard: true, show: false});
+        $("#completeSalesModal").modal('hide');
+        $("#completesale").trigger('click');
     });
 
     $(".amountextract").click(function() {

@@ -103,9 +103,13 @@ function processCardPayment() {
 
                         topFrame.genarateSalesTotalCart();
                         topFrame.$("#squareupmodal").modal('hide');
-
+                        
                         topFrame.$("#cartMessageProShow").html(successMessage(data.msg));
                         topFrame.$("#cartMessageProShow").show();
+
+                        topFrame.$("#completeSalesModal").modal({backdrop: 'static', keyboard: false, show: true});
+                        topFrame.$(".comprint > .dropdown-menu").css("left","unset");
+                        topFrame.$(".comprint > .dropdown-menu").css("right","0");
                         //cartMessageProShow
 
                     } else {
