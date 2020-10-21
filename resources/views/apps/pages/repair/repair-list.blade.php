@@ -196,7 +196,8 @@
 
                         
                         var parts_text='';
-                        var total_repair_price=row.price;
+						var total_repair_price=row.price;
+						console.log(key,row.price);
                         if(row.total_parts>0)
                         {
                             $.each($.parseJSON(row.parts_json),function(r,k){
@@ -212,7 +213,8 @@
 
                                 if(k.price!=undefined)
                                 {
-                                    total_repair_price+=(k.price-0);
+									total_repair_price+=(k.price-0);
+									console.log(key,k.price);
                                 }
                                 
                             });

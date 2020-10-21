@@ -129,7 +129,7 @@ class InvoiceProductController extends Controller
                         if($key==0)
                         {
                             $pro=Product::find($row->id);
-                            $cart->addCustomRepairPrice($pro, $pro->id,$pro->price,$repair_id);
+                            $cart->addCustomRepairPrice($pro, $pro->id,$row->price,$repair_id);
                         }
                         else
                         {
@@ -150,7 +150,8 @@ class InvoiceProductController extends Controller
                     $repairJson=json_decode($tab_invoice->parts_json);
                     foreach ($repairJson as $key => $row) {
                         $pro=Product::find($row->id);
-                        $cart->add($pro, $pro->id);
+                        //$cart->add($pro, $pro->id);
+                        $cart->addCustomQuantityPrice($pro, $pro->id,1,$row->price);
                     }
 
                 }

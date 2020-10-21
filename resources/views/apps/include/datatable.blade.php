@@ -299,7 +299,7 @@
 						optHtml+='<tr id="'+puslableID+'">';
 							optHtml+='<td>1</td>';
 							optHtml+='<td>'+row.name+'<input type="hidden" name="repair_parts_id[]" value="'+row.id+'" /></td>';
-							optHtml+='<td>'+row.price+'</td>';
+							optHtml+='<td><input type="text" style="width: 72px;" class="form-control" name="repair_parts_price[]" value="'+row.price+'" /></td>';
 							optHtml+='<td><button data-id="'+puslableID+'" class="btn btn-danger removeParts" type="button"><i class="icon-trash"></i></button></td>';
 						optHtml+='</tr>';
 					}

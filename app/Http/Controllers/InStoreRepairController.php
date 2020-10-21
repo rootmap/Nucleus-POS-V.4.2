@@ -275,6 +275,7 @@ class InStoreRepairController extends Controller
 
             if($request->repair_option=="repair_parts")
             {
+                //dd($request);
                 if(empty($request->device)){ $res=['status'=>0,'msg'=>"Please type device name."]; return response()->json($res); die(); }
                 if(empty($request->problem_type)){ $res=['status'=>0,'msg'=>"Please type problem type."]; return response()->json($res); die(); }
                 if(empty($request->cost)){ $res=['status'=>0,'msg'=>"Please type repair cost."]; return response()->json($res); die(); }
@@ -286,9 +287,9 @@ class InStoreRepairController extends Controller
                 {
                     $total_parts=count($request->repair_parts_id);
                     $pro_array=[];
-                    foreach ($request->repair_parts_id as $row_id) {
+                    foreach ($request->repair_parts_id as $index=>$row_id) {
                         $product_row=Product::find($row_id);
-                        $pro_array[]=['id'=>$row_id,'name'=>$product_row->name,'price'=>$product_row->price];
+                        $pro_array[]=['id'=>$row_id,'name'=>$product_row->name,'price'=>$request->repair_parts_price[$index]];
                     }
                     $parts_json=json_encode($pro_array);
                 }
@@ -367,9 +368,9 @@ class InStoreRepairController extends Controller
                 {
                     $total_parts=count($request->repair_parts_id);
                     $pro_array=[];
-                    foreach ($request->repair_parts_id as $row_id) {
+                    foreach ($request->repair_parts_id as $index=>$row_id) {
                         $product_row=Product::find($row_id);
-                        $pro_array[]=['id'=>$row_id,'name'=>$product_row->name,'price'=>$product_row->price];
+                        $pro_array[]=['id'=>$row_id,'name'=>$product_row->name,'price'=>$request->repair_parts_price[$index]];
                     }
                     $parts_json=json_encode($pro_array);
                 }
@@ -439,9 +440,9 @@ class InStoreRepairController extends Controller
                 {
                     $total_parts=count($request->repair_parts_id);
                     $pro_array=[];
-                    foreach ($request->repair_parts_id as $row_id) {
+                    foreach ($request->repair_parts_id as $index=>$row_id) {
                         $product_row=Product::find($row_id);
-                        $pro_array[]=['id'=>$row_id,'name'=>$product_row->name,'price'=>$product_row->price];
+                        $pro_array[]=['id'=>$row_id,'name'=>$product_row->name,'price'=>$request->repair_parts_price[$index]];
                     }
                     $parts_json=json_encode($pro_array);
                 }
@@ -530,9 +531,9 @@ class InStoreRepairController extends Controller
                 {
                     $total_parts=count($request->repair_parts_id);
                     $pro_array=[];
-                    foreach ($request->repair_parts_id as $row_id) {
+                    foreach ($request->repair_parts_id as $index=>$row_id) {
                         $product_row=Product::find($row_id);
-                        $pro_array[]=['id'=>$row_id,'name'=>$product_row->name,'price'=>$product_row->price];
+                        $pro_array[]=['id'=>$row_id,'name'=>$product_row->name,'price'=>$request->repair_parts_price[$index]];
                     }
                     $parts_json=json_encode($pro_array);
                 }

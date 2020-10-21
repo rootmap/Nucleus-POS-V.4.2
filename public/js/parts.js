@@ -69,18 +69,36 @@ $(document).ready(function(){
         var data_gg = {};
         var data_gg_row = {};
         var data_ggrow = [];
+        var data_ggrow_price = [];
         
         $.each(formData,function(kk,rorr){
             console.log(rorr);
             data_gg_row = {};
-            if(rorr.name!="repair_parts_id[]"){ data_gg[rorr.name]=rorr.value; }
-            if(rorr.name=="repair_parts_id[]"){ data_ggrow.push(rorr.value); }
+            if(rorr.name!="repair_parts_id")
+            {
+                if(rorr.name!="repair_parts_id[]")
+                { 
+                    if(rorr.name!="repair_parts_price[]")
+                    { 
+                        data_gg[rorr.name]=rorr.value; 
+                    }
+                }
+
+                
+                if(rorr.name=="repair_parts_id[]"){ data_ggrow.push(rorr.value); }
+                if(rorr.name=="repair_parts_price[]"){ data_ggrow_price.push(rorr.value); }
+            }
+            
         });
         data_gg['customer_id']=customer_id;
         data_gg['repair_parts_id']=data_ggrow;
+        data_gg['repair_parts_price']=data_ggrow_price;
         data_gg['_token']=csrftLarVe;
         console.log(data_gg);
         console.log(data_ggrow);
+        console.log(data_ggrow_price);
+
+        //return false;
         //return false;
         //var data_param={ 'form_data': formData, '_token': csrftLarVe }
         $.ajax({
@@ -128,18 +146,34 @@ $(document).ready(function(){
         var data_gg = {};
         var data_gg_row = {};
         var data_ggrow = [];
+        var data_ggrow_price = [];
         
         $.each(formData,function(kk,rorr){
             console.log(rorr);
             data_gg_row = {};
-            if(rorr.name!="repair_parts_id[]"){ data_gg[rorr.name]=rorr.value; }
-            if(rorr.name=="repair_parts_id[]"){ data_ggrow.push(rorr.value); }
+            if(rorr.name!="repair_parts_id")
+            {
+                if(rorr.name!="repair_parts_id[]")
+                { 
+                    if(rorr.name!="repair_parts_price[]")
+                    { 
+                        data_gg[rorr.name]=rorr.value; 
+                    }
+                }
+
+                
+                if(rorr.name=="repair_parts_id[]"){ data_ggrow.push(rorr.value); }
+                if(rorr.name=="repair_parts_price[]"){ data_ggrow_price.push(rorr.value); }
+            }
+            
         });
         data_gg['customer_id']=customer_id;
         data_gg['repair_parts_id']=data_ggrow;
+        data_gg['repair_parts_price']=data_ggrow_price;
         data_gg['_token']=csrftLarVe;
         console.log(data_gg);
         console.log(data_ggrow);
+        console.log(data_ggrow_price);
         //return false;
         //var data_param={ 'form_data': formData, '_token': csrftLarVe }
         $.ajax({
@@ -197,7 +231,7 @@ $(document).ready(function(){
                 optHtml+='<tr id="'+puslableID+'">';
                     optHtml+='<td>1</td>';
                     optHtml+='<td>'+row.name+'<input type="hidden" name="repair_parts_id[]" value="'+row.id+'" /></td>';
-                    optHtml+='<td>'+row.price+'</td>';
+                    optHtml+='<td><input type="text" style="width: 72px;" class="form-control" name="repair_parts_price[]" value="'+row.price+'" /></td>';
                     optHtml+='<td><button data-id="'+puslableID+'" class="btn btn-danger removeParts" type="button"><i class="icon-trash"></i></button></td>';
                 optHtml+='</tr>';
             }
