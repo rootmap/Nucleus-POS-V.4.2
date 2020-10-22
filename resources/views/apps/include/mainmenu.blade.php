@@ -167,7 +167,7 @@
             </li>
             @endif  --}}
 
-            @if(in_array('sprepairnticket', $dataMenuAssigned))
+            @if(in_array('repair-feature', $dataMenuAssigned))
 
             <li class="submenu">
                 <a href="javascript:void(0);">
@@ -183,7 +183,7 @@
                     @if(in_array('repair/create', $dataMenuAssigned))
                     <li class="{{ Request::path() == 'repair/create' ? 'active' : '' }}  border-bottom-purple"><a href="{{url('repair/create')}}" class="menu-item">New Repair</a></li>
                     @endif
-                    @if(in_array('repair/list', $dataMenuAssigned))
+                    @if(in_array('repair-list', $dataMenuAssigned))
                     <li class="{{ Request::path() == 'repair-list' ? 'active' : '' }}  border-bottom-purple"><a href="{{url('repair-list')}}" class="menu-item">Repair List Data</a></li>
                     @endif
            

@@ -3,8 +3,20 @@
 @section('content')
 <section id="form-action-layouts">
 <?php 
-    $userguideInit=StaticDataController::userguideInit();
+	$userguideInit=StaticDataController::userguideInit();
+	$dataMenuAssigned=array();
+    $dataMenuAssigned=StaticDataController::dataMenuAssigned();
+    //dd($dataMenuAssigned);
+    if(empty($dataMenuAssigned))
+    {
+        ?>
+        <script type="text/javascript">
+            logoutFRM();
+        </script>
+        <?php
+    }
 ?>
+
 <!-- Both borders end-->
 <div class="row">
 	<div class="col-xs-12" @if($userguideInit==1) data-step="1" data-intro="You are seeing all the repair list in this table." @endif>
@@ -121,10 +133,16 @@
 
 	             actHTml+=' > <button id="btnSearchDrop4" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" class="btn btn-green dropdown-toggle dropdown-menu-right"><i class="icon-cog3"></i></button>';
 	             actHTml+='                <span aria-labelledby="btnSearchDrop4" class="dropdown-menu mt-1 dropdown-menu-right">';
-	             actHTml+='                <a href="'+repairView+'/'+id+'" title="View Invoice" class="dropdown-item"><i class="icon-file-text"></i> View Repair Info</a>';
-	             actHTml+='                <a href="'+repairPrint+'/'+id+'" title="Print" class="dropdown-item"><i class="icon-printer"></i> Print</a>';
-	             actHTml+='                <a href="'+repairDelete+'/'+id+'" title="Delete" class="dropdown-item"><i class="icon-cross"></i> Delete</a>';
-	              actHTml+='           </span>';
+				 @if(in_array('repair-view', $dataMenuAssigned))
+				 	actHTml+='                <a href="'+repairView+'/'+id+'" title="View Invoice" class="dropdown-item"><i class="icon-file-text"></i> View Repair Info</a>';
+				 @endif 
+				 @if(in_array('repair-print', $dataMenuAssigned))
+				 actHTml+='                <a href="'+repairPrint+'/'+id+'" title="Print" class="dropdown-item"><i class="icon-printer"></i> Print</a>';
+				 @endif 
+				 @if(in_array('repair-delete', $dataMenuAssigned))
+				 actHTml+='                <a href="'+repairDelete+'/'+id+'" title="Delete" class="dropdown-item"><i class="icon-cross"></i> Delete</a>';
+				 @endif 
+				 actHTml+='           </span>';
 	               actHTml+='      </span>';
 
                 return actHTml;
